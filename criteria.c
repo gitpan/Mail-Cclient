@@ -4,7 +4,7 @@
  *
  * Author:	Helena Gomes <hpgomes@mail.pt>
  * Date:	18 July 2001
- * Last Edited:	23 July 2001
+ * Last Edited:	15 October 2001
  *
  * Parts of code from sources of c-client (Mark Crispin)
  * Copyright 2001 University of Washington.
@@ -17,247 +17,355 @@
 #include "misc.h"
 #include "criteria.h"
 
-#define CRITERIATMPLEN	256
+#define LITSTKLEN	20
+#define MAXCLIENTLIT	10000
+#define TMPLEN		8192
 
-/*
- * Mail parse number into elt field
- * Accepts: elt to write into
- *	    number string to parse
- * Returns: T if parse successful, else NIL 
- */
+int litsp = 0;
+char *litstk[LITSTKLEN];
+char cmdbuf[TMPLEN];
 
-long _mail_parse_number(MESSAGECACHE *elt, char *s)
-{
-    unsigned long size = 0;
-    char *p = s;
-
-    while(*p) if(!isdigit(*p++)) return NIL;
-    elt->rfc822_size = 0;
-    size = strtoul((const char *)s, &s, 10);
-    elt->rfc822_size = size;
-    return T;
+long _parse_criteria(SEARCHPGM *pgm, char **arg, unsigned long maxmsg,
+				unsigned long maxuid, unsigned long depth) {
+	if(arg && *arg) {
+		do
+			if(!_parse_criterion(pgm, arg, maxmsg, maxuid, depth))
+				return NIL;
+		while (**arg == ' ' && (*arg)++);
+		if(**arg && **arg != ')') return NIL;
+	}
+	return T;
 }
 
-/*
- * Parse a number 
- * Accepts: pointer to number unsigned long to return
- * Returns: T if successful, else NIL
- */
+long _parse_criterion(SEARCHPGM *pgm, char **arg, unsigned long maxmsg,
+				unsigned long maxuid, unsigned long depth) {
+	unsigned long i;
+	char c = NIL, *s, *t, *v, *tail, *del;  
+	SEARCHSET **set;
+	SEARCHPGMLIST **not;
+	SEARCHOR **or;
+	SEARCHHEADER **hdr;
+	long ret = NIL;
 
-long _mail_criteria_number (unsigned long *number)
-{
-    STRINGLIST *s = NIL;
-    MESSAGECACHE elt;
+	if((depth > 50) || !(arg && *arg));
+	else if(**arg == '(') {
+		(*arg)++;
+		if(_parse_criteria(pgm, arg, maxmsg, maxuid, depth+1) && **arg == ')') {
+			(*arg)++;
+			ret = T;
+		}
+	} else {
+		if(!(tail = strpbrk((s = *arg)," )"))) tail = *arg + strlen (*arg);
+		c = *(del = tail);
+		*del = '\0';
 
-    int ret = (mail_criteria_string(&s) &&
-	_mail_parse_number(&elt,(char *) s->text.data) &&
-		(*number = elt.rfc822_size)) ? T : NIL;
-    if(s) mail_free_stringlist(&s);
-    return ret;
+		switch(*ucase(s)) {
+		case '*':
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
+			if(*(set = &pgm->msgno)) {
+				for(not = &pgm->not; *not; not = &(*not)->next);
+				*not = mail_newsearchpgmlist();
+				set = &((*not)->pgm->not = mail_newsearchpgmlist())->pgm->msgno;
+			}
+			ret = _crit_set(set, &s, maxmsg) && (tail == s);
+			break;
+		case 'A': /* possible ALL, ANSWERED */
+			if(!strcmp(s+1,"LL")) ret = T;
+			else if(!strcmp(s+1,"NSWERED")) ret = pgm->answered = T;
+			break;
+
+		case 'B': /* possible BCC, BEFORE, BODY */
+			if(!strcmp(s+1,"CC") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->bcc,&tail);
+			else if(!strcmp(s+1,"EFORE") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->before,&tail);
+			else if(!strcmp(s+1,"ODY") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->body,&tail);
+			break;
+		case 'C': /* possible CC */
+			if(!strcmp(s+1,"C") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->cc,&tail);
+			break;
+		case 'D': /* possible DELETED */
+			if(!strcmp(s+1,"ELETED")) ret = pgm->deleted = T;
+			if(!strcmp(s+1,"RAFT")) ret = pgm->draft = T;
+			break;
+		case 'F':  /* possible FLAGGED, FROM */
+			if(!strcmp(s+1,"LAGGED")) ret = pgm->flagged = T;
+			else if(!strcmp(s+1,"ROM") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->from,&tail);
+			break;
+		case 'H': /* possible HEADER */
+			if(!strcmp(s+1,"EADER") && c == ' ' && *(v = tail + 1) &&
+				(s = _parse_astring(&v, &i, &c)) && i && c == ' ' &&
+					(t = _parse_astring (&v, &i, &c))) {
+				for(hdr = &pgm->header; *hdr; hdr = &(*hdr)->next);
+				*hdr = mail_newsearchheader(s,t);
+				*(tail = v ? v - 1 : t + i) = c;
+				ret = T;
+			}
+			break;
+		case 'K': /* possible KEYWORD */
+			if(!strcmp(s+1,"EYWORD") && c == ' ' && *++tail)
+				ret = _crit_string (&pgm->keyword,&tail);
+			break;
+		case 'L': /* possible LARGER */
+			if(!strcmp(s+1,"ARGER") && c == ' ' && *++tail)
+				ret = _crit_number(&pgm->larger,&tail);
+			break;
+		case 'N': /* possible NEW, NOT */
+			if(!strcmp(s+1,"EW")) ret = pgm->recent = pgm->unseen = T;
+			else if(!strcmp(s+1,"OT") && c == ' ' && *++tail) {
+				for(not = &pgm->not; *not; not = &(*not)->next);
+				*not = mail_newsearchpgmlist();
+				ret = _parse_criterion((*not)->pgm, &tail, maxmsg, maxuid, depth+1);
+			}
+			break;
+		case 'O': /* possible OLD, ON */
+			if(!strcmp(s+1,"LD")) ret = pgm->old = T;
+			else if(!strcmp(s+1,"N") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->on,&tail);
+			else if(!strcmp(s+1,"R") && c == ' ') {
+				for(or = &pgm->or; *or; or = &(*or)->next);
+				*or = mail_newsearchor();
+				ret = *++tail && _parse_criterion((*or)->first,&tail,maxmsg,maxuid,depth+1) &&
+					*tail == ' ' && *++tail && _parse_criterion((*or)->second,&tail,maxmsg,maxuid,depth+1);
+			}
+			break;
+		case 'R': /* possible RECENT */
+			if(!strcmp (s+1,"ECENT")) ret = pgm->recent = T;
+			break;
+		case 'S': /* possible SEEN, SINCE, SUBJECT */
+			if(!strcmp(s+1,"EEN")) ret = pgm->seen = T;
+			else if(!strcmp(s+1,"ENTBEFORE") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->sentbefore,&tail);
+			else if(!strcmp(s+1,"ENTON") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->senton,&tail);
+			else if(!strcmp(s+1,"ENTSINCE") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->sentsince,&tail);
+			else if(!strcmp(s+1,"INCE") && c == ' ' && *++tail)
+				ret = _crit_date(&pgm->since,&tail);
+			else if(!strcmp(s+1,"MALLER") && c == ' ' && *++tail)
+				ret = _crit_number(&pgm->smaller,&tail);
+			else if(!strcmp(s+1,"UBJECT") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->subject,&tail);
+			break;
+		case 'T': /* possible TEXT, TO */
+			if(!strcmp(s+1,"EXT") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->text, &tail);
+			else if(!strcmp(s+1,"O") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->to, &tail);
+			break;
+		case 'U': /* possible UID, UN* */
+			if(!strcmp(s+1,"ID") && c== ' ' && *++tail) {
+				if(*(set = &pgm->uid)) {
+					for(not = &pgm->not; *not; not = &(*not)->next);
+					*not = mail_newsearchpgmlist();
+					set = &((*not)->pgm->not = mail_newsearchpgmlist ())->pgm->uid;
+				}
+				ret = _crit_set(set, &tail, maxuid);
+			} else if(!strcmp(s+1,"NANSWERED")) ret = pgm->unanswered = T;
+			else if(!strcmp(s+1,"NDELETED")) ret = pgm->undeleted = T;
+			else if(!strcmp(s+1,"NDRAFT")) ret = pgm->undraft = T;
+			else if(!strcmp(s+1,"NFLAGGED")) ret = pgm->unflagged = T;
+			else if(!strcmp(s+1,"NKEYWORD") && c == ' ' && *++tail)
+				ret = _crit_string(&pgm->unkeyword, &tail);
+			else if(!strcmp(s+1,"NSEEN")) ret = pgm->unseen = T;
+			break;
+		default:
+			break;
+		}
+		if(ret) {
+			*del = c;
+			*arg = tail;
+		}
+	}
+	return ret;
 }
 
-/*
- * Mail parse search criteria
- * Accepts: criteria
- * Returns: search program if parse successful, else NIL
- */
-
-SEARCHPGM *_mail_criteria (char *criteria)  
-{
-    SEARCHPGM *pgm;
-    char tmp[MAILTMPLEN];
-    int f = NIL;
-
-    if (!criteria) return NIL;
-	pgm = mail_newsearchpgm ();
-
-    for (criteria = strtok (criteria," "); criteria;
-	(criteria = strtok (NIL," "))) {
-	f = NIL;
-	switch (*ucase (criteria)) {
-	case 'A':	/* possible ALL, ANSWERED */
-	    if(!strcmp (criteria+1,"LL")) f = T;
-	    else if(!strcmp (criteria+1,"NSWERED")) f = pgm->answered = T;
-	    break;
-	case 'B':	/* possible BCC, BEFORE, BODY */
-	    if(!strcmp (criteria+1,"CC"))
-		f = mail_criteria_string(&pgm->bcc);
-	    else if(!strcmp (criteria+1,"EFORE"))
-		f = mail_criteria_date(&pgm->before);
-	    else if(!strcmp (criteria+1,"ODY"))
-		f = mail_criteria_string(&pgm->body);
-	    break;
-	case 'C':	/* possible CC */
-	    if(!strcmp (criteria+1,"C"))
-		f = mail_criteria_string(&pgm->cc);
-	    break;
-	case 'D':	/* possible DELETED, DRAFT */
-	    if(!strcmp(criteria+1,"ELETED")) f = pgm->deleted = T;
-	    else if(!strcmp(criteria+1,"RAFT")) f = pgm->draft = T;
-	    break;
-	case 'F':	/* possible FLAGGED, FROM */
-	    if(!strcmp (criteria+1,"LAGGED"))
-		f = pgm->flagged = T;
-	    else if(!strcmp (criteria+1,"ROM"))
-		f = mail_criteria_string(&pgm->from);
-	    break;
-	case 'K':	/* possible KEYWORD */
-	    if(!strcmp (criteria+1,"EYWORD"))
-		f = mail_criteria_string(&pgm->keyword);
-	    break;
-	case 'L':	/* possible LARGER */
-	    if(!strcmp(criteria+1,"ARGER"))
-		f = _mail_criteria_number(&pgm->larger);
-	    break;
-	case 'N':	/* possible NEW */
-	    if(!strcmp (criteria+1,"EW"))
-		f = pgm->recent = pgm->unseen = T;
-	    break;
-	case 'O':	/* possible OLD, ON */
-	    if (!strcmp (criteria+1,"LD")) f = pgm->old = T;
-	    else if(!strcmp (criteria+1,"N"))
-		f = mail_criteria_date(&pgm->on);
-	    break;
-	case 'R':	/* possible RECENT */
-	    if(!strcmp (criteria+1,"ECENT")) f = pgm->recent = T;
-	    break;
-	case 'S':	/* possible SEEN, SENTBEFORE, SENTON, SENTSINCE, SINCE, SMALLER, SUBJECT */
-	    if(!strcmp (criteria+1,"EEN"))
-		f = pgm->seen = T;
-	    else if(!strcmp (criteria+1,"ENTBEFORE"))
-		f = mail_criteria_date(&pgm->sentbefore);
-	    else if(!strcmp (criteria+1,"ENTON"))
-		f = mail_criteria_date(&pgm->senton);
-	    else if(!strcmp (criteria+1,"ENTSINCE"))
-		f = mail_criteria_date(&pgm->sentsince);
-	    else if(!strcmp (criteria+1,"INCE"))
-		f = mail_criteria_date(&pgm->since);
-	    else if(!strcmp (criteria+1,"MALLER"))
-		f = _mail_criteria_number(&pgm->smaller);
-	    else if(!strcmp (criteria+1,"UBJECT"))
-		f = mail_criteria_string(&pgm->subject);
-	    break;
-	case 'T':	/* possible TEXT, TO */
-	    if(!strcmp (criteria+1,"EXT"))
-		f = mail_criteria_string(&pgm->text);
-	    else if(!strcmp (criteria+1,"O"))
-		f = mail_criteria_string(&pgm->to);
-	    break;
-	case 'U':       /* possible UN* */
-	    if(criteria[1] == 'N') {
-		if(!strcmp (criteria+2,"ANSWERED"))
-		    f = pgm->unanswered = T;
-		else if(!strcmp (criteria+2,"DELETED"))
-		    f = pgm->undeleted = T;
-		else if(!strcmp (criteria+2,"DRAFT"))
-		    f = pgm->undraft = T;
-		else if(!strcmp (criteria+2,"FLAGGED"))
-		    f = pgm->unflagged = T;
-		else if(!strcmp (criteria+2,"KEYWORD"))
-		    f = mail_criteria_string (&pgm->unkeyword);
-		else if(!strcmp (criteria+2,"SEEN"))
-		    f = pgm->unseen = T;
-	    }
-	    break;
-	default:
-	    break;
-	}
-	if(!f) {
-	    sprintf (tmp,"Unknown search criterion: %.30s",criteria);
-	    MM_LOG (tmp, ERROR);
-	    mail_free_searchpgm (&pgm);
-	    break;
-	}
-    }
-    return pgm;
+long _crit_date(unsigned short *date, char **arg) {
+	if(**arg != '"') return _crit_date_work(date, arg);   
+	(*arg)++;
+	if(!(_crit_date_work(date,arg) && (**arg == '"'))) return NIL;
+	(*arg)++;                                               
+	return T;
 }
 
-/*
- * Mail parse search criteria for logical NOT or OR
- * Accepts: criteria
- * Returns: search program if parse successful, else NIL
- */
-
-SEARCHPGM *make_criteria(char *criteria)
-{
-    int i = 0;
-    char string_not[CRITERIATMPLEN] = "";
-    char string_or[2][CRITERIATMPLEN] = {"",""};
-    char string[CRITERIATMPLEN] = "";
-    short crit = 0;
-    short orcrit = 0;
-    short notcrit = 0;
-    short n = 0;
-    short group = 0;
-    short quot = 0;
-    char tmp[MAILTMPLEN] = "";
-    SEARCHPGM *spgm;
-
-    if(!criteria) return NIL;
-    while(*criteria) {
-	if(*(criteria-1) != '\\' && *criteria == '"') quot = (quot) ? 0 : 1;
-	if(*criteria == '(') group = 1;
-	if(notcrit) {
-	    if(!group && !quot && *criteria == ' ' && *(criteria+1) != '"') {
-		notcrit = 0;
-		i = 0;
-	    } else if(*criteria != '(' && *criteria != ')')
-		string_not[i++] = *criteria;
+long _crit_date_work(unsigned short *date, char **arg) {
+	int d,m,y;
+	if(isdigit(d = *(*arg)++) || ((d == ' ') && isdigit(**arg))) {
+		if(d == ' ') d = 0;
+		else d -= '0';
+		if(isdigit(**arg)) {
+			d *= 10;
+			d += *(*arg)++ - '0';
+		}
+		if((**arg == '-') && (y = *++(*arg))) {
+			m = (y >= 'a' ? y - 'a' : y - 'A') * 1024;
+			if((y = *++(*arg))) {
+				m += (y >= 'a' ? y - 'a' : y - 'A') * 32;
+				if((y = *++(*arg))) {
+					m += (y >= 'a' ? y - 'a' : y - 'A');
+					switch(m) {
+					case(('J'-'A') * 1024) + (('A'-'A') * 32) + ('N'-'A'): m = 1; break;
+					case(('F'-'A') * 1024) + (('E'-'A') * 32) + ('B'-'A'): m = 2; break;
+					case(('M'-'A') * 1024) + (('A'-'A') * 32) + ('R'-'A'): m = 3; break;
+					case(('A'-'A') * 1024) + (('P'-'A') * 32) + ('R'-'A'): m = 4; break;
+					case(('M'-'A') * 1024) + (('A'-'A') * 32) + ('Y'-'A'): m = 5; break;
+					case(('J'-'A') * 1024) + (('U'-'A') * 32) + ('N'-'A'): m = 6; break;
+					case(('J'-'A') * 1024) + (('U'-'A') * 32) + ('L'-'A'): m = 7; break;
+					case(('A'-'A') * 1024) + (('U'-'A') * 32) + ('G'-'A'): m = 8; break;
+					case(('S'-'A') * 1024) + (('E'-'A') * 32) + ('P'-'A'): m = 9; break;
+					case(('O'-'A') * 1024) + (('C'-'A') * 32) + ('T'-'A'): m = 10;break;
+					case(('N'-'A') * 1024) + (('O'-'A') * 32) + ('V'-'A'): m = 11;break; 
+					case(('D'-'A') * 1024) + (('E'-'A') * 32) + ('C'-'A'): m = 12;break;   
+					default: return NIL;
+					}
+					if((*++(*arg) == '-') && isdigit (*++(*arg))) {
+						y = 0;
+						do {
+							y *= 10;
+							y += *(*arg)++ - '0';
+						} while(isdigit(**arg));
+						if(d < 1 || d > 31 || m < 1 || m > 12 || y < 0) return NIL;
+						if(y < 100) y += (y >= (BASEYEAR - 1900)) ? 1900 : 2000;
+						*date = ((y - BASEYEAR) << 9) + (m << 5) + d;
+						return T;
+					}
+				}
+			}
+		}
 	}
-	if(!notcrit && !group && !quot &&
-		((*criteria == ' ' && n) || !n) &&
-		*(criteria+n) == 'N' &&
-		*(criteria+n+1) == 'O' &&
-		*(criteria+n+2) == 'T' &&
-		*(criteria+n+3) == ' ') {
-	    criteria = criteria + n + 3;
-	    notcrit = 1;
-	    orcrit = 0;
-	    i = 0;
-	}
-	if(orcrit) {
-	    if(!group && !quot && *criteria == ' ' && *(criteria+1) != '"') {
-		i = 0;
-		crit++;
-	    }
-	    if(crit > 1) {
-		orcrit = 0;
-		i = 0;
-	    } else if((*criteria != ' ' || i) &&
-			(*criteria != '(' && *criteria != ')'))
-		string_or[crit][i++] = *criteria;
-	}
-	if(!orcrit && !group && !quot &&
-		((*criteria == ' ' && n) || !n) &&
-		*(criteria+n) == 'O' &&
-		*(criteria+n+1) == 'R' &&
-		*(criteria+n+2) == ' ') {
-	    criteria = criteria + n + 2;
-	    notcrit = 0;
-	    orcrit = 1;
-	    i = 0;
-	}
-	if(!notcrit && !orcrit && (*criteria != ' ' || i))
-	    string[i++] = *criteria;
-	++criteria;
-	if(*criteria == ')') group = 0;
-	n = 1;
-    }
-    if(group || quot) {
-	sprintf (tmp,"criteria miss: '\"' or ')'");
-	MM_LOG (tmp,ERROR);
 	return NIL;
-    }
-    spgm = mail_newsearchpgm();
-    if(string[0]) spgm = _mail_criteria(string);
-    if(string_not[0]) {
-	spgm->not = mail_newsearchpgmlist();
-	spgm->not->pgm = _mail_criteria(string_not);
-    }
-    if(string_or[0][0] && string_or[1][0]) {
-	spgm->or = mail_newsearchor();
-	spgm->or->first = _mail_criteria(string_or[0]);
-	spgm->or->second = _mail_criteria(string_or[1]);
-    }
-    return spgm;
+}
+
+
+long _crit_string(STRINGLIST **string, char **arg) {
+	unsigned long i;
+	char c;
+	char *s = _parse_astring(arg, &i, &c);
+
+	if(!s) return NIL;
+
+	while (*string) string = &(*string)->next;
+	*string = mail_newstringlist ();
+	(*string)->text.data = (unsigned char *) fs_get (i + 1);
+	memcpy((*string)->text.data,s,i);
+	(*string)->text.data[i] = '\0';  
+	(*string)->text.size = i;
+
+	if(!*arg) *arg = (char *) (*string)->text.data + i;
+	else (*--(*arg) = c);
+
+	return T;
+}
+
+char *_parse_astring(char **arg, unsigned long *size, char *del) {
+	unsigned long i;
+	char c,*s,*t,*v;
+
+	if(!*arg) return NIL;
+	switch(**arg) {
+	default:
+		for (s = t = *arg, i = 0;
+			(*t > ' ') && (*t < 0x7f) && (*t != '(') && (*t != ')') &&
+				(*t != '{') && (*t != '%') && (*t != '*') && (*t != '"') &&
+					(*t != '\\'); ++t,++i);
+		if(*size = i)
+			break;
+	case ')': case '%': case '*': case '\\': case '\0': case ' ':
+		return NIL;
+	case '"':
+		for(s = t = v = *arg + 1; (c = *t++) != '"'; *v++ = c) {
+			if(c == '\\') c = *t++;
+			if(!c || (c & 0x80)) return NIL;
+		}
+		*v = '\0';
+		*size = v - s;
+		break;
+	case '{':
+		s = *arg + 1;
+		if(!isdigit (*s)) return NIL;
+		if((*size = i = strtoul(s,&t,10)) > MAXCLIENTLIT) {
+			mm_notify(NIL,"Absurdly long client literal",ERROR);
+			return NIL;
+		}
+		if(!t || (*t != '}') || t[1]) return NIL;
+		if(litsp >= LITSTKLEN) {
+			mm_notify(NIL,"Too many literals in command",ERROR);
+			return NIL;
+		}
+		_inliteral(s = litstk[litsp++] = (char *) fs_get(i+1),i);
+		_slurp(*arg = t,TMPLEN - (t - cmdbuf));
+		if(!strchr(t, '\012')) return NIL;
+		if(!strtok(t, "\015\012")) *t = '\0';
+		break;
+	}
+	if(*del = *t) {
+		*t++ = '\0';   
+		*arg = t;
+	}
+	else *arg = NIL;
+	return s;
+}
+
+void _inliteral(char *s, unsigned long n) {
+	/* warning, this need some debug */
+	s[n] = '\0';
+}
+
+void _slurp(char *s, int n) {
+	/* warning, this need some debug */
+	s[--n] = '\0';
+}
+
+long _crit_set(SEARCHSET **set, char **arg, unsigned long maxima) {
+	unsigned long i;
+
+	*set = mail_newsearchset();
+	if (**arg == '*') {
+		(*arg)++;
+		(*set)->first = maxima;
+	} else if(_crit_number(&i, arg) && i) (*set)->first = i;
+	else return NIL;
+
+	switch(**arg) {
+	case ':':
+		if(*++(*arg) == '*') {
+			(*arg)++;
+			(*set)->last -= maxima;
+		} else if(_crit_number(&i,arg) && i) {
+			if(i < (*set)->first) {
+				(*set)->last = (*set)->first;
+				(*set)->first = i;
+			} else (*set)->last = i;
+		} else return NIL;
+		if(**arg != ',')
+			break;
+	case ',':
+		(*arg)++;
+		return _crit_set(&(*set)->next, arg, maxima);
+	default:
+		break;
+	}
+	return T;
+}
+
+long _crit_number(unsigned long *number, char **arg) {
+	if(!isdigit (**arg)) return NIL;
+	*number = 0;
+	while (isdigit (**arg)) {
+		*number *= 10;                            
+		*number += *(*arg)++ - '0';                       
+	}
+	return T;
+}
+
+SEARCHPGM *make_criteria(char *criteria) {
+	SEARCHPGM *spgm;
+
+	if(!criteria) return NIL;
+	_parse_criteria(spgm = mail_newsearchpgm(), &criteria, 0, 0, 0);
+	return spgm;
 }

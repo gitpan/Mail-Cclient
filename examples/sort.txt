@@ -2,10 +2,11 @@ use Mail::Cclient qw(set_callback);
 
 # Criteria examples
 #
+#       '12,23,45,16,19 SUBJECT "perl"'
 #       'FLAGGED SINCE 1-Feb-1994 NOT FROM "SMITH"'
-#       'ALL FROM "hdias" NOT (SUBJECT "spam" TEXT "bug")'
+#       'ALL FROM "hdias" NOT SUBJECT "spam" NOT TEXT "bug"'
 #       'OR FROM "hdias" SUBJECT "perl"'
-#       'FROM "hdias" NOT FROM "smith" OR (SUBJECT "perl" TO "cpan") SUBJECT "linux"'
+#       'FROM "hdias" NOT FROM "smith" OR SUBJECT "perl" TO "cpan"'
 #       'FROM "hdias"'
 #       'ANSWERED TO "malcolm"'
 #

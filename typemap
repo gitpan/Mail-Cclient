@@ -1,4 +1,5 @@
 Mail::Cclient		T_XSCPTR
+Mail::Cclient::SMTP	T_PTROBJ
 
 INPUT
 T_XSCPTR

@@ -1,3 +1,23 @@
+Revision history for Perl extension Mail::Cclient.
+
+1.4
+22 Oct 2001
+
+* Added rfc822_output method
+
+* Added support for SMTP API
+
+* Safemalloc have been removed from mail_sort function
+
+* Full support for all "rfc2060" search keys
+ (from code submitted by Helena Gomes <hpgomes@mail.pt>)
+
+* documentation updated (new pod file)
+
+* example updated
+
+* new Makefile.PL with options for pam and ssl
+
 1.3
 23 Jul 2001
   (version 1.3 submitted by Henrique Dias <hdias@esb.ucp.pt>)

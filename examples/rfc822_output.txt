@@ -1,0 +1,82 @@
+# this is a example
+
+use Mail::Cclient qw(rfc822_output);
+
+my @attachs = (
+	{
+		content_type => "image/gif",
+		filename     => "image.gif",
+		encoding     => "binary",
+		path         => "files/image.gif",
+	},
+	{
+		content_type => "image/jpeg",
+		filename     => "image.jpg",
+		encoding     => "binary",
+		path         => "files/image.jpg",
+	},
+);
+
+my $envelope = {
+	from    => "hdias@aeiou.pt",
+	to      => "xyz@perl.com",
+	cc      => "abc@perl.com",
+	subject => "another test",
+};
+        
+my $data = "bla bla bla";
+my $signature = "\n\n--\n--Henrique Dias--\n";
+
+my $body = {
+	content_type => "text/plain",
+	encoding     => "quoted-printable",
+	data         => $data . $signature,
+}
+
+my $i = 0;
+my $part = [];
+for my $attach (@attachs) {
+	$part->[$i++] = {
+		content_type => $attach->{'content_type'},
+		disposition  => {
+			type      => "attachment",
+			parameter => [{
+				attribute => "filename",
+				value     => $attach->{'filename'},
+			}],
+		},
+		encoding     => $attach->{'encoding'},
+		path         => $attach->{'path'},
+		parameter    => [{
+			attribute => "name",
+			value     => $attach->{'filename'},
+		}],
+	};
+}
+if(scalar(@{$part})) {
+	unshift(@{$part}, $body);
+	$body = {
+		content_type => "multipart/mixed",
+		part         => $part,
+	};
+}
+
+open(FILE, ">tmp.rfc822") or die "$!\n";
+my $fh = *FILE;
+rfc822_output(
+	filehandle  => $fh,
+	envelope    => $envelope,
+	body        => $body,
+);
+seek($fh, 0, 0);
+local $/ = undef;
+my $text = <$fh>;
+close(FILE);
+$smtp->close();
+
+# Append the message to mailbox
+my $msg2mb = "postponed-msgs";
+my $mailbox = "{mail.aeiou.pt/imap}mail/$msg2mb";
+$cclient->append($mailbox, $text);
+
+exit(0);

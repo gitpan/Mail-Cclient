@@ -18,14 +18,17 @@
  * For imap-2000 we also need to include stddef.h first to ensure
  * size_t is defined since misc.h needs it.
  */
+
 #include <stddef.h>
 #include "mail.h"
-#include "misc.h"
+#include "osdep.h"
 #include "rfc822.h"
+#include "misc.h"
+#include "smtp.h"
 #include "criteria.h"
 
 #define CCLIENT_LOCAL_INIT(s,d,data,size) \
-    ((*((s)->dtb = &d)->init) (s,data,size))
+	((*((s)->dtb = &d)->init) (s,data,size))
 #undef INIT
 
 #ifdef OP_PROTOTYPE
@@ -44,12 +47,14 @@
 #include "XSUB.h"
 
 typedef MAILSTREAM *Mail__Cclient;
+typedef SENDSTREAM *Mail__Cclient__SMTP;
 
 /* Magic signature for Cclient's mg_private is "Cc" */
 #define Mail__Cclient_MAGIC_SIGNATURE 0x4363
 
 #define MAX_LEN_ARRAY	14
 #define MUST_EXIST	1
+#define DATE_BUFF_SIZE	64
 
 static HV *mailstream2sv;	/* Map MAILSTREAM* to SV* */
 static HV *stash_Cclient;	/* Mail::Cclient:: stash */
@@ -65,57 +70,401 @@ static SV *elt_fields;		/* \%Mail::Cclient::Elt::FIELDS */
 
 #include "patchlevel.h"
 #if PATCHLEVEL < 4
-static SV *
-newRV_noinc(SV *ref)
-{
-    SV *sv = newRV(ref);
-    SvREFCNT_dec(ref);
-    return sv;
+static SV *newRV_noinc(SV *ref) {
+	SV *sv = newRV(ref);
+	SvREFCNT_dec(ref);
+	return sv;
 }
 #endif
 
-static SV *str_to_sv(char *str)
-{
-    return str ? newSVpv(str, 0) : newSVsv(&sv_undef);
+static SV *str_to_sv(char *str) {
+	return str ? newSVpv(str, 0) : newSVsv(&sv_undef);
 }
 
-static SV *get_mailstream_sv(MAILSTREAM *stream, char *class)
-{
-    SV **svp = hv_fetch(mailstream2sv, (char*)&stream, sizeof(stream), FALSE);
-    SV *sv;
-
-#ifdef PERL_CCLIENT_DEBUG
-    fprintf(stderr, "get_mailstream_sv(%p, %s), hv_fetch returns SV %p\n",
-	    stream, class, svp ? *svp : 0); /* debug */
-#endif
-    if (svp)
-	sv = *svp;
-    else {
-	SV *rv = (SV*)newHV();
-	sv = sv_bless(newRV(rv), stash_Cclient);
-	SvREFCNT_dec(rv);
-	sv_magic(rv, newSViv((IV)stream), '~', 0, 0);
-	SvMAGIC(rv)->mg_private = Mail__Cclient_MAGIC_SIGNATURE;
-	hv_store(mailstream2sv, (char*)&stream, sizeof(stream), sv, 0);
-    }
-#ifdef PERL_CCLIENT_DEBUG
-    fprintf(stderr, "returning %p, type %d\n", sv, SvTYPE(sv)); /* debug */
-#endif
-    return sv;
+static HV *av_to_hv(AV *av, int n) {
+	SV **keysp = av_fetch(av, n, FALSE);
+	if(keysp) {
+		SV *sv = *keysp;
+		if(SvGMAGICAL(sv)) mg_get(sv);
+		if(SvROK(sv)) {
+			sv = SvRV(sv); 
+			if(SvTYPE(sv) == SVt_PVHV) return (HV*)sv;
+		}
+	}
+	croak("Can't coerce array into hash");
+	return Nullhv;
 }
 
-static SV *
-mm_callback(char *name)
-{
-    dSP;
-    SV **svp = hv_fetch(callback, name, strlen(name), FALSE);
+static SV *get_mailstream_sv(MAILSTREAM *stream, char *class) {
+	SV **svp = hv_fetch(mailstream2sv, (char*)&stream, sizeof(stream), FALSE);
+	SV *sv;
 
 #ifdef PERL_CCLIENT_DEBUG
-    fprintf(stderr, "mm_callback(%s)\n", name);
+	fprintf(stderr, "get_mailstream_sv(%p, %s), hv_fetch returns SV %p\n",
+		stream, class, svp ? *svp : 0); /* debug */
 #endif
-    if (svp && SvOK(*svp))
-	return *svp;
-    return 0;
+	if(svp)
+		sv = *svp;
+	else {
+		SV *rv = (SV*)newHV();
+		sv = sv_bless(newRV(rv), stash_Cclient);
+		SvREFCNT_dec(rv);
+		sv_magic(rv, newSViv((IV)stream), '~', 0, 0);
+		SvMAGIC(rv)->mg_private = Mail__Cclient_MAGIC_SIGNATURE;
+		hv_store(mailstream2sv, (char*)&stream, sizeof(stream), sv, 0);
+	}
+#ifdef PERL_CCLIENT_DEBUG
+	fprintf(stderr, "returning %p, type %d\n", sv, SvTYPE(sv)); /* debug */
+#endif
+	return sv;
+}
+
+static SV *mm_callback(char *name) {
+	dSP;
+	SV **svp = hv_fetch(callback, name, strlen(name), FALSE);
+
+#ifdef PERL_CCLIENT_DEBUG
+	fprintf(stderr, "mm_callback(%s)\n", name);
+#endif
+	if(svp && SvOK(*svp))
+		return *svp;
+	return 0;
+}
+
+/*
+ * SMTP
+ */
+
+char *generate_message_id() {
+	static short osec = 0, cnt = 0;
+	char *id;
+	time_t now;
+	struct tm *now_x;
+	char *host;
+
+	now = time((time_t *)0);
+	now_x = localtime(&now);
+	id = (char *)fs_get(128 * sizeof(char));	
+	if(now_x->tm_sec == osec)
+		cnt++;
+	else {
+		cnt = 0;
+		osec = now_x->tm_sec;
+	}
+	host = getenv("HOSTNAME") ;
+	if(!host) host = "localhost" ;
+
+	sprintf(id,"<Mail::Cclient.%.4s.%.20s.%02d%02d%02d%02d%02d%02d%X.%d@%.50s>",
+		VERSION, OSNAME, (now_x->tm_year) % 100, now_x->tm_mon + 1,
+		now_x->tm_mday, now_x->tm_hour, now_x->tm_min, now_x->tm_sec,
+		cnt, getpid(), host);
+
+	return(id);
+}
+
+static void make_mail_envelope(ENVELOPE *env, char *dhost, HV* hv) {
+
+	if(hv_exists(hv, "from", 4)) {
+		SV **value = hv_fetch(hv, "from", 4, 0);
+		rfc822_parse_adrlist(&env->from, SvPV(*value, na), dhost);
+		env->return_path = rfc822_cpy_adr(env->from);
+	}
+	if(hv_exists(hv, "to", 2)) {
+		SV **value = hv_fetch(hv, "to", 2, 0);
+		rfc822_parse_adrlist(&env->to, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "cc", 2)) {
+		SV **value = hv_fetch(hv, "cc", 2, 0);
+		rfc822_parse_adrlist(&env->cc, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "bcc", 3)) {
+		SV **value = hv_fetch(hv, "bcc", 3, 0);
+		rfc822_parse_adrlist(&env->bcc, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "sender", 6)) {
+		SV **value = hv_fetch(hv, "sender", 6, 0);
+		rfc822_parse_adrlist(&env->sender, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "reply_to", 8)) {
+		SV **value = hv_fetch(hv, "reply_to", 8, 0);
+		rfc822_parse_adrlist(&env->reply_to, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "return_path", 11)) {
+		SV **value = hv_fetch(hv, "return_path", 11, 0);
+		rfc822_parse_adrlist(&env->return_path, SvPV(*value, na), dhost);
+	}
+	if(hv_exists(hv, "in_reply_to", 11)) {
+		SV **value = hv_fetch(hv, "in_reply_to", 11, 0);
+		env->in_reply_to = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "message_id", 10)) {
+		SV **value = hv_fetch(hv, "message_id", 10, 0);
+		env->message_id = SvPV(*value, na);
+	} else
+		env->message_id = generate_message_id();
+
+	if(hv_exists(hv, "subject", 7)) {
+		SV **value = hv_fetch(hv, "subject", 7, 0);
+		env->subject = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "remail", 6)) {
+		SV **value = hv_fetch(hv, "remail", 6, 0);
+		env->remail = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "date", 4)) {
+		SV **value = hv_fetch(hv, "date", 4, 0);
+		env->date = SvPV(*value, na);
+	} else {
+		char buf[DATE_BUFF_SIZE];
+		rfc822_date(buf);
+		env->date = cpystr(buf);
+	}
+	if(hv_exists(hv, "newsgroups", 10)) {
+		SV **value = hv_fetch(hv, "newsgroups", 10, 0);
+		env->newsgroups = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "followup_to", 11)) {
+		SV **value = hv_fetch(hv, "followup_to", 11, 0);
+		env->followup_to = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "references", 10)) {
+		SV **value = hv_fetch(hv, "references", 11, 0);
+		env->references = SvPV(*value, na);
+	}
+}
+
+static PARAMETER *make_mail_parameter(SV *sv) {
+	PARAMETER *param = NULL, *p = NULL;
+
+	if(SvROK(sv) && SvTYPE(SvRV(sv))) {
+		AV *av = (AV*)SvRV(sv);
+		I32 k;
+		for(k = 0; k < av_len(av) + 1; k++) {
+			HV *hv = av_to_hv(av, k);
+
+			if(p) p = p->next = mail_newbody_parameter();
+			else param = p = mail_newbody_parameter();
+
+			if(hv_exists(hv, "attribute", 9)) {
+				SV **value = hv_fetch(hv, "attribute", 9, 0);
+				p->attribute = SvPV(*value, na);
+			}
+			if(hv_exists(hv, "value", 5)) {
+				SV **value = hv_fetch(hv, "value", 5, 0);
+				p->value = SvPV(*value, na);
+			}
+		}
+	}
+	return(param);
+}
+
+
+int set_encoding(char *enc) {
+	return(strcaseEQ(enc, "7bit")
+		? ENC7BIT
+		: strcaseEQ(enc, "8bit")
+			? ENC8BIT
+			: strcaseEQ(enc, "binary")
+				? ENCBINARY
+				: strcaseEQ(enc, "base64")
+					? ENCBASE64
+					: strcaseEQ(enc, "quoted-printable")
+						? ENCQUOTEDPRINTABLE
+						: ENCOTHER);
+}
+
+int set_type(char *type) {
+	return(strcaseEQ(type, "text")
+		? TYPETEXT
+		: strcaseEQ(type, "multipart")
+			? TYPEMULTIPART
+			: strcaseEQ(type, "message")
+				? TYPEMESSAGE
+				: strcaseEQ(type, "application")
+					? TYPEAPPLICATION
+					: strcaseEQ(type, "audio")
+						? TYPEAUDIO
+						: strcaseEQ(type, "image")
+							? TYPEIMAGE
+							: strcaseEQ(type, "video")
+								? TYPEVIDEO
+								: strcaseEQ(type, "model")
+									? TYPEMODEL
+									: TYPEOTHER);
+}
+
+static void make_mail_disposition(SV *sv, BODY **body) {
+	HV *hv = (HV*)SvRV(sv);
+	if(hv_exists(hv, "type", 4)) {
+		SV **v = hv_fetch(hv, "type", 4, 0);
+		(*body)->disposition.type = SvPV(*v, na);
+	}
+	if(hv_exists(hv, "parameter", 9)) {
+		SV **v = hv_fetch(hv, "parameter", 9, 0);
+		(*body)->disposition.parameter = make_mail_parameter(*v);
+	}
+}
+
+static void addfile(char *filename, SIZEDTEXT *st) {
+	PerlIO *fp;
+	unsigned char *data;
+	struct stat statbuf;
+	int bytesread;
+
+	if ((fp = PerlIO_open(filename, "rb")) == NULL) {
+		croak("Failed to open file \"%s\"", filename);
+		return;
+	}
+	PerlLIO_fstat(PerlIO_fileno(fp), &statbuf);
+	data = (char*)fs_get(statbuf.st_size);
+	if(!(bytesread = PerlIO_read(fp, data, statbuf.st_size))) {
+		return;
+	}
+	PerlIO_close(fp);
+
+	st->data = (char*)fs_get(statbuf.st_size);
+	memcpy(st->data, data, statbuf.st_size + 1);
+	st->size = statbuf.st_size;
+	free(data);
+}
+
+static void set_mime_type(BODY **body) {
+	if((*body)->type == TYPEOTHER){
+		if((*body)->contents.text.data[0] == 'G' &&
+			(*body)->contents.text.data[1] == 'I' &&
+				(*body)->contents.text.data[2] == 'F') {
+			(*body)->type = TYPEIMAGE;
+			(*body)->subtype = cpystr("GIF");
+		} else if(((*body)->contents.text.size > 9) &&
+			(*body)->contents.text.data[0] == 0xFF &&
+				(*body)->contents.text.data[1] == 0xD8 &&
+					(*body)->contents.text.data[2] == 0xFF &&
+						(*body)->contents.text.data[3] == 0xE0 &&
+							!strncmp((char *)&(*body)->contents.text.data[6], "JFIF", 4)) {
+			(*body)->type = TYPEIMAGE;
+			(*body)->subtype = cpystr("JPEG");
+		} else if(((*body)->contents.text.data[0] == 'M' &&
+				(*body)->contents.text.data[1] == 'M') ||
+					((*body)->contents.text.data[0] == 'I' &&
+						(*body)->contents.text.data[1] == 'I')) {
+			(*body)->type = TYPEIMAGE;
+			(*body)->subtype = cpystr("TIFF");
+		} else if(((*body)->contents.text.data[0] == '%' &&
+			(*body)->contents.text.data[1] == '!') ||
+				((*body)->contents.text.data[0] == '\004' &&
+					(*body)->contents.text.data[1] == '%' &&
+						(*body)->contents.text.data[2] == '!')) {
+			(*body)->type = TYPEAPPLICATION;
+			(*body)->subtype = cpystr("PostScript");
+		} else if((*body)->contents.text.data[0] == '%' &&
+				!strncmp((char*)(*body)->contents.text.data+1, "PDF-", 4)) {
+			(*body)->type = TYPEAPPLICATION;
+			(*body)->subtype = cpystr("PDF");
+		} else if((*body)->contents.text.data[0] == '.' &&
+				!strncmp((char*)(*body)->contents.text.data+1, "snd", 3)) {
+			(*body)->type = TYPEAUDIO;
+			(*body)->subtype = cpystr("Basic");
+		} else if(((*body)->contents.text.size > 3) &&
+			(*body)->contents.text.data[0] == 0x00 &&
+				(*body)->contents.text.data[1] == 0x05 &&
+					(*body)->contents.text.data[2] == 0x16 &&
+						(*body)->contents.text.data[3] == 0x00) {
+			(*body)->type = TYPEAPPLICATION;
+			(*body)->subtype = cpystr("APPLEFILE");
+		} else if(((*body)->contents.text.size > 3) &&
+			(*body)->contents.text.data[0] == 0x50 &&
+				(*body)->contents.text.data[1] == 0x4b &&
+					(*body)->contents.text.data[2] == 0x03 &&
+						(*body)->contents.text.data[3] == 0x04) {
+			(*body)->type = TYPEAPPLICATION;
+			(*body)->subtype = cpystr("ZIP");
+		}
+		/*
+		 * if type was set above, but no encoding specified, go
+		 * ahead and make it BASE64...
+		 */
+		if((*body)->type != TYPEOTHER && (*body)->encoding == ENCOTHER)
+			(*body)->encoding = ENCBINARY;
+	}
+}
+
+static void make_mail_body(BODY *body, HV* hv) {
+
+	if(hv_exists(hv, "content_type", 12)) {
+		char *type = NULL, *subtype = NULL;
+		SV **value = hv_fetch(hv, "content_type", 12, 0);
+		char *ctype = SvPV(*value, na);
+
+		type = strtok(ctype, "/");
+		if(type) {
+			body->type = set_type(type);
+			subtype = strtok(NULL, "/");
+			if(subtype) body->subtype = subtype;
+		}
+	} else body->type = TYPEOTHER;
+
+	if(hv_exists(hv, "encoding", 8)) {
+		SV **value = hv_fetch(hv, "encoding", 8, 0);
+		body->encoding = set_encoding(SvPV(*value, na));
+	}
+	if(hv_exists(hv, "disposition", 11)) {
+		SV **value = hv_fetch(hv, "disposition", 11, 0);
+		make_mail_disposition(*value, &body);
+	}
+	if(hv_exists(hv, "parameter", 9)) {
+		SV **value = hv_fetch(hv, "parameter", 9, 0);
+		body->parameter = make_mail_parameter(*value);
+	}
+	if(hv_exists(hv, "description", 11)) {
+		SV **value = hv_fetch(hv, "description", 11, 0);
+		body->description = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "id", 2)) {
+		SV **value = hv_fetch(hv, "id", 2, 0);
+		body->id = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "md5", 3)) {
+		SV **value = hv_fetch(hv, "md5", 3, 0);
+		body->md5 = SvPV(*value, na);
+	}
+	if(hv_exists(hv, "path", 4)) {
+		SV **value = hv_fetch(hv, "path", 4, 0);
+		unsigned char *data;
+		addfile(SvPV(*value, na), &body->contents.text);
+		if(body->type == TYPEOTHER)
+			set_mime_type(&body);
+	} else if(hv_exists(hv, "data", 4)) {
+		SV **value = hv_fetch(hv, "data", 4, 0);
+		STRLEN len;
+		body->contents.text.data = SvPV(*value, len);
+		body->contents.text.size = len;
+		body->size.bytes = (int)(len/8);
+	}
+	if(hv_exists(hv, "part", 4)) {
+		SV **value = hv_fetch(hv, "part", 4, 0);
+		PART **part = &body->nested.part;
+		AV *av = (AV*)SvRV(*value);
+		I32 len = av_len(av) + 1;
+		I32 k;
+		if(!body->type || body->type != TYPEMULTIPART)
+			body->type = TYPEMULTIPART;
+		for(k = 0; k < len; k++) {
+			HV *hv = av_to_hv(av, k);
+			*part = mail_newbody_part();
+			make_mail_body(&(*part)->body, hv);
+			part = &(*part)->next;
+		}
+	}
+}
+
+long transfer(void *f, char *buf) {
+	PerlIO_write(f, buf, strlen(buf));
+	return(1L);
+}
+
+static void save_rfc822_tmp(ENVELOPE *env, BODY *body, PerlIO *fp) {
+	char tmp[8*MAILTMPLEN];
+	rfc822_output(tmp, env, body, transfer, fp, 1);
 }
 
 /*
@@ -133,21 +482,20 @@ mm_callback(char *name)
  * object. Note that make_address returns an AV*, not a ref to one.
  */
 static AV *
-make_address(ADDRESS *address)
-{
-    AV *alist = newAV();
-    for (; address; address = address->next) {
-	AV *a = newAV();
-	av_push(a, SvREFCNT_inc(address_fields));
-	av_push(a, str_to_sv(address->personal));
-	av_push(a, str_to_sv(address->adl));
-	av_push(a, str_to_sv(address->mailbox));
-	av_push(a, str_to_sv(address->host));
-	if (address->error)
-	    av_push(a, str_to_sv(address->error));
-	av_push(alist, sv_bless(newRV_noinc((SV*)a), stash_Address));
-    }
-    return alist;
+make_address(ADDRESS *address) {
+	AV *alist = newAV();
+	for (; address; address = address->next) {
+		AV *a = newAV();
+		av_push(a, SvREFCNT_inc(address_fields));
+		av_push(a, str_to_sv(address->personal));
+		av_push(a, str_to_sv(address->adl));
+		av_push(a, str_to_sv(address->mailbox));
+		av_push(a, str_to_sv(address->host));
+		if(address->error)
+			av_push(a, str_to_sv(address->error));
+		av_push(alist, sv_bless(newRV_noinc((SV*)a), stash_Address));
+	}
+	return alist;
 }
 
 /*
@@ -161,26 +509,25 @@ make_address(ADDRESS *address)
  * to the object.
  */
 static SV *
-make_envelope(ENVELOPE *envelope)
-{
-    AV *e = newAV();
-    av_push(e, SvREFCNT_inc(envelope_fields));
-    av_push(e, str_to_sv(envelope->remail));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->return_path)));
-    av_push(e, str_to_sv(envelope->date));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->from)));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->sender)));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->reply_to)));
-    av_push(e, str_to_sv(envelope->subject));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->to)));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->cc)));
-    av_push(e, newRV_noinc((SV*)make_address(envelope->bcc)));
-    av_push(e, str_to_sv(envelope->in_reply_to));
-    av_push(e, str_to_sv(envelope->message_id));
-    av_push(e, str_to_sv(envelope->newsgroups));
-    av_push(e, str_to_sv(envelope->followup_to));
-    av_push(e, str_to_sv(envelope->references));
-    return sv_bless(newRV_noinc((SV*)e), stash_Envelope);
+make_envelope(ENVELOPE *envelope) {
+	AV *e = newAV();
+	av_push(e, SvREFCNT_inc(envelope_fields));
+	av_push(e, str_to_sv(envelope->remail));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->return_path)));
+	av_push(e, str_to_sv(envelope->date));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->from)));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->sender)));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->reply_to)));
+	av_push(e, str_to_sv(envelope->subject));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->to)));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->cc)));
+	av_push(e, newRV_noinc((SV*)make_address(envelope->bcc)));
+	av_push(e, str_to_sv(envelope->in_reply_to));
+	av_push(e, str_to_sv(envelope->message_id));
+	av_push(e, str_to_sv(envelope->newsgroups));
+	av_push(e, str_to_sv(envelope->followup_to));
+	av_push(e, str_to_sv(envelope->references));
+	return sv_bless(newRV_noinc((SV*)e), stash_Envelope);
 }
 
 /*
@@ -199,172 +546,164 @@ make_envelope(ENVELOPE *envelope)
  * 5.005 pseudo-hash access to the object.
  */
 static SV *
-make_elt(MAILSTREAM *stream, MESSAGECACHE *elt)
-{
-    AV *av = newAV();
-    AV *flags = newAV();
-    char datebuf[26]; /* to fit "yyyy-mm-dd hh:mm:ss [+-]hhmm\0" */
-    int i;
+make_elt(MAILSTREAM *stream, MESSAGECACHE *elt) {
+	AV *av = newAV();
+	AV *flags = newAV();
+	char datebuf[26]; /* to fit "yyyy-mm-dd hh:mm:ss [+-]hhmm\0" */
+	int i;
     
-    av_push(av, SvREFCNT_inc(elt_fields));
-    av_push(av, newSViv(elt->msgno));
-    /*
-     * year field is OK until 2098 since it's an offset from BASEYEAR
-     * which in newer cclients is 1970 (was 1969) and elt->year is a
-     * bitfield with 7 bits.
-     */
-    sprintf(datebuf, "%04d-%02d-%02d %02d:%02d:%02d %c%02d%02d",
-	    BASEYEAR + elt->year, elt->month, elt->day, elt->hours,
-	    elt->minutes, elt->seconds,
-	    elt->zoccident ? '-' : '+', elt->zhours, elt->zminutes);
-    av_push(av, newSVpv(datebuf, sizeof(datebuf)));
-    if (elt->seen)
-	av_push(flags, newSVpv("\\Seen", 5));
-    if (elt->deleted)
-	av_push(flags, newSVpv("\\Deleted", 8));
-    if (elt->flagged)
-	av_push(flags, newSVpv("\\Flagged", 8));
-    if (elt->answered)
-	av_push(flags, newSVpv("\\Answered", 9));
-    if (elt->draft)
-	av_push(flags, newSVpv("\\Draft", 6));
-    if (elt->valid)
-	av_push(flags, newSVpv("\\Valid", 6));
-    if (elt->recent)
-	av_push(flags, newSVpv("\\Recent", 7));
-    if (elt->searched)
-	av_push(flags, newSVpv("\\Searched", 9));
-    for (i = 0; i < NUSERFLAGS; i++) {
-	if (elt->user_flags & (1 << i)) {
-	    char *fl = stream->user_flags[i];
-	    SV *sv = fl ? newSVpv(fl, 0) : newSVpvf("user_flag_%d", i);
-	    av_push(flags, sv);
+	av_push(av, SvREFCNT_inc(elt_fields));
+	av_push(av, newSViv(elt->msgno));
+	/*
+	 * year field is OK until 2098 since it's an offset from BASEYEAR
+	 * which in newer cclients is 1970 (was 1969) and elt->year is a
+	 * bitfield with 7 bits.
+	*/
+	sprintf(datebuf, "%04d-%02d-%02d %02d:%02d:%02d %c%02d%02d",
+		BASEYEAR + elt->year, elt->month, elt->day, elt->hours,
+		elt->minutes, elt->seconds,
+		elt->zoccident ? '-' : '+', elt->zhours, elt->zminutes);
+	av_push(av, newSVpv(datebuf, sizeof(datebuf)));
+	if(elt->seen)
+		av_push(flags, newSVpv("\\Seen", 5));
+	if(elt->deleted)
+		av_push(flags, newSVpv("\\Deleted", 8));
+	if(elt->flagged)
+		av_push(flags, newSVpv("\\Flagged", 8));
+	if(elt->answered)
+		av_push(flags, newSVpv("\\Answered", 9));
+	if(elt->draft)
+		av_push(flags, newSVpv("\\Draft", 6));
+	if(elt->valid)
+		av_push(flags, newSVpv("\\Valid", 6));
+	if(elt->recent)
+		av_push(flags, newSVpv("\\Recent", 7));
+	if(elt->searched)
+		av_push(flags, newSVpv("\\Searched", 9));
+
+	for(i = 0; i < NUSERFLAGS; i++) {
+		if(elt->user_flags & (1 << i)) {
+			char *fl = stream->user_flags[i];
+			SV *sv = fl ? newSVpv(fl, 0) : newSVpvf("user_flag_%d", i);
+			av_push(flags, sv);
+		}
 	}
-    }
-    av_push(av, newRV_noinc((SV*)flags));
-    av_push(av, newSViv(elt->rfc822_size)); 
-    return sv_bless(newRV_noinc((SV*)av), stash_Elt);
+	av_push(av, newRV_noinc((SV*)flags));
+	av_push(av, newSViv(elt->rfc822_size)); 
+	return sv_bless(newRV_noinc((SV*)av), stash_Elt);
 }
 
 /*
  * make_thread
  */
 static AV *
-make_thread(THREADNODE *thr)
-{
-    AV *av = newAV();
-    THREADNODE *t;
-    while(thr) {
-	if(thr->num) {
-	    av_push(av, newSViv(thr->num));
-	    if(t = thr->next) {
-		while (t) {
-		    if(t->branch) {
-			av_push(av, newRV_noinc((SV*)make_thread(t)));
-			t = NIL;
-		    } else {
-			av_push(av, newSViv(t->num));
-			t = t->next;
-		    }
+make_thread(THREADNODE *thr) {
+	AV *av = newAV();
+	THREADNODE *t;
+	while(thr) {
+		if(thr->num) {
+			av_push(av, newSViv(thr->num));
+			if(t = thr->next) {
+				while (t) {
+					if(t->branch) {
+						av_push(av, newRV_noinc((SV*)make_thread(t)));
+						t = NIL;
+					} else {
+						av_push(av, newSViv(t->num));
+						t = t->next;
+					}
+				}
+			}
+		} else {
+			av_push(av, newRV_noinc((SV*)make_thread(thr->next)));
 		}
-	    }
-	} else {
-	    av_push(av, newRV_noinc((SV*)make_thread(thr->next)));
+		thr = thr->branch;
 	}
-	thr = thr->branch;
-    }
-    return av;
+	return av;
 }
 
 /*          
  * make_sort
  */
 static AV *
-make_sort(unsigned long *slst)
-{
-    AV *av = newAV();
-    unsigned long *sl;
-    for (sl = slst; *sl; sl++) {
-	av_push(av, newSViv(*sl));
-    }
-    return av;
+make_sort(unsigned long *slst) {
+	AV *av = newAV();
+	unsigned long *sl;
+	for(sl = slst; *sl; sl++) {
+		av_push(av, newSViv(*sl));
+	}
+	return av;
 }
 
 static AV *
-stringlist_to_av(STRINGLIST *s)
-{
-    AV *av = newAV();
-    for (; s; s = s->next)
-	av_push(av, newSVpv(s->text.data, s->text.size));
-    return av;
+stringlist_to_av(STRINGLIST *s) {
+	AV *av = newAV();
+	for (; s; s = s->next)
+		av_push(av, newSVpv(s->text.data, s->text.size));
+	return av;
 }
 
-static STRINGLIST *av_to_stringlist(AV *av)
-{
-    STRINGLIST *rets = 0;
-    STRINGLIST **s = &rets;
-    SV **svp = AvARRAY(av);
-    I32 count;
-    for (count = AvFILL(av); count >= 0; count--) {
-	STRLEN len;
-	*s =  mail_newstringlist();
-	(*s)->text.data = cpystr(SvPV(*svp, len));
-	(*s)->text.size = len;
-	s = &(*s)->next;
-	svp++;
-    }
-    return rets;
+static STRINGLIST *av_to_stringlist(AV *av) {
+	STRINGLIST *rets = 0;
+	STRINGLIST **s = &rets;
+	SV **svp = AvARRAY(av);
+	I32 count;
+	for (count = AvFILL(av); count >= 0; count--) {
+		STRLEN len;
+		*s =  mail_newstringlist();
+		(*s)->text.data = cpystr(SvPV(*svp, len));
+		(*s)->text.size = len;
+		s = &(*s)->next;
+		svp++;
+	}
+	return rets;
 }
 
 static AV *
-push_parameter(AV *av, PARAMETER *param)
-{
-    for (; param; param = param->next) {
-	av_push(av, newSVpv(param->attribute, 0));
-	av_push(av, newSVpv(param->value, 0));
-    }
-    return av;
+push_parameter(AV *av, PARAMETER *param) {
+	for(; param; param = param->next) {
+		av_push(av, newSVpv(param->attribute, 0));
+		av_push(av, newSVpv(param->value, 0));
+	}
+	return av;
 }
 
 static SV *
-make_body(BODY *body)
-{
-    AV *av = newAV();
-    SV *nest;
-    AV *paramav = newAV();
+make_body(BODY *body) {
+	AV *av = newAV();
+	SV *nest;
+	AV *paramav = newAV();
 
-    av_push(av, SvREFCNT_inc(body_fields));
-    av_push(av, newSVpv(body_types[body->type], 0));
-    av_push(av, newSVpv(body_encodings[body->encoding], 0));
-    av_push(av, str_to_sv(body->subtype));
-    av_push(av, newRV_noinc((SV*)push_parameter(newAV(), body->parameter)));
-    av_push(av, str_to_sv(body->id));
-    av_push(av, str_to_sv(body->description));
-    if (body->type == TYPEMULTIPART) {
-	AV *parts = newAV();
-	PART *p;
-	for (p = body->nested.part; p; p = p->next)
-	    av_push(parts, make_body(&p->body));
-	nest = newRV_noinc((SV*)parts);
-    }
-    else if (body->type == TYPEMESSAGE && strEQ(body->subtype, "RFC822")) {
-	AV *mess = newAV();
-	MESSAGE *msg = body->nested.msg;
-	av_push(mess, msg ? make_envelope(msg->env) : &sv_undef);
-	av_push(mess, msg ? make_body(msg->body) : &sv_undef);
-	nest = newRV_noinc((SV*)mess);
-    }
-    else {
-	nest = newSVsv(&sv_undef);
-    }
-    av_push(av, nest);
-    av_push(av, newSViv(body->size.lines));
-    av_push(av, newSViv(body->size.bytes));
-    av_push(av, str_to_sv(body->md5));
-    av_push(paramav, str_to_sv(body->disposition.type));
-    paramav = push_parameter(paramav, body->disposition.parameter);
-    av_push(av, newRV_noinc((SV*)paramav));
-    return sv_bless(newRV_noinc((SV*)av), stash_Body);
+	av_push(av, SvREFCNT_inc(body_fields));
+	av_push(av, newSVpv(body_types[body->type], 0));
+	av_push(av, newSVpv(body_encodings[body->encoding], 0));
+	av_push(av, str_to_sv(body->subtype));
+	av_push(av, newRV_noinc((SV*)push_parameter(newAV(), body->parameter)));
+	av_push(av, str_to_sv(body->id));
+	av_push(av, str_to_sv(body->description));
+	if (body->type == TYPEMULTIPART) {
+		AV *parts = newAV();
+		PART *p;
+		for (p = body->nested.part; p; p = p->next)
+			av_push(parts, make_body(&p->body));
+		nest = newRV_noinc((SV*)parts);
+	} else if (body->type == TYPEMESSAGE && strEQ(body->subtype, "RFC822")) {
+		AV *mess = newAV();
+		MESSAGE *msg = body->nested.msg;
+		av_push(mess, msg ? make_envelope(msg->env) : &sv_undef);
+		av_push(mess, msg ? make_body(msg->body) : &sv_undef);
+		nest = newRV_noinc((SV*)mess);
+	} else
+		nest = newSVsv(&sv_undef);
+
+	av_push(av, nest);
+	av_push(av, newSViv(body->size.lines));
+	av_push(av, newSViv(body->size.bytes));
+	av_push(av, str_to_sv(body->md5));
+	av_push(paramav, str_to_sv(body->disposition.type));
+	paramav = push_parameter(paramav, body->disposition.parameter);
+	av_push(av, newRV_noinc((SV*)paramav));
+	return sv_bless(newRV_noinc((SV*)av), stash_Body);
 }
 
 /*
@@ -1004,118 +1343,115 @@ mail_thread(stream, ...)
 	    XPUSHs(sv_2mortal(newRV_noinc((SV*)make_thread(thread))));
 	    mail_free_threadnode(&thread);
 	}
-	if (spg) mail_free_searchpgm(&spg);
+	if(spg) mail_free_searchpgm(&spg);
 
 
 void
 mail_sort(stream, ...)
-	Mail::Cclient	stream
-    PREINIT:
-	char *cs = NIL;
-	char *search_criteria = NIL;
-	AV *array;
-	SEARCHPGM *spg = NIL;
-	SORTPGM **pgm;
-	unsigned long *slst;
-	I32 idx;
-	I32 len = 0;
-	int i;
-	int j = 0;
-	long flags = 0;
-    PPCODE:
-	if(items < 3 || items > 9 || floor(fmod(items+1, 2)))
-	    croak("Wrong numbers of args (KEY => value)"
-			" passed to Mail::Cclient::sort");
-	for(i = 1; i < items; i = i + 2) {
-	    char *key = SvPV(ST(i), na);
-	    if(strcaseEQ(key, "sort")) {
-		SV *arrayRef = ST(i+1);
-		if(SvROK(arrayRef) && SvTYPE(SvRV(arrayRef))) {
-		    array = (AV*)SvRV(arrayRef);
-		    len = av_len(array) + 1;
-		    if(floor(fmod(len, 2)) || !len)
-			croak("SORT => wrong numbers of elements in array ref"
+		Mail::Cclient	stream
+	PREINIT:
+		char *cs = NIL;
+		char *search_criteria = NIL;
+		AV *array;
+		SEARCHPGM *spg = NIL;
+		SORTPGM *pgm = NIL, *pg = NIL;
+		unsigned long *slst;
+		I32 idx;
+		I32 len = 0;
+		int i;
+		long flags = 0;
+	PPCODE:
+		if(items < 3 || items > 9 || floor(fmod(items+1, 2)))
+			croak("Wrong numbers of args (KEY => value)"
 				" passed to Mail::Cclient::sort");
-		    if(len > MAX_LEN_ARRAY)
-			croak("SORT => max length of elements exceeded in array ref"
-				" passed to Mail::Cclient::sort");
-		} else
-		    croak("SORT => not array ref"
-			" passed to Mail::Cclient::sort");
-	    } else if(strcaseEQ(key, "charset"))
-		cs = SvPV(ST(i+1), na);
-	    else if(strcaseEQ(key, "search"))
-		search_criteria = SvPV(ST(i+1), na);
-	    else if(strcaseEQ(key, "flag")) {
-		AV *avflags;
-		int k;
-		SV *svflags = ST(i+1);
-		if(SvROK(svflags) && SvTYPE(SvRV(svflags)))
-		    avflags = (AV*)SvRV(svflags);
-		else {
-		    avflags = newAV();
-		    av_push(avflags, svflags);
+		for(i = 1; i < items; i = i + 2) {
+			char *key = SvPV(ST(i), na);
+			if(strcaseEQ(key, "sort")) {
+				SV *arrayRef = ST(i+1);
+				if(SvROK(arrayRef) && SvTYPE(SvRV(arrayRef))) {
+					array = (AV*)SvRV(arrayRef);
+					len = av_len(array) + 1;
+					if(floor(fmod(len, 2)) || !len)
+						croak("SORT => wrong numbers of elements in array ref"
+							" passed to Mail::Cclient::sort");
+					if(len > MAX_LEN_ARRAY)
+						croak("SORT => max length of elements exceeded in array ref"
+							" passed to Mail::Cclient::sort");
+				} else
+					croak("SORT => not array ref"
+						" passed to Mail::Cclient::sort");
+			} else if(strcaseEQ(key, "charset"))
+				cs = SvPV(ST(i+1), na);
+			else if(strcaseEQ(key, "search"))
+				search_criteria = SvPV(ST(i+1), na);
+			else if(strcaseEQ(key, "flag")) {
+				AV *avflags;
+				int k;
+				SV *svflags = ST(i+1);
+				if(SvROK(svflags) && SvTYPE(SvRV(svflags)))
+					avflags = (AV*)SvRV(svflags);
+				else {
+					avflags = newAV();
+					av_push(avflags, svflags);
+				}
+				for (k = 0; k < av_len(avflags) + 1; k++) {
+					SV **allflags = av_fetch(avflags, k, 0);
+					char *flag = SvPV(*allflags, na);
+					if(strEQ(flag, "uid"))
+						flags |= SE_UID;
+					else if(strEQ(flag, "searchfree"))
+						flags |= SE_FREE;
+					else if(strEQ(flag, "noprefetch"))
+						flags |= SE_NOPREFETCH;
+					else if(strEQ(flag, "sortfree"))
+						flags |= SO_FREE;
+					else
+						croak("unknown FLAG => \"%s\" value passed to"
+							" Mail::Cclient::sort", flag);
+				}
+				if(flags) av_undef(avflags);
+			} else
+				croak("unknown \"%s\" keyword passed to"
+					" Mail::Cclient::sort", key);
 		}
-		for (k = 0; k < av_len(avflags) + 1; k++) {
-		    SV **allflags = av_fetch(avflags, k, 0);
-		    char *flag = SvPV(*allflags, na);
-		    if(strEQ(flag, "uid"))
-			flags |= SE_UID;
-		    else if(strEQ(flag, "searchfree"))
-			flags |= SE_FREE;
-		    else if(strEQ(flag, "noprefetch"))
-			flags |= SE_NOPREFETCH;
-		    else if(strEQ(flag, "sortfree"))
-			flags |= SO_FREE;
-		    else
-			croak("unknown FLAG => \"%s\" value passed to"
-				" Mail::Cclient::sort", flag);
-		}
-		if(flags) av_undef(avflags);
-	    } else
-		croak("unknown \"%s\" keyword passed to"
-			" Mail::Cclient::sort", key);
-	}
-	if(!len)
-	    croak("no SORT key/value passed to Mail::Cclient::sort");
-	spg = (search_criteria) ?
-		make_criteria(search_criteria) : mail_newsearchpgm();
-	pgm = (SORTPGM **)safemalloc(len * sizeof(SORTPGM *));
-	for(idx = 0; idx < len; idx = idx+2) {
-	    SV **n;
-	    char *criteria = "";
-	    SORTPGM *pg = mail_newsortpgm ();
-	    SV **elem = av_fetch(array, idx, 0);
-	    if(SvPOKp(*elem)) criteria = SvPV(*elem, na);
-	    pg->function = (strEQ(criteria, "subject"))
-			    ? SORTSUBJECT   
-			    : (strEQ(criteria, "from"))
-				? SORTFROM
-				: (strEQ(criteria, "to"))
-				    ? SORTTO
-				    : (strEQ(criteria, "cc"))
-					? SORTCC
-					: (strEQ(criteria, "date"))
-					    ? SORTDATE
-					    : (strEQ(criteria, "size"))
-						? SORTSIZE
-						: SORTARRIVAL;	
-	    n = av_fetch(array, idx+1, 0);
-	    pg->reverse = (SvIOK(*n)) ? SvIV(*n) : NIL;
-	    if(j > 0) (pgm[j-1])->next = pg;
-	    pgm[j] = pg;
-	    j++;
-	}
-	if(j == 1) (pgm[0])->next = NIL;
+		if(!len)
+			croak("no SORT key/value passed to Mail::Cclient::sort");
+		spg = (search_criteria) ?
+			make_criteria(search_criteria) : mail_newsearchpgm();
 
-	slst = mail_sort(stream, cs, spg, pgm[0], flags);
-	if (spg) mail_free_searchpgm(&spg);
-	if (slst != NIL && slst != 0) {
-	    XPUSHs(sv_2mortal(newRV_noinc((SV*)make_sort(slst))));
-	    fs_give ((void **) &slst);
-	}
-	av_undef(array);
-	safefree(pgm);
+		for(idx = 0; idx < len; idx = idx+2) {
+			SV **n;
+			char *criteria = "";
+			SV **elem = av_fetch(array, idx, 0);
+
+			if(pg) pg = pg->next = mail_newsortpgm();
+			else pgm = pg = mail_newsortpgm();
+
+			if(SvPOKp(*elem)) criteria = SvPV(*elem, na);
+			pg->function = (strEQ(criteria, "subject"))
+						? SORTSUBJECT
+						: (strEQ(criteria, "from"))
+							? SORTFROM
+							: (strEQ(criteria, "to"))
+								? SORTTO
+								: (strEQ(criteria, "cc"))
+									? SORTCC
+									: (strEQ(criteria, "date"))
+										? SORTDATE
+										: (strEQ(criteria, "size"))
+											? SORTSIZE
+											: SORTARRIVAL;
+			n = av_fetch(array, idx+1, 0);
+			pg->reverse = (SvIOK(*n)) ? SvIV(*n) : NIL;
+		}
+		slst = mail_sort(stream, cs, spg, pgm, flags);
+		if(spg) mail_free_searchpgm(&spg);
+		if(slst != NIL && slst != 0) {
+			XPUSHs(sv_2mortal(newRV_noinc((SV*)make_sort(slst))));
+			fs_give ((void **) &slst);
+		}
+		av_undef(array);
+		safefree(pgm);
 
 
 void
@@ -1157,7 +1493,7 @@ mail_fetchheader(stream, msgno, ...)
 	}
 	hdr = mail_fetchheader_full(stream, msgno, lines, &len, flags);
 	XPUSHs(sv_2mortal(newSVpv(hdr, len)));
-	if (lines)
+	if(lines)
 	    mail_free_stringlist(&lines);
 
 void
@@ -1213,15 +1549,18 @@ mail_fetchbody(stream, msgno, section, ...)
 	body = mail_fetchbody_full(stream, msgno, section, &len, flags);
 	XPUSHs(sv_2mortal(newSVpv(body, len)));
 
+
 unsigned long
 mail_uid(stream, msgno)
 	Mail::Cclient	stream
 	unsigned long	msgno
 
+
 unsigned long
 mail_msgno (stream, uid)
 	Mail::Cclient   stream
 	unsigned long   uid
+
 
 void
 mail_elt(stream, msgno)
@@ -1336,7 +1675,7 @@ void
 mail_search(stream, ...)
 	Mail::Cclient	stream
     PREINIT:
-	SEARCHPGM *spgm;
+	SEARCHPGM *spgm = NIL;
 	char *search_criteria = NIL;
 	char *cs = NIL;
 	int i;
@@ -1383,6 +1722,47 @@ mail_search(stream, ...)
 	    croak("no SEARCH key/value passed to Mail::Cclient::search");
 	if(spgm = make_criteria(search_criteria))
 		mail_search_full(stream, cs, spgm, flags);
+
+
+unsigned long
+mail_filter(stream, ...)
+		Mail::Cclient	stream
+	PREINIT:	
+		STRINGLIST *lines = 0;
+		STRLEN len = 0;
+		SIZEDTEXT szt;
+		MESSAGECACHE *mc;
+		int i;
+		long flags = 0;
+		unsigned long msgno;
+	CODE:
+		if(items < 5 || items > 7 || floor(fmod(items+1, 2)))
+			croak("Wrong numbers of args (KEY => value)"
+				" passed to Mail::Cclient::filter");
+
+		for(i = 1; i < items; i = i + 2) {
+			char *key = SvPV(ST(i), na);
+			if(strcaseEQ(key, "msgno")) {
+				msgno = (unsigned long)SvUV(ST(i+1));
+			} else if(strcaseEQ(key, "lines")) {
+				SV *arrayRef = ST(i+1);
+				if(SvROK(arrayRef) && SvTYPE(SvRV(arrayRef))) {
+					lines = av_to_stringlist((AV*)SvRV(arrayRef));
+				}
+			} else if(strcaseEQ(key, "flag")) {
+				char *flag = SvPV(ST(i+1), na);
+				if (strEQ(flag, "not"))
+					flags |= FT_NOT;
+				else
+					croak("unknown FLAG => \"%s\" value passed to"
+						" Mail::Cclient::filter", flag);
+			}
+		}
+		mc = mail_elt(stream, msgno);
+		memset(&szt, 0, sizeof(SIZEDTEXT));
+		textcpy(&szt, &mc->private.msg.header.text);
+		mail_filter((char *) szt.data, szt.size, lines, flags);
+
 
  #
  # mail_search_msg from code submitted by
@@ -1615,6 +1995,129 @@ mail_uid_set_sequence(stream, sequence)
 	Mail::Cclient	stream
 	char *		sequence
 
+
+MODULE = Mail::Cclient	PACKAGE = Mail::Cclient::SMTP	PREFIX = smtp_
+
+PROTOTYPES: DISABLE
+
+ #
+ # SMTP Functions
+ #
+
+Mail::Cclient::SMTP
+smtp_open(package="Mail::Cclient::SMTP", svhostlist, debug = 0)
+		char *	package
+		SV *	svhostlist
+		long	debug
+	PREINIT:
+		int k;
+		char **hostlist = NIL;
+		AV *avhostlist;
+		I32 n;
+	CODE:
+		if(SvROK(svhostlist) && SvTYPE(SvRV(svhostlist)))
+			avhostlist = (AV*)SvRV(svhostlist);
+		else {
+			avhostlist = newAV();
+			av_push(avhostlist, svhostlist);
+		}
+		n = av_len(avhostlist) + 1;
+		hostlist = (char **)safemalloc(n * sizeof(char *));
+		for (k = 0; k < n; k++) {
+			SV **h = av_fetch(avhostlist, k, 0);
+			char *host = SvPV(*h, na);
+			hostlist[k] = host;
+		}
+
+		RETVAL = smtp_open(hostlist, debug);
+		safefree(hostlist);
+
+		if(!RETVAL)
+			XSRETURN_UNDEF;
+	OUTPUT:
+		RETVAL
+
+
+long
+smtp_mail(stream, ...)
+		Mail::Cclient::SMTP	stream
+	PREINIT:
+		ENVELOPE *env = NULL;
+		BODY *body = NULL;
+		SV *svenv = NULL, *svbody = NULL;
+		char *trans = "MAIL";
+		char *dhost = "no host";
+		PerlIO *fp = NULL;
+		int i;
+	CODE:
+		for(i = 1; i < items; i = i + 2) {
+			char *key = SvPV(ST(i), na);
+			if(strcaseEQ(key, "defaulthost"))
+				dhost = SvPV(ST(i+1), na);
+			else if(strcaseEQ(key, "transaction"))
+				trans = ucase(SvPV(ST(i+1), na));
+			else if(strcaseEQ(key, "filehandle"))
+				fp = IoIFP(sv_2io(ST(i+1)));
+			else if(strcaseEQ(key, "envelope"))
+				svenv = ST(i+1);
+			else if(strcaseEQ(key, "body"))
+				svbody = ST(i+1);
+			else
+				croak("unknown \"%s\" keyword passed to"
+					" Mail::Cclient::SMTP::smtp_mail", key);
+		}
+		if(svenv) {
+			if(SvROK(svenv) && SvTYPE(SvRV(svenv)) == SVt_PVHV) {
+				env = mail_newenvelope();
+				make_mail_envelope(env, dhost, (HV*)SvRV(svenv));
+			} else {
+				croak("envelope is not hash reference");
+				XSRETURN_UNDEF;
+			}
+		} else {
+			croak("no such envelope hash reference");
+			XSRETURN_UNDEF;
+		}
+
+		if(svbody) {
+			if(SvROK(svbody) && SvTYPE(SvRV(svbody)) == SVt_PVHV) {
+				body = mail_newbody();
+				make_mail_body(body, (HV*)SvRV(svbody));
+			} else {
+				croak("body is not hash reference");
+				XSRETURN_UNDEF;
+			}
+		} else {
+			croak("no such body hash reference");
+			XSRETURN_UNDEF;
+		}
+		RETVAL = smtp_mail(stream, trans, env, body);
+		if(fp) save_rfc822_tmp(env, body, fp);
+
+	OUTPUT:
+		RETVAL
+
+
+void
+smtp_debug(stream, ...)
+		Mail::Cclient::SMTP	stream
+	CODE:
+		stream->debug = T;
+
+
+void
+smtp_nodebug(stream, ...)
+		Mail::Cclient::SMTP	stream
+	CODE:
+		stream->debug = NIL;
+
+void
+smtp_close(stream, ...)
+		Mail::Cclient::SMTP	stream
+	CODE:
+		smtp_close(stream);
+
+
 MODULE = Mail::Cclient	PACKAGE = Mail::Cclient
 
  #
@@ -1623,79 +2126,131 @@ MODULE = Mail::Cclient	PACKAGE = Mail::Cclient
 
 void
 rfc822_base64(source)
-	SV *	source
-    PREINIT:
-	STRLEN srcl;
-	unsigned long len;
-	unsigned char *s;
-    PPCODE:
-	s = (unsigned char*)SvPV(source, srcl);
-	s = rfc822_base64(s, (unsigned long)srcl, &len);
-	XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
+		SV *	source
+	PREINIT:
+		STRLEN srcl;
+		unsigned long len;
+		unsigned char *s;
+	PPCODE:
+		s = (unsigned char*)SvPV(source, srcl);
+		s = rfc822_base64(s, (unsigned long)srcl, &len);
+		XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
 
 void
 rfc822_qprint(source)
-	SV *	source
-    PREINIT:
-	STRLEN srcl;
-	unsigned long len;
-	unsigned char *s;
-    PPCODE:
-	s = (unsigned char*)SvPV(source, srcl);
-	s = rfc822_qprint(s, (unsigned long)srcl, &len);
-	XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
+		SV *	source
+	PREINIT:
+		STRLEN srcl;
+		unsigned long len;
+		unsigned char *s;
+	PPCODE:
+		s = (unsigned char*)SvPV(source, srcl);
+		s = rfc822_qprint(s, (unsigned long)srcl, &len);
+		XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
 
 
  #
  # Utility functions
  #
 
-#define DATE_BUFF_SIZE 64
-
 char *
 rfc822_date()
-    PREINIT:
-	static char date[DATE_BUFF_SIZE];
-    CODE:
-	rfc822_date(date);
-	RETVAL = date;
-    OUTPUT:
-	RETVAL
+	PREINIT:
+		static char date[DATE_BUFF_SIZE];
+	CODE:
+		rfc822_date(date);
+		RETVAL = date;
+	OUTPUT:
+		RETVAL
 
 void
 rfc822_parse_adrlist(string, host)
-	char *  string
-	char *  host  
-    PREINIT:
-	ENVELOPE *env;
-    PPCODE:
-	env = mail_newenvelope();
-	rfc822_parse_adrlist(&env->to, string, host);
-	XPUSHs(env->to ?
-	    sv_2mortal(newRV_noinc((SV*)make_address(env->to))) : &sv_undef);
+		char *  string
+		char *  host  
+	PREINIT:
+		ENVELOPE *env;
+	PPCODE:
+		env = mail_newenvelope();
+		rfc822_parse_adrlist(&env->to, string, host);
+		XPUSHs(env->to ?
+			sv_2mortal(newRV_noinc((SV*)make_address(env->to))) : &sv_undef);
 
 
 char *
 rfc822_write_address(mailbox, host, personal)
-	char *  mailbox
-	char *  host
-	char *  personal
-    PREINIT:
-	ADDRESS *addr;
-	char string[MAILTMPLEN];
-    CODE:
-	addr = mail_newaddr();
-	addr->mailbox = mailbox;
-	addr->host = host;
-	addr->personal = personal;
-	addr->next=NIL;
-	addr->error=NIL;
-	addr->adl=NIL;
-	string[0]='\0';
-	rfc822_write_address(string, addr);
-	RETVAL = string;
-    OUTPUT:
-	RETVAL
+		char *  mailbox
+		char *  host
+		char *  personal
+	PREINIT:
+		ADDRESS *addr;
+		char string[MAILTMPLEN];
+	CODE:
+		addr = mail_newaddr();
+		addr->mailbox = mailbox;
+		addr->host = host;
+		addr->personal = personal;
+		addr->next=NIL;
+		addr->error=NIL;
+		addr->adl=NIL;
+		string[0]='\0';
+		rfc822_write_address(string, addr);
+		RETVAL = string;
+	OUTPUT:
+		RETVAL
+
+
+long
+rfc822_output(...)
+	PREINIT:
+		char tmp[8*MAILTMPLEN];
+		ENVELOPE *env = NULL;
+		BODY *body = NULL;
+		SV *svenv = NULL, *svbody = NULL;
+		char *dhost = "no host";
+		PerlIO *fp = NULL;
+		int i;
+	CODE:
+		for(i = 0; i < items; i = i + 2) {
+			char *key = SvPV(ST(i), na);
+			if(strcaseEQ(key, "defaulthost"))
+				dhost = SvPV(ST(i+1), na);
+			else if(strcaseEQ(key, "filehandle"))
+				fp = IoIFP(sv_2io(ST(i+1)));
+			else if(strcaseEQ(key, "envelope"))
+				svenv = ST(i+1);
+			else if(strcaseEQ(key, "body"))
+				svbody = ST(i+1);   
+			else
+				croak("unknown \"%s\" keyword passed to"
+					" Mail::Cclient::rfc822_output",key);
+		}
+		if(svenv) {
+			if(SvROK(svenv) && SvTYPE(SvRV(svenv)) == SVt_PVHV) {
+				env = mail_newenvelope();
+				make_mail_envelope(env, dhost, (HV*)SvRV(svenv));
+			} else {
+				croak("envelope is not hash reference");
+				XSRETURN_UNDEF;  
+			}
+		} else {
+			croak("no such envelope hash reference");
+			XSRETURN_UNDEF;
+		}
+		if(svbody) {
+			if(SvROK(svbody) && SvTYPE(SvRV(svbody)) == SVt_PVHV) {
+				body = mail_newbody();
+				make_mail_body(body, (HV*)SvRV(svbody));
+			} else {
+				croak("body is not hash reference");
+				XSRETURN_UNDEF;
+			}
+		} else {
+			croak("no such body hash reference");
+			XSRETURN_UNDEF;
+		}
+		RETVAL = rfc822_output(tmp, env, body, transfer, fp, 1);
+	OUTPUT:
+		RETVAL
 
 
 BOOT:

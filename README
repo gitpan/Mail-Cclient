@@ -1,4 +1,4 @@
-		     Perl Mail::Cclient module, Version 1.3
+		     Perl Mail::Cclient module, Version 1.4
 
 		Copyright (c) 1998, 1999, 2000, 2001, Malcolm Beattie
 
@@ -33,18 +33,24 @@ Washington IMAP daemon (written by Mark Crispin).
 INSTALLATION
 
 Install the University of Washington imapd source distribution
-(e.g. version imap-2000 or above) and build at least the c-client library
+(e.g. version imap-2001 or above) and build at least the c-client library
 (c-client/c-client.a). The home site for the UW imapd is
     ftp://ftp.cac.washington.edu/mail/imap.tar.Z or
     ftp://ftp.cac.washington.edu/mail/imap-2001.BETA.tar.Z
-	
+
 If your platform needs any additional LIBS entries, edit Makefile.PL
 and add them. Do
-    perl Makefile.PL CCLIENT_DIR=/path/to/c-client
+    perl Makefile.PL --cclient_dir=/path/to/c-client
+
+Options:
+    --with-pam (support for PAM)
+    --with-ssl (support for SSL)
+    --help
+
 where /path/to/c-client is the pathname of the directory which contains
 the c-client.a archive library which you have just built. If you want
-to add any additional MakeMaker options then add them after the
-CCLIENT_DIR=... argument, not before.
+to add any additional MakeMaker options then edit the file Makefile.PL
+and add them in WriteMakefile.
 
 This process needs to extract all object files from the c-client.a
 archive into the current directory. This is for the sake of those
@@ -53,6 +59,7 @@ shared objects rather than a mix of .o and .a files. If the extraction
 succeeds, it will say so and you can carry on and do
 
     make
+    make test
 
 If the extraction failed for some reason, you will have to do that
 part yourself and then replace that part of MakeMaker with a simple
@@ -75,9 +82,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-
-Version 1.3 submitted by Henrique Dias
-Questions, bug reports, useful code bits, and suggestions for Mail-Cclient-1.3
+Version 1.4 submitted by Henrique Dias
+Questions, bug reports, useful code bits, and suggestions for Mail-Cclient-1.4
 should just be sent to to me at hdias@esb.ucp.pt
 Henrique Dias
-23 Jul 2001
+22 Oct 2001
