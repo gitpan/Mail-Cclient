@@ -1,6 +1,6 @@
-		  Perl Mail::Cclient module, Version 1.7
+		  Perl Mail::Cclient module, Version 1.8
 
-		Copyright (c) 1998 - 2002, Malcolm Beattie
+		Copyright (c) 1998 - 2003, Malcolm Beattie
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of either:
@@ -30,11 +30,46 @@ Mail::Cclient gives access to mailboxes in many different formats
 library is the core library used by Pine and the University of
 Washington IMAP daemon (written by Mark Crispin).
 
+PREREQUISITES
+
+If you use RedHat please install the following rpm's:
+
+imap-devel-xxx.xxx.rpm
+krb5-devel-xxx.xxx.rpm
+openssl-devel-xxx.xxx.rpm
+pam-devel-xxx.xxx.rpm
+
 INSTALLATION
 
+Minumum instruction (RedHat 8.0 and 9):
+
+perl Makefile.PL \
+    --with-shared_cclient \
+    --with-kerberos=/usr/kerberos/lib \
+    --with-pam \
+    --with-ssl \
+    --with-cclient-includes=/usr/include/imap
+make
+make test
+make install
+
+Build static library without OpenSSL (RedHat 8.0 and 9):
+
+tar xvfz Mail-Cclient-1.8.tar.gz
+tar xvfz imap.tar.Z
+cd imap-2002c1
+make lrh SSLTYPE=none 
+cd ../Mail-Cclient-1.8
+perl Makefile.PL --cclient_dir=../imap-2002c1/c-client --with-pam
+make
+make test
+make install
+
+A little advanced instruction:
+
 Install the University of Washington imapd source distribution
-(e.g. version imap-2002.RC4 or above) and build at least the c-client library
-(c-client/c-client.a). The home site for the UW imapd is
+(e.g. version imap-2002b.tar.Z or above) and build at least the c-client 
+library (c-client/c-client.a). The home site for the UW imapd is
     ftp://ftp.cac.washington.edu/mail/imap.tar.Z
 
 If your platform needs any additional LIBS entries, edit Makefile.PL
@@ -94,8 +129,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.7 submitted by Henrique Dias
+Version 1.8 submitted by Henrique Dias
 Questions, bug reports, useful code bits, and suggestions for
-Mail-Cclient-1.7 should just be sent to me at hdias@esb.ucp.pt
+Mail-Cclient-1.8 should just be sent to me at hdias@aesbuc.pt
 Henrique Dias
-14 Sep 2002
+14 Jun 2003

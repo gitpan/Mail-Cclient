@@ -2,7 +2,10 @@
 
 use Mail::Cclient;
 
-my $smtp = Mail::Cclient::SMTP->new(["smtp1.perl.org","smtp2.perl.org"]);
+my $smtp = Mail::Cclient::SMTP->new(
+	hostlist => ["smtp1.perl.org","smtp2.perl.org"],
+	port     => 25
+);
 
 $smtp->mail(
 	transaction => "mail",

@@ -1,8 +1,8 @@
 /*
  *	Cclient.xs
- *	Last Edited: Sat Sep 14 14:44:04 WEST 2002
+ *	Last Edited: Sat Jun 14 16:33:02 WEST 2003
  *
- *	Copyright (c) 1998 - 2002 Malcolm Beattie
+ *	Copyright (c) 1998 - 2003 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -95,6 +95,23 @@ static HV *av_to_hv(AV *av, int n) {
 	}
 	croak("Can't coerce array into hash");
 	return Nullhv;
+}
+
+
+static STRINGLIST *av_to_stringlist(AV *av) {
+	STRINGLIST *rets = 0;
+	STRINGLIST **s = &rets;
+	SV **svp = AvARRAY(av);
+	I32 count;
+	for (count = AvFILL(av); count >= 0; count--) {
+		STRLEN len;
+		*s =  mail_newstringlist();
+		(*s)->text.data = cpystr(SvPV(*svp, len));
+		(*s)->text.size = len;
+		s = &(*s)->next;
+		svp++;
+	}
+	return rets;
 }
 
 static SV *get_mailstream_sv(MAILSTREAM *stream, char *class) {
@@ -429,6 +446,16 @@ static void make_mail_body(BODY *body, HV* hv) {
 		SV **value = hv_fetch(hv, "id", 2, 0);
 		body->id = SvPV(*value, na);
 	}
+	if(hv_exists(hv, "language", 8)) {
+		SV **value = hv_fetch(hv, "language", 8, 0);
+		body->language = av_to_stringlist((AV*)value);
+	}
+#ifdef DR_NONEWMAIL
+	if(hv_exists(hv, "location", 8)) {
+		SV **value = hv_fetch(hv, "location", 8, 0);
+		body->location = SvPV(*value, na);
+	}
+#endif
 	if(hv_exists(hv, "md5", 3)) {
 		SV **value = hv_fetch(hv, "md5", 3, 0);
 		body->md5 = SvPV(*value, na);
@@ -670,22 +697,6 @@ stringlist_to_av(STRINGLIST *s) {
 	return av;
 }
 
-static STRINGLIST *av_to_stringlist(AV *av) {
-	STRINGLIST *rets = 0;
-	STRINGLIST **s = &rets;
-	SV **svp = AvARRAY(av);
-	I32 count;
-	for (count = AvFILL(av); count >= 0; count--) {
-		STRLEN len;
-		*s =  mail_newstringlist();
-		(*s)->text.data = cpystr(SvPV(*svp, len));
-		(*s)->text.size = len;
-		s = &(*s)->next;
-		svp++;
-	}
-	return rets;
-}
-
 static AV *
 push_parameter(AV *av, PARAMETER *param) {
 	for(; param; param = param->next) {
@@ -724,6 +735,12 @@ make_body(BODY *body) {
 		nest = newSVsv(&sv_undef);
 
 	av_push(av, nest);
+	av_push(av, newRV_noinc((SV*)stringlist_to_av(body->language)));
+#ifdef DR_NONEWMAIL
+	av_push(av, str_to_sv(body->location));
+#else
+	av_push(av, str_to_sv(""));
+#endif
 	av_push(av, newSViv(body->size.lines));
 	av_push(av, newSViv(body->size.bytes));
 	av_push(av, str_to_sv(body->md5));
@@ -1028,7 +1045,7 @@ PROTOTYPES: DISABLE
 Mail::Cclient
 mail_open(stream, mailbox, ...)
 		Mail::Cclient	stream
-		char *		mailbox
+		char 		*mailbox
 	PREINIT:
 		int i;
 		long options = 0;
@@ -1102,52 +1119,52 @@ mail_close(stream, ...)
 void
 mail_list(stream, ref, pat)
 	Mail::Cclient	stream
-	char *		ref
-	char *		pat
+	char		*ref
+	char		*pat
 
 void
 mail_scan(stream, ref, pat, contents)
 	Mail::Cclient	stream
-	char *		ref
-	char *		pat
-	char *		contents
+	char		*ref
+	char		*pat
+	char		*contents
 
 void
 mail_lsub(stream, ref, pat)
 	Mail::Cclient	stream
-	char *		ref
-	char *		pat
+	char		*ref
+	char		*pat
 
 unsigned long
 mail_subscribe(stream, mailbox)
 	Mail::Cclient	stream
-	char *		mailbox
+	char		*mailbox
 
 unsigned long
 mail_unsubscribe(stream, mailbox)
 	Mail::Cclient	stream
-	char *		mailbox
+	char		*mailbox
 
 unsigned long
 mail_create(stream, mailbox)
 	Mail::Cclient	stream
-	char *		mailbox
+	char		*mailbox
 
 unsigned long
 mail_delete(stream, mailbox)
 	Mail::Cclient	stream
-	char *		mailbox
+	char		*mailbox
 
 unsigned long
 mail_rename(stream, oldname, newname)
 	Mail::Cclient	stream
-	char *		oldname
-	char *		newname
+	char		*oldname
+	char		*newname
 
 long
 mail_status(stream, mailbox, ...)
 	Mail::Cclient	stream
-	char *		mailbox
+	char		*mailbox
     PREINIT:
 	int i;
 	long flags = 0;
@@ -1652,32 +1669,30 @@ mail_fetch_mime(stream, msgno, section = NIL, ...)
 
 void
 mail_fetch_body(stream, msgno, section = NIL, ...)
-	Mail::Cclient	stream
-	unsigned long	msgno
-	char *		section
-    ALIAS:
-	Mail::Cclient::fetchbody = 1
-    PREINIT:
-	int i;
-	long flags = 0;
-	unsigned long len;
-	char *body;
-    PPCODE:
-	for (i = 3; i < items; i++) {
-	    char *flag = SvPV(ST(i), na);
-	    if (strEQ(flag, "uid"))
-		flags |= FT_UID;
-	    else if (strEQ(flag, "peek"))
-		flags |= FT_PEEK;
-	    else if (strEQ(flag, "internal"))
-		flags |= FT_INTERNAL;
-	    else {
-		croak("unknown flag \"%s\" passed to Mail::Cclient::fetch_body",
-		      flag);
-	    }
-	}
-	body = mail_fetch_body(stream, msgno, section, &len, flags);
-	XPUSHs(sv_2mortal(newSVpv(body, len)));
+		Mail::Cclient	stream
+		unsigned long	msgno
+		char		*section
+	ALIAS:
+		Mail::Cclient::fetchbody = 1
+	PREINIT:
+		int i;
+		long flags = 0;
+		unsigned long len;
+		char *body;
+	PPCODE:
+		for(i = 3; i < items; i++) {
+			char *flag = SvPV(ST(i), na);
+			if(strEQ(flag, "uid"))
+				flags |= FT_UID;
+			else if(strEQ(flag, "peek"))
+				flags |= FT_PEEK;
+			else if(strEQ(flag, "internal"))
+				flags |= FT_INTERNAL;
+			else
+				croak("unknown flag \"%s\" passed to Mail::Cclient::fetch_body", flag);
+		}
+		body = mail_fetch_body(stream, msgno, section, &len, flags);
+		XPUSHs(sv_2mortal(newSVpv(body, len)));
 
 
 unsigned long
@@ -1709,8 +1724,8 @@ mail_elt(stream, msgno)
 void
 mail_setflag(stream, sequence, flag, ...)
 		Mail::Cclient	stream
-		char *			sequence
-		char *			flag
+		char		*sequence
+		char		*flag
 	PREINIT:
 		int i;
 		long flags = 0;
@@ -1753,8 +1768,8 @@ mail_expunge(stream)
 long
 mail_copy(stream, sequence, mailbox, ...)
 	Mail::Cclient	stream
-	char *		sequence
-	char *		mailbox
+	char		*sequence
+	char		*mailbox
     ALIAS:
 	move = 1
     PREINIT:
@@ -1786,10 +1801,10 @@ mail_copy(stream, sequence, mailbox, ...)
 long
 mail_append(stream, mailbox, message, date = 0, flags = 0)
 	Mail::Cclient	stream
-	char *		mailbox
-	SV *		message
-	char *		date
-	char *		flags
+	char		*mailbox
+	SV		*message
+	char		*date
+	char		*flags
     PREINIT:
 	STRING s;
 	char *str;
@@ -1903,8 +1918,8 @@ long
 mail_search_msg(stream, msgno, criteria, cs = NIL)
 	Mail::Cclient	stream
 	unsigned long	msgno
-	char *		criteria
-	char *		cs
+	char		*criteria
+	char		*cs
     PREINIT:
 	SEARCHPGM *spgm;
 	long result = NIL;
@@ -1946,8 +1961,8 @@ mail_real_gc(stream, ...)
 void
 mail__parameters(stream, param, sv = 0)
 		Mail::Cclient	stream
-		char *			param
-		SV *				sv
+		char		*param
+		SV		*sv
 	PREINIT:
 		char *res_str = 0;
 		int res_int;
@@ -2126,14 +2141,14 @@ mail_nodebug(stream)
 long
 mail_set_sequence(stream, sequence)
 	Mail::Cclient	stream
-	char *		sequence
+	char		*sequence
 
 #define mail_uid_set_sequence(stream, seq) mail_uid_sequence(stream, seq)
 
 long
 mail_uid_set_sequence(stream, sequence)
 	Mail::Cclient	stream
-	char *		sequence
+	char		*sequence
 
 
 MODULE = Mail::Cclient	PACKAGE = Mail::Cclient::SMTP	PREFIX = smtp_
@@ -2145,33 +2160,87 @@ PROTOTYPES: DISABLE
  #
 
 Mail::Cclient::SMTP
-smtp_open(package="Mail::Cclient::SMTP", svhostlist, debug = 0)
-		char *	package
-		SV *	svhostlist
-		long	debug
+smtp_open_full(package="Mail::Cclient::SMTP", ...)
+		char	*package
 	PREINIT:
-		int k;
 		char **hostlist = NIL;
-		AV *avhostlist;
+		char *service = "smtp";
+		unsigned long port = SMTPTCPPORT;
+		long options = NIL;
 		I32 n;
+		int i;
 	CODE:
-		if(SvROK(svhostlist) && SvTYPE(SvRV(svhostlist)))
-			avhostlist = (AV*)SvRV(svhostlist);
-		else {
-			avhostlist = newAV();
-			av_push(avhostlist, svhostlist);
+		if(items < 3 || items > 7 || floor(fmod(items+1, 2)))
+			croak("Wrong numbers of args (KEY => value)"
+				" passed to Mail::Cclient::SMTP::smtp_open_full");
+		for(i = 1; i < items; i = i + 2) {
+			char *key = SvPV(ST(i), na);
+			if(strcaseEQ(key, "hostlist")) {
+				int k;
+				AV *av_hl;
+				SV *sv_hl = ST(i+1);
+				if(SvROK(sv_hl) && SvTYPE(SvRV(sv_hl)))
+					av_hl = (AV*)SvRV(sv_hl);
+				else {
+					av_hl = newAV();
+					av_push(av_hl, sv_hl);
+				}
+				n = av_len(av_hl) + 1;
+				New(0, hostlist, n * sizeof(char *), char*);
+				for (k = 0; k < n; k++) {
+					SV **h = av_fetch(av_hl, k, 0);
+					char *host = SvPV(*h, na);
+					hostlist[k] = host;
+				}
+			} else if(strcaseEQ(key, "service"))
+				service = SvPV(ST(i+1), na);
+			else if(strcaseEQ(key, "port"))
+				port = (unsigned long)SvUV(ST(i+1));
+			else if(strcaseEQ(key, "options")) {
+				int k;
+				AV *av_options;
+				SV *sv_options = ST(i+1);
+				if(SvROK(sv_options) && SvTYPE(SvRV(sv_options)))
+					av_options = (AV*)SvRV(sv_options);
+				else {
+					av_options = newAV();
+					av_push(av_options, sv_options);
+				}
+				for(k = 0; k < av_len(av_options) + 1; k++) {
+					SV **sv_opt = av_fetch(av_options, k, 0);
+					char *option = SvPV(*sv_opt, na);
+					if(strEQ(option, "debug"))
+						options |= SOP_DEBUG;
+					else if(strEQ(option, "dsn"))
+						options |= SOP_DSN;
+					else if(strEQ(option, "dsn_notify_failure"))
+						options |= SOP_DSN_NOTIFY_FAILURE;
+					else if(strEQ(option, "dsn_notify_delay"))
+						options |= SOP_DSN_NOTIFY_DELAY;
+					else if(strEQ(option, "dsn_notify_success"))
+						options |= SOP_DSN_NOTIFY_SUCCESS;
+					else if(strEQ(option, "dsn_return_full"))
+						options |= SOP_DSN_RETURN_FULL;
+					else if(strEQ(option, "8bitmime"))
+						options |= SOP_8BITMIME;
+					else if(strEQ(option, "secure"))
+						options |= SOP_SECURE;
+					else if(strEQ(option, "tryssl"))
+						options |= SOP_TRYSSL;
+					else if(strEQ(option, "tryalt"))
+						options |= SOP_TRYSSL;
+					else
+						croak("unknown option \"%s\" passed to"
+							" Mail::Cclient::SMTP::open_full", option);
+				}
+			} else
+				croak("unknown \"%s\" keyword passed to"
+					" Mail::Cclient::SMTP::smtp_open_full", key);
 		}
-		n = av_len(avhostlist) + 1;
-		hostlist = (char **)safemalloc(n * sizeof(char *));
-		for (k = 0; k < n; k++) {
-			SV **h = av_fetch(avhostlist, k, 0);
-			char *host = SvPV(*h, na);
-			hostlist[k] = host;
-		}
-
-		RETVAL = smtp_open(hostlist, debug);
-		safefree(hostlist);
-
+		if(!hostlist)
+			croak("no hostlist key/value passed to Mail::Cclient::SMTP::smtp_open_full");
+		RETVAL = smtp_open_full(NIL, hostlist, service, port, options);
+		if(hostlist) Safefree(hostlist);
 		if(!RETVAL)
 			XSRETURN_UNDEF;
 	OUTPUT:
@@ -2218,7 +2287,6 @@ smtp_mail(stream, ...)
 			croak("no such envelope hash reference");
 			XSRETURN_UNDEF;
 		}
-
 		if(svbody) {
 			if(SvROK(svbody) && SvTYPE(SvRV(svbody)) == SVt_PVHV) {
 				body = mail_newbody();
@@ -2233,7 +2301,6 @@ smtp_mail(stream, ...)
 		}
 		RETVAL = smtp_mail(stream, trans, env, body);
 		if(fp) save_rfc822_tmp(env, body, fp);
-
 	OUTPUT:
 		RETVAL
 
@@ -2243,7 +2310,6 @@ smtp_debug(stream, ...)
 		Mail::Cclient::SMTP	stream
 	CODE:
 		stream->debug = T;
-
 
 void
 smtp_nodebug(stream, ...)
@@ -2266,7 +2332,7 @@ MODULE = Mail::Cclient	PACKAGE = Mail::Cclient
 
 void
 rfc822_base64(source)
-		SV *	source
+		SV	*source
 	PREINIT:
 		STRLEN srcl;
 		unsigned long len;
@@ -2276,9 +2342,22 @@ rfc822_base64(source)
 		s = rfc822_base64(s, (unsigned long)srcl, &len);
 		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
 
+
+void
+rfc822_binary(source)
+		SV	*source
+	PREINIT:
+		STRLEN srcl;
+		unsigned long len;
+		unsigned char *s;
+	PPCODE:
+		s = (unsigned char*)SvPV(source, srcl);
+		s = rfc822_binary((void *) s, (unsigned long)srcl, &len);
+		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
+
 void
 rfc822_qprint(source)
-		SV *	source
+		SV	*source
 	PREINIT:
 		STRLEN srcl;
 		unsigned long len;
@@ -2289,9 +2368,22 @@ rfc822_qprint(source)
 		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
 
 
-void            
+void
+rfc822_8bit(source)
+		SV	*source
+	PREINIT:
+		STRLEN srcl;
+		unsigned long len;
+		unsigned char *s;
+	PPCODE:
+		s = (unsigned char*)SvPV(source, srcl);
+		s = rfc822_8bit(s, (unsigned long)srcl, &len);
+		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
+
+
+void
 utf8_mime2text(source)
-		SV *	source
+		SV	*source
 	PREINIT:
 		SIZEDTEXT src;
 		SIZEDTEXT dst;

@@ -61,7 +61,9 @@ if(scalar(@{$part})) {
 	};
 }
 
-my $smtp = Mail::Cclient::SMTP->new(["smtp.aeiou.pt"]);
+my $smtp = Mail::Cclient::SMTP->new(
+	hostlist => ["smtp.aeiou.pt"]
+);
 open(FILE, ">tmp.rfc822") or die "$!\n";
 my $fh = *FILE;
 $smtp->mail(

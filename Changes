@@ -1,5 +1,18 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.8
+14 Jun 2003
+* rfc822_8bit and rfc822_binary methods are added.
+
+* The SMTP API was changed
+  (code submitted by Andrew Schretter <schrett@math.duke.edu>)
+
+* Test script to smtp_open function was added.
+
+* New examples for smtp were added
+
+* Documentation update.
+
 1.7
 14 Sep 2002
 * Added more test scripts.

@@ -90,14 +90,21 @@ Mail::Cclient - Mailbox access via the c-client library API
 
 =head2 Mail::Cclient::SMTP API
 
-    $smtp = Mail::Cclient::SMTP->new([HOSTLIST], DEBUG);
+    $smtp = Mail::Cclient::SMTP->new(
+        hostlist => [HOSTS] / "HOST",
+        service  => SERVICE,
+        port     => PORT,
+        options  => ["option_1", ..., "option_n"] / "option");
 
     $smtp->mail(
         transaction => MAILTYPE,
         defaulthost => HOST,
-	filehandle  => FILEHANDLE,
+        filehandle  => FILEHANDLE,
         envelope    => { header => value, ... },
         body        => {HASHREF} );
+
+    $smtp->debug();
+    $smtp->nodebug();
 
     $smtp->close();
 
@@ -106,7 +113,9 @@ Mail::Cclient - Mailbox access via the c-client library API
     Mail::Cclient::rfc822_output(HASHREF);
 
     $text = Mail::Cclient::rfc822_base64(SOURCE);
+    $text = Mail::Cclient::rfc822_binary(SOURCE);
     $text = Mail::Cclient::rfc822_qprint(SOURCE);
+    $text = Mail::Cclient::rfc822_8bit(SOURCE);
 
     $text = Mail::Cclient::utf8_mime2text(SOURCE);
 
@@ -662,12 +671,35 @@ LISTMAXLEVEL, ANONYMOUSHOME.
 
 =over 5
 
-=item new([HOSTLIST], DEBUG)
+=item new(KEY => VALUE [, KEY1 => VALUE1 ...])
 
-Creates the SMTP object and opens an SMTP connection to a one of the hosts 
-in the HOSTLIST and if successful returns a stream suitable for use by the
-other SMTP methods. If DEBUG is defined, protocol telemetry is logged 
-via mm_dlog().
+Creates the SMTP object and opens an SMTP connection to a one of the hosts
+in the B<hostlist> and if successful returns a stream suitable for use by
+the other SMTP methods. The B<hostlist> keyword/value is not optional. All
+others keywords are optional.
+
+The following SMTP open options are available:
+
+* debug - Debug protocol negotiations. If "debug" is defined, protocol
+telemetry is logged via mm_dlog().
+
+* dsn - DSN notification, none set mean NEVER
+
+* dsn_notify_failure
+
+* dsn_notify_delay
+
+* dsn_notify_success - DSN return full msg vs. header
+
+* dsn_return_full
+
+* 8bitmime - 8-bit MIME requested
+
+* secure - Don't do non-secure authentication
+
+* tryssl - Try SSL first
+
+* tryalt - Old name for tryssl
 
 =item mail(OPTION => VALUE, ...)
 
@@ -700,7 +732,7 @@ subject, remail, date, newsgroups, followup_to, references
 
 The following fields are available for body message:
 
-=over 10
+=over 12
 
 =item content_type
 
@@ -733,6 +765,14 @@ List of hash references.
 =item description
 
 The MIME description of the body part.
+
+=item language 
+
+body language list reference
+
+=item location
+
+body content URI
 
 =item id
 
@@ -775,15 +815,23 @@ This method disables SMTP protocol telemetry
 
 The following are utility functions (not methods).
 
-=over 7
+=over 9
 
 =item Mail::Cclient::rfc822_base64(SOURCE)
 
 Returns the SOURCE text converted to base64 format.
 
+=item Mail::Cclient::rfc822_binary(SOURCE)
+
+Convert binary contents to base64
+
 =item Mail::Cclient::rfc822_qprint(SOURCE)
 
 Returns the SOURCE text converted to quoted printable format.
+
+=item Mail::Cclient::rfc822_8bit(SOURCE)
+    
+Convert 8bit contents to quoted-printable text
 
 =item Mail::Cclient::utf8_mime2text(SOURCE)
 
@@ -1313,11 +1361,11 @@ Multiple c-client instances open simultaneously may not work as expected.
 
 Malcolm Beattie, mbeattie@sable.ox.ac.uk.
 
-Maintained by Henrique Dias, hdias@esb.ucp.pt.
+Maintained by Henrique Dias, hdias@aesbuc.pt.
 
 =head1 VERSION
 
-version 1.7
+version 1.8
 
 =head1 SEE ALSO
 

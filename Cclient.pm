@@ -1,8 +1,8 @@
 #
 #	Cclient.pm
-#       Last Edited: Sat Sep 14 14:49:04 WEST 2002
+#       Last Edited: Sat Jun 14 16:32:38 WEST 2003
 #
-#	Copyright (c) 1998 - 2002 Malcolm Beattie
+#	Copyright (c) 1998 - 2003 Malcolm Beattie
 #
 #	You may distribute under the terms of either the GNU General Public
 #	License or the Artistic License, as specified in the README file.
@@ -14,12 +14,11 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.7";
+$VERSION = "1.8";
 @ISA = qw(Exporter DynaLoader);
-@EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_qprint
-		utf8_mime2text rfc822_date rfc822_parse_adrlist
-		rfc822_write_address rfc822_output);
-
+@EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_binary
+		rfc822_qprint rfc822_8bit utf8_mime2text rfc822_date
+		rfc822_parse_adrlist rfc822_write_address rfc822_output);
 {
 	package Mail::Cclient::Address;
 	use vars qw(%FIELDS);
@@ -50,10 +49,12 @@ $VERSION = "1.7";
 		id          => 5,
 		description => 6,
 		nested      => 7,
-		lines       => 8,
-		bytes       => 9,
-		md5         => 10,
-		disposition => 11);
+		language    => 8,
+		location    => 9,
+		lines       => 10,
+		bytes       => 11,
+		md5         => 12,
+		disposition => 13);
 
 	sub type { shift->[1] }
 	sub encoding { shift->[2] }
@@ -62,10 +63,12 @@ $VERSION = "1.7";
 	sub id { shift->[5] }
 	sub description { shift->[6] }
 	sub nested { shift->[7] }
-	sub lines { shift->[8] }
-	sub bytes { shift->[9] }
-	sub md5 { shift->[10] }
-	sub disposition { shift->[11] }
+	sub language { shift->[8] }
+	sub location { shift->[9] }
+	sub lines { shift->[10] }
+	sub bytes { shift->[11] }
+	sub md5 { shift->[12] }
+	sub disposition { shift->[13] }
 }
 
 {
@@ -73,7 +76,7 @@ $VERSION = "1.7";
 	use vars qw(%FIELDS);
 
 	%FIELDS = (
-		remail => 1,
+		remail      => 1,
 		return_path => 2,
 		date        => 3,
 		from        => 4,
@@ -165,7 +168,7 @@ sub parameters {
 
 sub Mail::Cclient::SMTP::new {
 	my $class = shift;
-	return Mail::Cclient::SMTP::open(undef, @_);
+	return Mail::Cclient::SMTP::open_full(undef, @_);
 }
 
 bootstrap Mail::Cclient;
