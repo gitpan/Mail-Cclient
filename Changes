@@ -1,3 +1,20 @@
+1.2
+05 Jul 2001
+  (version 1.2 submitted by Henrique Dias <hdias@esb.ucp.pt>)
+
+* Updated the documentation
+
+* Added rfc822_write_address and rfc822_parse_adrlist to @EXPORT_OK.
+
+* Added $mc->msgno method
+
+* Added $mc->thread method
+
+* Added $mc->sort method
+
+* Updated $mc->search method
+  Now support the more advanced search specifications
+
 1.1
 31 Oct 2000
 

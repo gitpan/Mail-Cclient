@@ -1,0 +1,38 @@
+use Mail::Cclient qw(set_callback);
+
+#	'FLAGGED SINCE 1-Feb-1994 NOT FROM "SMITH"'
+#	'ALL FROM "hdias"'
+#	'FROM "hdias"'
+#	'ANSWERED TO "malcolm"'
+
+my $criteria = "ALL FROM \"hdias\"";
+
+# first sort by "from" if two or more messages collate identically 
+# in that case sort by "size" in the end sort by subject.
+
+my $sequence = $cclient->sort(
+	SORT   => ["from", 0, "size", 1, "subject", 0],
+	SEARCH => $criteria);
+
+for(@{$sequence}) {
+	print "$_\n";
+}
+
+
+my @array = ("from", 0, "size", 1, "subject", 0);
+my $sequence = $cclient->sort(
+	SORT   => \@array,
+	SEARCH => $criteria,
+	FLAG   => "uid");
+
+
+my $sequence = $cclient->sort(
+	SORT   => ["subject", 1],
+	SEARCH => $criteria,
+	FLAG   => ["uid"]);
+
+
+my $sequence = $cclient->sort(
+	SORT   => ["size", 0, "from", 1, "subject", 0],
+	SEARCH => $criteria,
+	FLAG   => ["uid", "noprefetch"]);

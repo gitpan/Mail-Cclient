@@ -1,0 +1,82 @@
+use Mail::Cclient qw(set_callback);
+
+#	'FLAGGED SINCE 1-Feb-1994 NOT FROM "SMITH"'
+#	'ALL FROM "hdias"'
+#	'FROM "hdias"'
+#	'ANSWERED TO "malcolm"'
+
+
+--- Example 1
+
+my @sequence = ();
+set_callback(
+	'searched' => sub {
+		my ($stream, $number) = @_;
+		push(@sequence, $number);
+	} );
+
+
+my $criteria = "ALL FROM \"hdias\"";
+$cclient->search(
+	SEARCH => $criteria);
+
+# results via searched callback
+
+for(@sequence) {
+	print "$_\n";
+}
+
+--- Example 2
+
+my @sequence = ();
+set_callback(
+	'searched' => sub {
+		my ($stream, $number) = @_;
+		push(@sequence, $number); } );
+
+$cclient->search(
+	SEARCH => "FLAGGED SINCE 1-Feb-1994 NOT FROM \"SMITH\"",
+	FLAG   => ["uid"]);
+
+# results via searched callback
+
+for(@sequence) {
+        print "$_\n";
+}
+
+--- Example 3
+
+my @sequence = ();
+set_callback(
+	'searched' => sub {
+		my ($stream, $number) = @_;
+		push(@sequence, $number); } );
+
+$cclient->search(
+	SEARCH => "FROM \"hdias\"",
+	FLAG   => "uid");
+
+# results via searched callback
+
+for(@sequence) {
+	print "$_\n";
+}
+
+--- Example 4
+
+my @sequence = ();
+set_callback(
+	'searched' => sub {
+		my ($stream, $number) = @_;
+		push(@sequence, $number); } );
+
+$cclient->search(
+	SEARCH => "ANSWERED TO \"malcolm\"",
+	FLAG   => ["uid","noprefetch"]);
+
+# results via searched callback
+
+for(@sequence) {
+	print "$_\n";
+}
+

@@ -1,0 +1,36 @@
+use Mail::Cclient qw(set_callback);
+
+my $thr = $cclient->thread(
+			THREADING => "references",
+			SEARCH    => "ALL FROM \"hdias\"",
+			FLAG      => "uid");
+
+# $thr = [214, [5, 12, 24], 144, 123, [5, [10, 8, 2]], 65]
+
+&loop($thr, "");
+
+sub loop {
+    my ($thr, $str) = @_;
+
+    for(@{$thr}) {
+	if(ref($_) eq "ARRAY") {
+	    &loop($_, $str . "--");
+	} else {
+	    print "$str> $_\n";
+	}
+    }
+}
+
+1;
+
+> 214
+--> 5
+--> 12
+--> 24
+> 144
+> 123
+--> 5
+----> 10
+----> 8
+----> 2
+> 65

@@ -1,7 +1,7 @@
 /*
  *	Cclient.xs
  *
- *	Copyright (c) 1998,1999,2000 Malcolm Beattie
+ *	Copyright (c) 1998,1999,2000,2001 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -31,6 +31,10 @@
 #undef OP_PROTOTYPE
 #endif
 
+#ifndef strcaseEQ
+#define strcaseEQ(s1,s2) (!strcasecmp(s1,s2))
+#endif
+
 /* Ensure na and sv_undef get defined */
 #define PERL_POLLUTE
 
@@ -43,6 +47,7 @@ typedef MAILSTREAM *Mail__Cclient;
 /* Magic signature for Cclient's mg_private is "Cc" */
 #define Mail__Cclient_MAGIC_SIGNATURE 0x4363
 
+#define MAX_LEN_ARRAY	14
 #define MUST_EXIST	1
 
 static HV *mailstream2sv;	/* Map MAILSTREAM* to SV* */
@@ -238,6 +243,50 @@ make_elt(MAILSTREAM *stream, MESSAGECACHE *elt)
     av_push(av, newRV_noinc((SV*)flags));
     av_push(av, newSViv(elt->rfc822_size)); 
     return sv_bless(newRV_noinc((SV*)av), stash_Elt);
+}
+
+/*
+ * make_thread
+ */
+static AV *
+make_thread(THREADNODE *thr)
+{
+    AV *av = newAV();
+    THREADNODE *t;
+    while(thr) {
+	if(thr->num) {
+	    av_push(av, newSViv(thr->num));
+	    if(t = thr->next) {
+		while (t) {
+		    if(t->branch) {
+			av_push(av, newRV_noinc((SV*)make_thread(t)));
+			t = NIL;
+		    } else {
+			av_push(av, newSViv(t->num));
+			t = t->next;
+		    }
+		}
+	    }
+	} else {
+	    av_push(av, newRV_noinc((SV*)make_thread(thr->next)));
+	}
+	thr = thr->branch;
+    }
+    return av;
+}
+
+/*          
+ * make_sort
+ */
+static AV *
+make_sort(unsigned long *slst)
+{
+    AV *av = newAV();
+    unsigned long *sl;
+    for (sl = slst; *sl; sl++) {
+	av_push(av, newSViv(*sl));
+    }
+    return av;
 }
 
 static AV *
@@ -911,6 +960,163 @@ mail_fetchstructure(stream, msgno, ...)
 	if (GIMME == G_ARRAY)
 	    XPUSHs(sv_2mortal(make_body(body)));
 
+
+void
+mail_thread(stream, ...)
+	Mail::Cclient   stream
+    PREINIT:
+	char *threading = "";
+	char *cs = NIL;
+	char *search_criteria = NIL;
+	SEARCHPGM *spg = NIL;
+	THREADNODE *thread;
+	int i;
+	long flags = 0;
+    PPCODE:
+	if(items > 9 || floor(fmod(items+1, 2)))
+	    croak("Wrong numbers of args (KEY => value)"
+		" passed to Mail::Cclient::thread");
+	for(i = 1; i < items; i = i + 2) {
+	    char *key = SvPV(ST(i), na);
+	    if(strcaseEQ(key, "threading"))
+		threading = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "charset"))
+		cs = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "search"))
+		search_criteria = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "flag")) {
+		char *flag = SvPV(ST(i+1), na);		
+		if (strEQ(flag, "uid"))
+		    flags |= SE_UID;
+		else
+		    croak("unknown FLAG => \"%s\" value passed to"
+			" Mail::Cclient::thread", flag);
+	    } else
+		 croak("unknown \"%s\" keyword passed to"
+			" Mail::Cclient::thread", key);
+	}
+	spg = (search_criteria) ?
+		mail_criteria(search_criteria) : mail_newsearchpgm();
+	thread = mail_thread(stream, (strEQ(threading, "references")) ?
+			    "REFERENCES" : "ORDEREDSUBJECT", cs, spg, flags);
+	if(thread) {
+	    XPUSHs(sv_2mortal(newRV_noinc((SV*)make_thread(thread))));
+	    mail_free_threadnode(&thread);
+	}
+	if (spg) mail_free_searchpgm(&spg);
+
+
+void
+mail_sort(stream, ...)
+	Mail::Cclient	stream
+    PREINIT:
+	char *cs = NIL;
+	char *search_criteria = NIL;
+	AV *array;
+	SEARCHPGM *spg = NIL;
+	SORTPGM **pgm;
+	unsigned long *slst;
+	I32 idx;
+	I32 len = 0;
+	int i;
+	int j = 0;
+	long flags = 0;
+    PPCODE:
+	if(items < 3 || items > 9 || floor(fmod(items+1, 2)))
+	    croak("Wrong numbers of args (KEY => value)"
+			" passed to Mail::Cclient::sort");
+	for(i = 1; i < items; i = i + 2) {
+	    char *key = SvPV(ST(i), na);
+	    if(strcaseEQ(key, "sort")) {
+		SV *arrayRef = ST(i+1);
+		if(SvROK(arrayRef) && SvTYPE(SvRV(arrayRef))) {
+		    array = (AV*)SvRV(arrayRef);
+		    len = av_len(array) + 1;
+		    if(floor(fmod(len, 2)) || !len)
+			croak("SORT => wrong numbers of elements in array ref"
+				" passed to Mail::Cclient::sort");
+		    if(len > MAX_LEN_ARRAY)
+			croak("SORT => max length of elements exceeded in array ref"
+				" passed to Mail::Cclient::sort");
+		} else
+		    croak("SORT => not array ref"
+			" passed to Mail::Cclient::sort");
+	    } else if(strcaseEQ(key, "charset"))
+		cs = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "search"))
+		search_criteria = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "flag")) {
+		AV *avflags;
+		int k;
+		SV *svflags = ST(i+1);
+		if(SvROK(svflags) && SvTYPE(SvRV(svflags)))
+		    avflags = (AV*)SvRV(svflags);
+		else {
+		    avflags = newAV();
+		    av_push(avflags, svflags);
+		}
+		for (k = 0; k < av_len(avflags) + 1; k++) {
+		    SV **allflags = av_fetch(avflags, k, 0);
+		    char *flag = SvPV(*allflags, na);
+		    if(strEQ(flag, "uid"))
+			flags |= SE_UID;
+		    else if(strEQ(flag, "searchfree"))
+			flags |= SE_FREE;
+		    else if(strEQ(flag, "noprefetch"))
+			flags |= SE_NOPREFETCH;
+		    else if(strEQ(flag, "sortfree"))
+			flags |= SO_FREE;
+		    else
+			croak("unknown FLAG => \"%s\" value passed to"
+				" Mail::Cclient::sort", flag);
+		}
+		if(flags) av_undef(avflags);
+	    } else
+		croak("unknown \"%s\" keyword passed to"
+			" Mail::Cclient::sort", key);
+	}
+	if(!len)
+	    croak("no SORT key/value passed to Mail::Cclient::sort");
+	spg = (search_criteria) ?
+		mail_criteria(search_criteria) : mail_newsearchpgm();
+	pgm = (SORTPGM **)safemalloc(len * sizeof(SORTPGM *));
+	for(idx = 0; idx < len; idx = idx+2) {
+	    SV **n;
+	    char *criteria = "";
+	    SORTPGM *pg = mail_newsortpgm ();
+	    SV **elem = av_fetch(array, idx, 0);
+	    if(SvPOKp(*elem)) criteria = SvPV(*elem, na);
+	    pg->function = (strEQ(criteria, "subject"))
+			    ? SORTSUBJECT   
+			    : (strEQ(criteria, "from"))
+				? SORTFROM
+				: (strEQ(criteria, "to"))
+				    ? SORTTO
+				    : (strEQ(criteria, "cc"))
+					? SORTCC
+					: (strEQ(criteria, "date"))
+					    ? SORTDATE
+					    : (strEQ(criteria, "size"))
+						? SORTSIZE
+						: SORTARRIVAL;	
+	    n = av_fetch(array, idx+1, 0);
+	    pg->reverse = (SvIOK(*n)) ? SvIV(*n) : NIL;
+	    if(j > 0) (pgm[j-1])->next = pg;
+	    pgm[j] = pg;
+	    j++;
+	}
+	if(j == 1) (pgm[0])->next = NIL;
+
+	slst = mail_sort(stream, cs, spg, pgm[0], flags);
+	if (spg) mail_free_searchpgm(&spg);
+	if (slst != NIL && slst != 0) {
+	    XPUSHs(sv_2mortal(newRV_noinc((SV*)make_sort(slst))));
+	    fs_give ((void **) &slst);
+	}
+	av_undef(array);
+	safefree(pgm);
+
+
 void
 mail_fetchheader(stream, msgno, ...)
 	Mail::Cclient	stream
@@ -1010,6 +1216,11 @@ unsigned long
 mail_uid(stream, msgno)
 	Mail::Cclient	stream
 	unsigned long	msgno
+
+unsigned long
+mail_msgno (stream, uid)
+	Mail::Cclient   stream
+	unsigned long   uid
 
 void
 mail_elt(stream, msgno)
@@ -1121,9 +1332,55 @@ mail_append(stream, mailbox, message, date = 0, flags = 0)
 	RETVAL
 
 void
-mail_search(stream, criteria)
+mail_search(stream, ...)
 	Mail::Cclient	stream
-	char *		criteria
+    PREINIT:
+	char *search_criteria = NIL;
+	char *cs = NIL;
+	int i;
+	long flags = 0;
+    CODE:
+	if(items < 3 || items > 7 || floor(fmod(items+1, 2)))
+	    croak("Wrong numbers of args (KEY => value)"
+		" passed to Mail::Cclient::search");
+	for(i = 1; i < items; i = i + 2) {
+	    char *key = SvPV(ST(i), na);
+	    if(strcaseEQ(key, "search"))
+		search_criteria = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "charset"))
+		cs = SvPV(ST(i+1), na);
+	    else if(strcaseEQ(key, "flag")) {
+		int k;
+		AV *avflags;
+		SV *svflags = ST(i+1);
+		if(SvROK(svflags) && SvTYPE(SvRV(svflags)))
+		    avflags = (AV*)SvRV(svflags);
+		else {
+		    avflags = newAV();
+		    av_push(avflags, svflags);
+		}
+		for (k = 3; k < av_len(avflags) + 1; k++) {
+		    SV **allflags = av_fetch(avflags, k, 0);
+		    char *flag = SvPV(*allflags, na);
+		    if (strEQ(flag, "uid"))
+			flags |= SE_UID;
+		    else if (strEQ(flag, "searchfree"))
+			flags |= SE_FREE;
+		    else if (strEQ(flag, "noprefetch"))
+			flags |= SE_NOPREFETCH;
+		    else
+			croak("unknown FLAG => \"%s\" value passed to"
+				" Mail::Cclient::search", flag);
+		}
+		if(flags) av_undef(avflags);
+	    } else
+		croak("unknown \"%s\" keyword passed to"
+			" Mail::Cclient::search", key);
+	}
+	if(!search_criteria)
+	    croak("no SEARCH key/value passed to Mail::Cclient::search");
+	mail_search_full(stream, cs, mail_criteria(search_criteria), flags);
+
 
 void
 mail_real_gc(stream, ...)
@@ -1380,6 +1637,42 @@ rfc822_date()
 	RETVAL = date;
     OUTPUT:
 	RETVAL
+
+void
+rfc822_parse_adrlist(string, host)
+	char *  string
+	char *  host  
+    PREINIT:
+	ENVELOPE *env;
+    PPCODE:
+	env = mail_newenvelope();
+	rfc822_parse_adrlist(&env->to, string, host);
+	XPUSHs(env->to ?
+	    sv_2mortal(newRV_noinc((SV*)make_address(env->to))) : &sv_undef);
+
+
+char *
+rfc822_write_address(mailbox, host, personal)
+	char *  mailbox
+	char *  host
+	char *  personal
+    PREINIT:
+	ADDRESS *addr;
+	char string[MAILTMPLEN];
+    CODE:
+	addr = mail_newaddr();
+	addr->mailbox = mailbox;
+	addr->host = host;
+	addr->personal = personal;
+	addr->next=NIL;
+	addr->error=NIL;
+	addr->adl=NIL;
+	string[0]='\0';
+	rfc822_write_address(string, addr);
+	RETVAL = string;
+    OUTPUT:
+	RETVAL
+
 
 BOOT:
 #include "linkage.c"

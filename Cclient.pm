@@ -1,7 +1,7 @@
 #
 #	Cclient.pm
 #
-#	Copyright (c) 1998,1999,2000 Malcolm Beattie
+#	Copyright (c) 1998,1999,2000,2001 Malcolm Beattie
 #
 #	You may distribute under the terms of either the GNU General Public
 #	License or the Artistic License, as specified in the README file.
@@ -13,10 +13,10 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.1";
+$VERSION = "1.2";
 @ISA = qw(Exporter DynaLoader);
-@EXPORT_OK = qw(set_callback get_callback
-		rfc822_base64 rfc822_qprint rfc822_date);
+@EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_qprint
+		rfc822_date rfc822_parse_adrlist rfc822_write_address);
 
 =head1 NAME
 
@@ -52,12 +52,26 @@ Mail::Cclient - Mailbox access via the c-client library API
     $c->move(SEQUENCE, MAILBOX [, FLAG ...]);
     $c->append(MAILBOX, MESSAGE [, DATE [, FLAGS]);
 
-    $c->search(CRITERIA);		# uses "search" callback
+    $arrayref = $c->sort(
+	SORT      => ["crit_1", rev_1, ..., "crit_n", rev_n], # (n <= 7)
+	CHARSET   => "MIME character",
+	SEARCH    => "string",
+	FLAG      => [flag_1, ..., flag_n] / "flag" );
+    $c->search(			# results via "search" callback
+	SEARCH    => "string",
+	CHARSET   => "MIME character",
+	FLAG      => ["flag_1", ..., "flag_n"] / "flag");
+    $arrayref = $c->thread(
+	THREADING => "orderedsubject/references",
+	CHARSET   => "MIME character",
+	SEARCH    => "string",
+	FLAG      => "flag");
 
     $c->ping;
     $c->check;				# uses "log" callback
     $c->expunge;			# uses "expunge" callback
     $uid = $c->uid(MSGNO);
+    $msgno = $c->msgno(uid);
     $c->setflag(SEQUENCE, MAILFLAG [, FLAG ...]);
     $c->clearflag(SEQUENCE, MAILFLAG [, FLAG ...]);
 
@@ -74,6 +88,11 @@ Mail::Cclient - Mailbox access via the c-client library API
 
     $text = Mail::Cclient::rfc822_base64(SOURCE);
     $text = Mail::Cclient::rfc822_qprint(SOURCE);
+
+    $str = Mail::Cclient::rfc822_date;
+
+    $str = Mail::Cclient::rfc822_write_address(MAILBOX, HOST, PERSONAL);
+    $str = Mail::Cclient::rfc822_parse_adrlist(ADDRESSES, HOST);
 
     $c->close;
 
@@ -109,7 +128,7 @@ mailbox. An argument denoted MSGNO is a number that refers to a single
 message. Message 1 refers to the first message in the mailbox, unless
 the "uid" option is passed as as additional argument in which case the
 number refers to the uid of the message. An argument denoted SEQUENCE
-refers to a list of messages and is a string such as '1,3,5-9,12'. 
+refers to a list of messages and is a string such as '1,3,5-9,12'.
 
 Creating a C<Mail::Cclient> object and associating a mailstream with it
 is done with the C<"new"> constructor method (whereas the underlying
@@ -169,7 +188,7 @@ Don't use or update a .newsrc file for news.
 
 Don't cache envelopes or body structures.
 
-=item prototype 
+=item prototype
 
 Return the "prototype stream" for the driver associated with
 this mailbox instead of opening the stream.
@@ -354,13 +373,79 @@ included) to mailbox MAILBOX.
 Append a raw message (MESSAGE is an ordinary string) to MAILBOX,
 giving it an optional date and FLAGS (again, simply strings).
 
-=item search(CRITERIA)
+=item sort(KEY => VALUE [, KEY1 => VALUE2 ...])
 
-Search for messages satisfying CRITERIA. The "search" callback (q.v.)
-is called for each matching message. CRITERIA is a string containing
-a search specification as defined on pages 15-16 of RFC1176. Note
-that this is an IMAP2 search specification--this method does not
-support the more advanced IMAP4rev1 search specification.
+Returns an array reference of message numbers sorted by the given pairs of
+parameters (KEY => VALUE). The B<SORT> keyword value is a array reference,
+and the argument "crit_1", ..., "crit_n", is a string and can be one of
+the following: "date", "arrival", "from", "subject", "to", "cc", "size".
+The argument rev_1, ... rev_n is 0 or 1 if reverse sorting. The B<CHARSET>
+keyword value is a MIME character set to use when sorting strings. The
+B<SEARCH> keyword value is a string like, ALL, SEEN, UNSEEN, ANSWERED,
+UNANSWERED, FLAGGED, UNFLAGGED, SEARCHED or like SEARCH keyword in search
+method and return only messages that meet specified search criteria. The
+B<FLAG> keyword value can be a array reference or a string. Flags:
+"B<uid>" return uid's instead of sequence numbers; "B<searchfree>" return
+the search program to free storage after finishing (internal use only);
+"B<noprefetch>" don't prefetch searched messages; "B<sortfree>" return the
+sort program to free storage after finishing (internal use only). The
+B<SORT> keyword/value is not optional. All others keywords are optional.
+
+=item search(KEY => VALUE [, KEY1 => VALUE2 ...])
+
+Search for messages satisfying B<SEARCH> keyword value. The "search"
+callback (q.v.) is called for each matching message. The B<SEARCH> keyword
+value is a string containing a search specification as defined in item
+SEARCH Command (6.4.4.) of RFC2060 (imap2000/docs/rfc/rfc2060.txt).
+The B<SEARCH> keyword value is like 'ANSWERED TO "malcolm"' or 'FLAGGED
+SINCE 1-Feb-1994 NOT FROM "Smith"'. B<SEARCH> keyword value can be a
+combination of one or more of the following strings: ALL, NEW, OLD,
+RECENT, ANSWERED, UNASWERED, SEEN, UNSEEN, DELETED, UNDELETED, DRAFT,
+UNDRAFT, FLAGGED, UNFLAGGED, FROM <string>, TO <string>, CC <string>, BCC
+<string>, SUBJECT <string>, BODY <string>, TEXT <string>, HEADER
+<field-name> <string>, KEYWORD <flag>, UNKEYWORD <flag>, LARGER <n>,
+SMALLER <n>, SENTBEFORE <date>, SENTO <date>, SENTSINCE <date>, SINCE
+<date>, ON <date>, BEFORE <date>, NOT <search-key>, OR <search-key1>
+<search-key2>, UID <message set>. The B<CHARSET> keyword value is a MIME
+character set to use when searching strings. The B<FLAG> keyword value can
+be a array reference or a string. Flags: "B<uid>" return a message uid's
+instead of sequence numbers; "B<searchfree>" return the search program to
+free storage after finishing (internal use only); "B<noprefetch>" don't
+prefetch searched messages. The B<SEARCH> keyword/value is not optional.
+All others keywords are optional.
+
+=item thread(KEY => VALUE [, KEY1 => VALUE2 ...])
+
+This method returns a array reference of message sequence numbers and/or
+lists of lists of message numbers. The B<THREADING> keyword value can take
+one of following strings values: "B<orderedsubject>" or "B<references>".
+The "B<orderedsubject>" algorithm sorts by subject with a secondary sort
+of message date, and then for sets of messages with identical subjects.
+The "B<references>" algorithm threads the searched messages by grouping
+them together in parent/child relationships based on which messages are
+replies to others. The B<CHARSET> keyword value is a MIME character set to
+use when searching strings. The B<SEARCH> keyword value accepts a string
+ala search() method. The B<FLAG> keyword value is a string. Flags:
+"B<uid>" return a message uid's instead of sequence numbers. All keywords
+are optional. If you don't use any keyword, in that case the default value
+is "B<orderedsubject>".
+
+Example:
+
+ARRAYREF = [2, [3, 6, [4, 23], [44, 7, 96]]
+
+--> 2
+
+--> 3
+    \--> 6
+         |--> 4
+         |    \--> 23
+         |
+         \--> 44
+              \--> 7
+                   \--> 96
+
+
 
 =back
 
@@ -408,6 +493,10 @@ will be called with a msgno of 5 three times.
 =item uid(MSGNO)
 
 Returns the uid associated with message MSGNO.
+
+=item msgno(UID)
+
+Returns the msgno associated with message UID.
 
 =item setflag(SEQUENCE, MAILFLAG [, FLAG ...])
 
@@ -478,6 +567,18 @@ Returns the SOURCE text converted to quoted printable format.
 =item Mail::Cclient::rfc822_date()
 
 Returns the current date in RFC822 format.
+
+= item Mail::Cclient::rfc822_write_address(MAILBOX, HOST, PERSONAL)
+
+This function return an RFC 822 format address string based on the 
+information from MAILBOX, HOST and PERSONAL.
+
+= item Mail::Cclient::rfc822_parse_adrlist(ADDRESSES, HOST)
+
+This function parses the string of ADDRESSES into an address list array 
+ref. Any addresses missing a host name are have the host name defaulted 
+from the HOST argument. Any parsing errors are noted via the log()
+callback.
 
 =back
 
