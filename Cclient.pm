@@ -13,7 +13,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "0.5";
+$VERSION = "0.6";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback);
 
@@ -642,7 +642,7 @@ The MIME subtype (as a string) of the message. For example,
 
 =item parameter
 
-A reference to a list of MIME parameter strings.
+A reference to a list of MIME parameter key/value pairs.
 
 =item id
 
@@ -674,6 +674,12 @@ The size in bytes of the body.
 =item md5
 
 The MD5 checksum of the body.
+
+=item disposition
+
+The content disposition of the body: a reference to a list
+consisting of the disposition type followed by a (possibly empty)
+list of parameter key/value pairs.
 
 =back
 
@@ -784,7 +790,8 @@ Malcolm Beattie, mbeattie@sable.ox.ac.uk.
 	       nested => 7,
 	       lines => 8,
 	       bytes => 9,
-	       md5 => 10);
+	       md5 => 10,
+	       disposition => 11);
     sub type { shift->[1] }
     sub encoding { shift->[2] }
     sub subtype { shift->[3] }
@@ -795,6 +802,7 @@ Malcolm Beattie, mbeattie@sable.ox.ac.uk.
     sub lines { shift->[8] }
     sub bytes { shift->[9] }
     sub md5 { shift->[10] }
+    sub disposition { shift->[11] }
 }
 
 {

@@ -1,3 +1,12 @@
+0.6
+17 Jun 1999
+
+* Added rfc822_date function (without which it's difficult to get
+  hold of a date which includes the timezone name)
+
+* Added $body->disposition to get content-disposition information
+
+
 0.5
 7 Jun 1999
 

@@ -257,9 +257,8 @@ static STRINGLIST *av_to_stringlist(AV *av)
 }
 
 static AV *
-parameter_to_av(PARAMETER *param)
+push_parameter(AV *av, PARAMETER *param)
 {
-    AV *av = newAV();
     for (; param; param = param->next) {
 	av_push(av, newSVpv(param->attribute, 0));
 	av_push(av, newSVpv(param->value, 0));
@@ -272,12 +271,13 @@ make_body(BODY *body)
 {
     AV *av = newAV();
     SV *nest;
+    AV *paramav = newAV();
 
     av_push(av, SvREFCNT_inc(body_fields));
     av_push(av, newSVpv(body_types[body->type], 0));
     av_push(av, newSVpv(body_encodings[body->encoding], 0));
     av_push(av, str_to_sv(body->subtype));
-    av_push(av, newRV_noinc((SV*)parameter_to_av(body->parameter)));
+    av_push(av, newRV_noinc((SV*)push_parameter(newAV(), body->parameter)));
     av_push(av, str_to_sv(body->id));
     av_push(av, str_to_sv(body->description));
     if (body->type == TYPEMULTIPART) {
@@ -301,6 +301,9 @@ make_body(BODY *body)
     av_push(av, newSViv(body->size.lines));
     av_push(av, newSViv(body->size.bytes));
     av_push(av, str_to_sv(body->md5));
+    av_push(paramav, str_to_sv(body->disposition.type));
+    paramav = push_parameter(paramav, body->disposition.parameter);
+    av_push(av, newRV_noinc((SV*)paramav));
     return sv_bless(newRV_noinc((SV*)av), stash_Body);
 }
 
@@ -1346,6 +1349,22 @@ rfc822_qprint(source)
 	s = rfc822_qprint(s, (unsigned long)srcl, &len);
 	XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
 
+
+ #
+ # Utility functions
+ #
+
+#define DATE_BUFF_SIZE 64
+
+char *
+rfc822_date()
+    PREINIT:
+	static char date[DATE_BUFF_SIZE];
+    CODE:
+	rfc822_date(date);
+	RETVAL = date;
+    OUTPUT:
+	RETVAL
 
 BOOT:
 #include "linkage.c"
