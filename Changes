@@ -1,0 +1,31 @@
+0.4
+14 Sep 1998
+
+* Added support for mail_parameters
+
+* Added $mc->append method
+  (from code submitted by Kevin Sullivan <ksulliva@kludge.psc.edu>)
+
+* Added CAVEATS section to documentation
+  (submitted by Bruce Gingery <bgingery@gtcs.com>)
+
+* Attempt to work around possible NULL parts in make_body for TYPEMESSAGE.
+
+0.3
+1 Jun 1998
+
+* Created this Changes file
+
+* Removed duplicate decrement in av_to_stringlist which was
+  causing fetchheader to return only half the requested headers
+
+* Add support for elts
+
+0.2
+14 Apr 1998
+
+* Polished up for public release.
+
+0.1
+
+* First internal version
