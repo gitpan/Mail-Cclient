@@ -1,8 +1,8 @@
 #
 #	Cclient.pm
-#       Last Edited: Sat Jun 14 16:32:38 WEST 2003
+#       Last Edited: Tue Apr 20 16:36:59 WEST 2004
 #
-#	Copyright (c) 1998 - 2003 Malcolm Beattie
+#	Copyright (c) 1998 - 2004 Malcolm Beattie
 #
 #	You may distribute under the terms of either the GNU General Public
 #	License or the Artistic License, as specified in the README file.
@@ -14,7 +14,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.8";
+$VERSION = "1.9";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_binary
 		rfc822_qprint rfc822_8bit utf8_mime2text rfc822_date
@@ -168,7 +168,7 @@ sub parameters {
 
 sub Mail::Cclient::SMTP::new {
 	my $class = shift;
-	return Mail::Cclient::SMTP::open_full(undef, @_);
+	return Mail::Cclient::SMTP::open_full("Mail::Cclient::SMTP", @_);
 }
 
 bootstrap Mail::Cclient;

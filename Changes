@@ -1,5 +1,12 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.9
+20 Apr 2004
+* Use of uninitialized value in subroutine open_full as been fixed.
+
+* Examples to fetch structure and body parts of message in a mailbox were
+  added.
+
 1.8
 14 Jun 2003
 * rfc822_8bit and rfc822_binary methods are added.

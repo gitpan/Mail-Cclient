@@ -1365,7 +1365,7 @@ Maintained by Henrique Dias, hdias@aesbuc.pt.
 
 =head1 VERSION
 
-version 1.8
+version 1.9
 
 =head1 SEE ALSO
 

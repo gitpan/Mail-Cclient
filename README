@@ -1,6 +1,6 @@
-		  Perl Mail::Cclient module, Version 1.8
+		  Perl Mail::Cclient module, Version 1.9
 
-		Copyright (c) 1998 - 2003, Malcolm Beattie
+		Copyright (c) 1998 - 2004, Malcolm Beattie
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of either:
@@ -41,7 +41,7 @@ pam-devel-xxx.xxx.rpm
 
 INSTALLATION
 
-Minumum instruction (RedHat 8.0 and 9):
+Minumum instruction (RedHat 8.0, 9 and Fedora Core 1):
 
 perl Makefile.PL \
     --with-shared_cclient \
@@ -53,14 +53,14 @@ make
 make test
 make install
 
-Build static library without OpenSSL (RedHat 8.0 and 9):
+Build static library without OpenSSL (RedHat 8.0, 9 and Fedora Core 1):
 
 tar xvfz Mail-Cclient-1.8.tar.gz
 tar xvfz imap.tar.Z
 cd imap-2002c1
 make lrh SSLTYPE=none 
 cd ../Mail-Cclient-1.8
-perl Makefile.PL --cclient_dir=../imap-2002c1/c-client --with-pam
+perl Makefile.PL --cclient_dir=../imap-2004.RC8/c-client --with-pam
 make
 make test
 make install
@@ -68,7 +68,7 @@ make install
 A little advanced instruction:
 
 Install the University of Washington imapd source distribution
-(e.g. version imap-2002b.tar.Z or above) and build at least the c-client 
+(e.g. version imap-2004.RC8.tar.Z or above) and build at least the c-client
 library (c-client/c-client.a). The home site for the UW imapd is
     ftp://ftp.cac.washington.edu/mail/imap.tar.Z
 
@@ -129,8 +129,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.8 submitted by Henrique Dias
+Version 1.9 submitted by Henrique Dias
 Questions, bug reports, useful code bits, and suggestions for
-Mail-Cclient-1.8 should just be sent to me at hdias@aesbuc.pt
+Mail-Cclient-1.9 should just be sent to me at hdias@aesbuc.pt
 Henrique Dias
-14 Jun 2003
+20 Apr 2004

@@ -7,6 +7,8 @@ Copying
 criteria.c
 criteria.h
 examples/copy.txt
+examples/fetch_body.pl
+examples/fetch_structure.pl
 examples/imap.txt
 examples/list_mailboxs.pl
 examples/mime.txt
@@ -59,7 +61,9 @@ t/thread.t
 t/uid.t
 t/unsubscribe.t
 t/utf8_mime2text.t
+testmbx/multipart.mbox
 testmbx/test.mbox
 testmbx/test_mpart.mbox
 TODO
 typemap
+META.yml                                 Module meta-data (added by MakeMaker)
