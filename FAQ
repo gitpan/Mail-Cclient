@@ -1,0 +1,29 @@
+
+    Mail::Cclient Troubleshooting FAQ
+
+1) Can't load 'blib/arch/auto/Mail/Cclient/Cclient.so' for module 
+   Mail::Cclient: blib/arch/auto/Mail/Cclient/Cclient.so: undefined symbol: 
+   pam_end at /usr/lib/perl5/5.6.0/i386-linux/DynaLoader.pm line 169.
+
+   Add option --with-pam
+
+2) criteria.c:16: mail.h: No such file or directory
+   criteria.c:17: misc.h: No such file or directory
+
+   Add option --with-cclient-includes=/path/to/imap_includes
+   (RedHat 6.2 --with-cclient-includes=/usr/include/imap)
+
+3) Can't load 'blib/arch/auto/Mail/Cclient/Cclient.so' for module
+   Mail::Cclient: blib/arch/auto/Mail/Cclient/Cclient.so: undefined 
+   symbol: krb5_defkeyname at /usr/lib/perl5/5.6.0/i386-linux/DynaLoader.pm
+   line 169.
+
+   Add option --with-kerberos
+   (RedHat 6.2 --with-kerberos=/usr/kerberos/lib)
+
+4) Can't load 'blib/arch/auto/Mail/Cclient/Cclient.so' for module 
+   Mail::Cclient: blib/arch/auto/Mail/Cclient/Cclient.so:
+   undefined symbol: SSL_CTX_set_tmp_rsa_callback at
+   /usr/lib/perl5/5.6.0/i386-linux/DynaLoader.pm line 169.
+
+   Add option --with-ssl

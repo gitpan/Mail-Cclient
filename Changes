@@ -1,5 +1,16 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.4.1
+31 Oct 2001
+
+* Added file FAQ
+
+* Added the option --with-kerberos to the Makefile.PL
+  (from code submitted by Helena Gomes <hpgomes@mail.pt>)
+
+* Added the option --with-shared_cclient to the Makefile.PL
+  (from code submitted by Jaldhar H. Vyas <jaldhar@debian.org>)
+
 1.4
 22 Oct 2001
 

@@ -1254,7 +1254,7 @@ Maintained by Henrique Dias, hdias@esb.ucp.pt.
 
 =head1 VERSION
 
-version 1.4
+version 1.4.1
 
 =head1 SEE ALSO
 

@@ -1,4 +1,4 @@
-		     Perl Mail::Cclient module, Version 1.4
+		     Perl Mail::Cclient module, Version 1.4.1
 
 		Copyright (c) 1998, 1999, 2000, 2001, Malcolm Beattie
 
@@ -40,11 +40,24 @@ Install the University of Washington imapd source distribution
 
 If your platform needs any additional LIBS entries, edit Makefile.PL
 and add them. Do
+
+c-client shared library
+
+    perl Makefile.PL --with-shared_cclient
+    make
+    make test
+
+c-client static library
+
     perl Makefile.PL --cclient_dir=/path/to/c-client
 
 Options:
-    --with-pam (support for PAM)
-    --with-ssl (support for SSL)
+    --cclient_dir=/path/to/c-client
+    --with-shared_cclient
+    --with-pam=/path/to/libs (support for PAM)
+    --with-ssl=/path/to/libs (support for SSL)
+    --with-kerberos=/path/to/libs (support for Kerberos)
+    --with-cclient-includes=/path/to/imap_includes
     --help
 
 where /path/to/c-client is the pathname of the directory which contains
@@ -82,8 +95,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.4 submitted by Henrique Dias
-Questions, bug reports, useful code bits, and suggestions for Mail-Cclient-1.4
-should just be sent to to me at hdias@esb.ucp.pt
+Version 1.4.1 submitted by Henrique Dias
+Questions, bug reports, useful code bits, and suggestions for
+Mail-Cclient-1.4.1 should just be sent to to me at hdias@esb.ucp.pt
 Henrique Dias
-22 Oct 2001
+31 Oct 2001

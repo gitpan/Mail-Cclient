@@ -13,7 +13,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.4";
+$VERSION = "1.4.1";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_qprint
 	rfc822_date rfc822_parse_adrlist rfc822_write_address rfc822_output);
