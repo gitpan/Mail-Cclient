@@ -29,8 +29,8 @@ $pwd =~ s/examples$/testmbx/;
 my $c = new Mail::Cclient "$pwd/test.mbox" or die "Cannot open mailbox!\n";
 
 my $data = Dumper $c->thread(
-				THREADING => "references",
-				FLAG      => "uid" );
+			THREADING => "references",
+			FLAG      => "uid" );
 $data =~ s/\n//g;
 $data =~ s/\s+/ /g;
 

@@ -12,7 +12,7 @@ my $c = Mail::Cclient->new($mailbox, 'readonly') or print "not ";
 
 print "ok 2\n";
 
-my ($env, $body) = $c->fetchstructure(1);
+my ($env, $body) = $c->fetch_structure(1);
 
 print "not " unless($env || $body);
 

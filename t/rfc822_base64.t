@@ -4,6 +4,6 @@ print "1..2\n";
 
 print "ok 1\n";
 
-rfc822_base64("This is a teste!") or print "not ";
+rfc822_base64("SXN0byDpIHVtIHRlc3RlISEhDQo=") or print "not ";
 
 print "ok 2\n";

@@ -6,13 +6,13 @@ print "ok 1\n";
 
 my $pwd = `pwd`;
 chomp($pwd); 
-my $mailbox = "$pwd/testmbx/test.mbox";
+my $mailbox = "$pwd/testmbx/test_mpart.mbox";
 
 my $c = Mail::Cclient->new($mailbox, 'readonly') or print "not ";
 
 print "ok 2\n";
 
-$c->fetchheader(1) or print "not ";
+$c->fetch_mime(1, "2") or print "not ";
 
 print "ok 3\n";
 

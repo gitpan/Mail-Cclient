@@ -1,0 +1,58 @@
+From MAILER-DAEMON Thu Sep  5 10:58:41 2002
+Date: 05 Sep 2002 10:58:41 +0100
+From: Mail System Internal Data <MAILER-DAEMON@rosa.esb.ucp.pt>
+Subject: DON'T DELETE THIS MESSAGE -- FOLDER INTERNAL DATA
+X-IMAP: 1031219921 0000000000
+Status: RO
+
+This text is part of the internal format of your mail folder, and is not
+a real message.  It is created automatically by the mail system software.
+If deleted, important folder data will be lost, and it will be re-created
+with the data reset to initial values.
+
+From hdias@rosa.esb.ucp.pt  Thu Sep  5 10:57:46 2002
+Return-Path: <hdias@rosa.esb.ucp.pt>
+Received: from localhost (hdias@localhost)
+	by rosa.esb.ucp.pt (8.11.6/8.9.3) with ESMTP id g859vhv30340
+	for <wwwadmin@esb.ucp.pt>; Thu, 5 Sep 2002 10:57:43 +0100
+Date: Thu, 5 Sep 2002 10:57:43 +0100 (WEST)
+From: Henrique Dias <hdias@esb.ucp.pt>
+To: wwwadmin@esb.ucp.pt
+Subject: This is a test!!!
+Message-ID: <Pine.LNX.4.44.0209051056270.30307-200000@rosa.esb.ucp.pt>
+MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="-1463810558-900984865-1031219863=:30307"
+Status: RO
+X-Status: 
+X-Keywords:                 
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
+
+---1463810558-900984865-1031219863=:30307
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+
+This is a test!!!
+
+-- 
+---------------------------------------
+Henrique Manuel Ribeiro Dias
+Escola Superior de Biotecnologia - UCP
+Gabinete de Desenvolvimento de Software
+Rua Dr. Antonio Bernardino de Almeida
+4200 Porto
+Portugal
+Tel: 351-225580075
+---------------------------------------
+
+---1463810558-900984865-1031219863=:30307
+Content-Type: TEXT/plain; name="test.txt"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.44.0209051057430.30307@rosa.esb.ucp.pt>
+Content-Description: Test
+Content-Disposition: attachment; filename="test.txt"
+
+SXN0byDpIHVtIHRlc3RlISEhDQo=
+---1463810558-900984865-1031219863=:30307--
+

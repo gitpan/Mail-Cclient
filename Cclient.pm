@@ -1,5 +1,6 @@
 #
 #	Cclient.pm
+#       Last Edited: Sat Sep 14 14:49:04 WEST 2002
 #
 #	Copyright (c) 1998 - 2002 Malcolm Beattie
 #
@@ -13,7 +14,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.6";
+$VERSION = "1.7";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_qprint
 		utf8_mime2text rfc822_date rfc822_parse_adrlist
@@ -113,12 +114,14 @@ $VERSION = "1.6";
 		msgno       => 1,
 		date        => 2,
 		flags       => 3,
-		rfc822_size => 4);
+		rfc822_size => 4,
+		imapdate    => 5);
 
 	sub msgno { shift->[1] }
 	sub date { shift->[2] }
 	sub flags { shift->[3] }
 	sub rfc822_size { shift->[4] }
+	sub imapdate { shift->[5] }
 }
 
 # Our own methods

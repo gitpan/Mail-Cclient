@@ -1,5 +1,31 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.7
+14 Sep 2002
+* Added more test scripts.
+
+* fetch_message and fetch_mime methods are added.
+
+* The API of following methods are changed: fetchstructure, fetchheader,
+  fetchtext, fetchbody, fetchflags and fetchfast.
+
+* Fixed the problem with rfc822_qprint and rfc822_base64 functions which 
+  was causing a core dump.
+
+* Fixed mail_append() parameter order which was causing appends to IMAP 
+  mailboxes not to work.
+  (code from Gombas Gabor, submitted by Jaldhar H. Vyas <jaldhar@debian.org>)
+
+* imapdate method was added to Mail::CClient::Elt.
+  (code from Gombas Gabor, submitted by Jaldhar H. Vyas <jaldhar@debian.org>)
+
+* Corrected a error in the documentation. The call back for the search 
+  function was listed as "search" when explaining the search function, but 
+  "searched" under the callback section.
+  (Thanks to David Harris <dharris@drh.net>)
+
+* Documentation update.
+
 1.6
 26 Apr 2002
 * The make_thread function was rewritten.

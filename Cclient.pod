@@ -11,10 +11,28 @@ Mail::Cclient - Mailbox access via the c-client library API
     use Mail::Cclient;
     $c = Mail::Cclient->new(MAILBOX [, OPTION ...]);
 
+    # Old API deprecated in next versions
+
     ($envelope, $body) = $c->fetchstructure(MSGNO [, FLAG ...] );
-    $hdr = $c->fetchheader(MSGNO [, FLAG ...]);
+    $hdr = $c->fetchheader(MSGNO [, LINES [, FLAG ...]]);
     $text = $c->fetchtext(MSGNO [, FLAG ...]);
-    $text = $c->fetchbody(MSGNO, SECTION, [, FLAG ...]);
+    $text = $c->fetchbody(MSGNO, SECTION [, FLAG ...]);
+
+    $c->fetchflags(SEQUENCE);
+    $c->fetchfast(SEQUENCE);
+
+    # New API
+
+    ($envelope, $body) = $c->fetch_structure(MSGNO [, FLAG ...] );
+    $msg = $c->fetch_message(MSGNO [, FLAG ...]);
+    $hdr = $c->fetch_header(MSGNO, SECTION [, LINES [, FLAG ...]]);
+    $text = $c->fetch_text(MSGNO, SECTION [, FLAG ...]);
+    $mime = $c->fetch_mime(MSGNO, SECTION [, FLAG ...]);
+    $text = $c->fetch_body(MSGNO, SECTION [, FLAG ...]);
+
+    $c->fetch_flags(SEQUENCE);
+    $c->fetch_fast(SEQUENCE);
+
     $elt = $c->elt(MSGNO);
 
     $c->create(MAILBOX);
@@ -41,7 +59,7 @@ Mail::Cclient - Mailbox access via the c-client library API
 	CHARSET   => "MIME character",
 	SEARCH    => "string",
 	FLAG      => [flag_1, ..., flag_n] / "flag" );
-    $c->search(				# uses "search" callback
+    $c->search(				# uses "searched" callback
 	SEARCH    => "string",
 	CHARSET   => "MIME character",
 	FLAG      => ["flag_1", ..., "flag_n"] / "flag");
@@ -59,9 +77,6 @@ Mail::Cclient - Mailbox access via the c-client library API
     $msgno = $c->msgno(uid);
     $c->setflag(SEQUENCE, MAILFLAG [, FLAG ...]);
     $c->clearflag(SEQUENCE, MAILFLAG [, FLAG ...]);
-
-    $c->fetchfast(SEQUENCE);
-    $c->fetchflags(SEQUENCE);
 
     $c->gc( [FLAG, ...] );
     $c->debug;
@@ -146,8 +161,8 @@ c-client library uses the C<mail_open> function).
 
 =item new(MAILBOX [, OPTION ...])
 
-Return a new C-Client object. The MAILBOX argument can be anything 
-accepted by the underlying c-client library. This includes the following 
+Return a new C-Client object. The MAILBOX argument can be anything
+accepted by the underlying c-client library. This includes the following
 forms
 
 =over 4
@@ -158,7 +173,7 @@ This is the driver-dependent INBOX folder.
 
 =item an absolute filename
 
-This specifies a mailbox in the default format 
+This specifies a mailbox in the default format
 (usually Berkeley format for most default library builds)
 
 =item a string of the form "{host}folder" or "{host/prot}folder"
@@ -362,62 +377,75 @@ This method closes the MAIL stream.
 B<!> The following methods provide access to messages themselves: their
 headers, structures and the text of their bodies (or parts thereof).
 
-=over 8
+=over 10
 
-=item fetchfast(SEQUENCE)
+=item fetch_fast(SEQUENCE)
 
 This method causes a cache load of all the "fast" information
 (internal date, RFC 822 size, and flags) for the given sequence.
 
-=item fetchflags(SEQUENCE)
+=item fetch_flags(SEQUENCE)
 
 This method causes a fetch of the flags for the given sequence.
 
-=item fetchstructure(MSGNO [, FLAG ...] )
+=item fetch_structure(MSGNO [, FLAG ...] )
 
-This returns the equivalent of what c-client calls an ENVELOPE
-structure for message MSGNO. If called in an array context then
-the equivalent of a BODY structure is passed as a second return
-value. The ENVELOPE structure is in the form of a Perl object of
-class C<Mail::Cclient::Envelope>. The BODY structure is in the
-form of a Perl object of class C<Mail::Cclient::Body>. See later
-on for the description of these objects. The FLAG "uid" can be
-passed which makes the MSGNO argument be interpreted as a
-message uid.
+This returns the equivalent of what c-client calls an ENVELOPE structure
+for message MSGNO. If called in an array context then the equivalent of a
+BODY structure is passed as a second return value. The ENVELOPE structure
+is in the form of a Perl object of class C<Mail::Cclient::Envelope>. The
+BODY structure is in the form of a Perl object of class
+C<Mail::Cclient::Body>. See later on for the description of these objects.
+The flag "B<uid>" can be passed which makes the MSGNO argument be
+interpreted as a message uid.
 
-=item fetchheader(MSGNO [, LINES [, FLAG ...]])
+=item fetch_message(MSGNO [, FLAG ...])
 
-This returns the header text (as a single string) of message MSGNO
-(which is interpreted as a message uid if the flag "uid" is included).
-With no LINES argument, all headers are put into the string. If an
-array ref argument is passed then it is taken to be a reference to a
-list of header names. Those headers are the ones that are included in
-the result, unless the flag "not" is passed in which case all headers
-are included except those in the list. The flag "internal" can be
-passed to avoid canonicalising the header texts. The flag
-"prefetchtext" can be passed to pre-fetch the RFC822.TEXT part of the
-message at the same time.
+This fetch a complete message (headers + body) from an IMAP server
+(a message uid if the flag "B<uid>" is included).
 
-=item fetchtext(MSGNO [, FLAG ...])
+=item fetch_header(MSGNO, SECTION [, LINES [, FLAG ...]])
 
-This returns the body of message MSGNO (a message uid if the flag
-"uid" is included). The whole body is returned as a single string
-with no MIME processing done. Line endings are canonicalised to CRLF
-unless the "internal" flag is included. If the "peek" flag is
-included then the \Seen flag is not actively set (though it may
-already have been set previously, of course).
+This returns the message header in RFC822 format (as a single string) of
+message MSGNO (which is interpreted as a message uid if the flag "B<uid>"
+is included). The SECTION specification is a string of integers delimited
+by period (#.#.#...#) and if is specifed then return only the header
+section. With no LINES argument, all headers are put into the string. If
+an array ref argument is passed then it is taken to be a reference to a
+list of header names. Those headers are the ones that are included in the
+result, unless the flag "B<not>" is passed in which case all headers are
+included except those in the list. The flag "B<internal>" can be passed to
+avoid canonicalising the header texts. The flag "B<prefetchtext>" can be
+passed to pre-fetch the RFC822.TEXT part of the message at the same time.
 
-=item fetchbody(MSGNO, SECTION, [, FLAG ...])
+=item fetch_mime(MSGNO, SECTION [, FLAG ...])
 
-This returns a single (MIME) section of message MSGNO (a message uid
-if the flag "uid" is included). The SECTION argument determines which
-section is returned and is a string in the form of a dot-separated
-list of numbers. See the IMAP specification for details. As an
-example, a multipart/mixed MIME message has sections "1", "2", "3"
-and so on. If section "3" is multipart/mixed itself, then it has
-subsections "3.1", "3.2" and so on. The "peek" and "internal" flags
-may also be passed and have the same effect as in C<fetchtext>
-documented above.
+This returns the message text of message MSGNO (which is interpreted as a
+message uid if the flag "B<uid>" is included) or a message text section if
+a valid SECTION is provided. The body is returned as a MIME single string.
+The SECTION specification is a string of integers delimited by period
+(#.#.#...#). The flag "B<internal>" can be passed to avoid canonicalising
+of "internal" format to CRLF newlines.
+
+=item fetch_text(MSGNO, SECTION [, FLAG ...])
+
+This returns the body of message MSGNO (a message uid if the flag "B<uid>"
+is included) or a message text section if a valid SECTION is provided. The
+whole body is returned as a single string with no MIME processing done.
+Line endings are canonicalised to CRLF unless the "B<internal>" flag is
+included. If the "B<peek>" flag is included then the \Seen flag is not
+actively set (though it may already have been set previously, of course).
+
+=item fetch_body(MSGNO, SECTION, [, FLAG ...])
+
+This returns a single (MIME) section of message MSGNO (a message uid if
+the flag "B<uid>" is included). The SECTION argument determines which
+section is returned and is a string in the form of a dot-separated list of
+numbers. See the IMAP specification for details. As an example, a
+multipart/mixed MIME message has sections "1", "2", "3" and so on. If
+section "3" is multipart/mixed itself, then it has subsections "3.1",
+"3.2" and so on. The "B<peek>" and "B<internal>" flags may also be passed
+and have the same effect as in C<fetch_text> documented above.
 
 =item uid(MSGNO)
 
@@ -428,7 +456,7 @@ Returns the uid associated with message MSGNO.
 This returns the MESSAGECACHE (commonly known as "elt") information
 associated with message MSGNO as an object in class Mail::Cclient::Elt.
 See below for what such an object contains. B<Important note>: for
-this method to be valid, a previous C<fetchstructure> or C<fetchflags>
+this method to be valid, a previous C<fetch_structure> or C<fetch_flags>
 B<must> have been called on this message. Otherwise, you are into the
 realms of undefined behaviour and at the mercy of the underlying
 c-client library.
@@ -441,15 +469,15 @@ c-client library.
 
 =item setflag(SEQUENCE, MAILFLAG [, FLAG ...])
 
-Sets flag MAILFLAG on each message in SEQUENCE (taken to be a
-sequence of message uids if the "uid" flag is passed). The "silent"
-flag causes the local cache not to be updated.
+Sets flag MAILFLAG on each message in SEQUENCE (taken to be a sequence of
+message uids if the "B<uid>" flag is passed). The "B<silent>" flag causes
+the local cache not to be updated.
 
 =item clearflag(SEQUENCE, MAILFLAG [, FLAG ...])
 
-Clears flag MAILFLAG from each message in SEQUENCE (taken to be a
-sequence of message uids if the "uid" flag is passed). The "silent"
-flag causes the local cache not to be updated.
+Clears flag MAILFLAG from each message in SEQUENCE (taken to be a sequence
+of message uids if the "B<uid>" flag is passed). The "B<silent>" flag
+causes the local cache not to be updated.
 
 =back
 
@@ -460,7 +488,7 @@ flag causes the local cache not to be updated.
 
 =item search(KEY => VALUE [, KEY1 => VALUE1 ...])
 
-Search for messages satisfying B<SEARCH> keyword value. The "search"
+Search for messages satisfying B<SEARCH> keyword value. The "searched"
 callback (q.v.) is called for each matching message. The B<SEARCH> keyword
 value is a string containing a search specification as defined in item
 SEARCH Command (6.4.4.) of RFC2060 (imap2000/docs/rfc/rfc2060.txt). The
@@ -524,46 +552,45 @@ The following are miscellaneous methods.
 
 =item ping
 
-Checks where the mailstream is still alive: used as a keep-alive
-and to check for new mail.
+Checks where the mailstream is still alive: used as a keep-alive and to
+check for new mail.
 
 =item check
 
-Performs a (driver-dependent) checkpoint of the mailstream
-(B<not> a check for new mail). Information about the checkpoint
-is passed to the "log" callback (q.v.).
+Performs a (driver-dependent) checkpoint of the mailstream (B<not> a check
+for new mail). Information about the checkpoint is passed to the "log"
+callback (q.v.).
 
 =item expunge
 
 Expunges all message marked as deleted in the mailbox. Calls the
-"expunged" callback (q.v.) on each such message and logging information
-is passed to the "log" callback. Decrementing message numbers happens
-after each and every message is expunged. As the example in the
-c-client documentation for mail_expunge says, if three consecutive
-messages starting at msgno 5 are expunged, the "expunged" callback
-will be called with a msgno of 5 three times.
+"expunged" callback (q.v.) on each such message and logging information is
+passed to the "log" callback. Decrementing message numbers happens after
+each and every message is expunged. As the example in the c-client
+documentation for mail_expunge says, if three consecutive messages
+starting at msgno 5 are expunged, the "expunged" callback will be called
+with a msgno of 5 three times.
 
 =back
 
 B<!> A message may be copied or moved into another mailbox with the
-methods C<copy> and C<move>. These methods only allow the
-destination mailbox to be of the same type as (and on the same
-host as) the mailstream object on which the methods are called.
+methods C<copy> and C<move>. These methods only allow the destination
+mailbox to be of the same type as (and on the same host as) the mailstream
+object on which the methods are called.
 
 =over 2
 
 =item copy(MSGNO, MAILBOX [, FLAGS])
 
-This copies message MSGNO (a message uid if the "uid" flag is
-included) to mailbox MAILBOX. If the "move" flag is included 
-then the message is actually moved instead (for compatibility
-with the CP_MOVE flag of the underlying c-client
-C<mail_copy_full> function).
+This copies message MSGNO (a message uid if the "B<uid>" flag is included)
+to mailbox MAILBOX. If the "B<move>" flag is included then the message is
+actually moved instead (for compatibility with the CP_MOVE flag of the
+underlying c-client C<mail_copy_full> function).
 
 =item move(MSGNO, MAILBOX [, FLAGS])
 
-This moved message MSGNO (a message uid if the "uid" flag is
-included) to mailbox MAILBOX.
+This moved message MSGNO (a message uid if the "B<uid>" flag is included)
+to mailbox MAILBOX.
 
 =back
 
@@ -571,13 +598,13 @@ included) to mailbox MAILBOX.
 
 =item append(MAILBOX, MESSAGE [, DATE [, FLAGS])
 
-Append a raw message (MESSAGE is an ordinary string) to MAILBOX,
-giving it an optional date and FLAGS (again, simply strings).
+Append a raw message (MESSAGE is an ordinary string) to MAILBOX, giving it
+an optional date and FLAGS (again, simply strings).
 
 =item gc( [FLAG, ...] )
 
 Garbage collects the cache for the mailstream. The FLAG arguments,
-"elt", "env", "texts", determine what is garbage collected.
+"B<elt>", "B<env>", "B<texts>", determine what is garbage collected.
 
 =back
 
@@ -596,22 +623,22 @@ Disables debugging for the mailstream.
 
 =item set_sequence(SEQUENCE)
 
-Sets the sequence bit for each message in SEQUENCE (and turns it off
-for all other messages). This has been renamed for Perl from the
-underlying c-client function C<mail_sequence> to avoid clashing with
-the sequence field member of the mailstream object.
+Sets the sequence bit for each message in SEQUENCE (and turns it off for
+all other messages). This has been renamed for Perl from the underlying
+c-client function C<mail_sequence> to avoid clashing with the sequence
+field member of the mailstream object.
 
 =item uid_set_sequence(SEQUENCE)
 
-Sets the sequence bit for each message referenced by uid in SEQUENCE
-(and turns it off for all other messages). This has been renamed for
-Perl from the underlying c-client function C<mail_uid_sequence> for
-consistency with C<set_sequence> above.
+Sets the sequence bit for each message referenced by uid in SEQUENCE (and
+turns it off for all other messages). This has been renamed for Perl from
+the underlying c-client function C<mail_uid_sequence> for consistency with
+C<set_sequence> above.
 
 =item search_msg(MSGNO, CRITERIA [, CHARSET])   
 
-It inspects the message B<MSGNO> on that stream to see if it matches
-the B<CRITERIA> or not. If it matches, 1 is returned, else 0.
+It inspects the message B<MSGNO> on that stream to see if it matches the
+B<CRITERIA> or not. If it matches, 1 is returned, else 0.
 
 =item msgno(UID)
 
@@ -677,17 +704,18 @@ The following fields are available for body message:
 
 =item content_type
 
-The content_type is a string like "type/subtype".
-Type is the MIME type of the message. For example, text, multipart, 
-message, application, audio, image, video, model, ...
+The content_type is a string like "type/subtype". Type is the MIME type of
+the message. For example, text, multipart, message, application, audio,
+image, video, model, ...
+
 Subtype is the MIME subtype of the message. For example, PLAIN, HTML,
 MIXED, RELATED, or ALTERNATIVE.
 
 =item encoding
 
-Encoding of a single part message or the body of a multipart message.
-The MIME encoding can be one of the following strings: 7bit, 8bit, 
-binary, base64, quoted-printable.
+Encoding of a single part message or the body of a multipart message. The
+MIME encoding can be one of the following strings: 7bit, 8bit, binary,
+base64, quoted-printable.
 
 =item part => [{part1}, {part2}, ...]
 
@@ -695,7 +723,7 @@ For MIME type multipart messages
 
 =item disposition => [{type => "inline/attachment"}, [parameter]]
 
-The content disposition of the body: a reference to a list consisting of 
+The content disposition of the body: a reference to a list consisting of
 the disposition type followed by a (possibly empty) list of parameter.
 
 =item parameter => [{attribute => attr_val1 }, {value => val_val1}, ...]
@@ -720,8 +748,8 @@ Message data of part body.
 
 =item path
 
-Pathname of file to attach. For example "/usr/local/images/image.jpg".
-If you use data in hash then don't use path.
+Pathname of file to attach. For example "/usr/local/images/image.jpg". If
+you use data in hash then don't use path.
 
 =back
 
@@ -733,9 +761,9 @@ This method closes the SMTP stream.
 
 =item debug
 
-This method enables SMTP protocol telemetry logging for this
-stream.  All SMTP protocol operations are passed to the application via
-the dlog() facility.
+This method enables SMTP protocol telemetry logging for this stream. All
+SMTP protocol operations are passed to the application via the dlog()
+facility.
 
 =item nodebug
 
@@ -772,16 +800,15 @@ information from MAILBOX, HOST and PERSONAL.
 
 =item Mail::Cclient::rfc822_parse_adrlist(ADDRESSES, HOST)
 
-This function parses the string of ADDRESSES into an address list array 
-ref. Any addresses missing a host name are have the host name defaulted 
+This function parses the string of ADDRESSES into an address list array
+ref. Any addresses missing a host name are have the host name defaulted
 from the HOST argument. Any parsing errors are noted via the log()
 callback.
 
 =item Mail::Cclient::rfc822_output(HASHREF)
 
-This function writes the message described with the given
-envelope and body. The options which can be passed to the rfc822_output 
-are as follows:
+This function writes the message described with the given envelope and
+body. The options which can be passed to the rfc822_output are as follows:
 
 =over 4
 
@@ -803,21 +830,21 @@ are as follows:
 Certain methods mentioned above use callbacks to pass or receive extra
 information. Each callback has a particular name (e.g. "log", "dlog",
 "list", "login") and can be associated with a particular piece of Perl
-code via the C<Mail::Cclient::set_callback> function (available for
-export by the C<Mail::Cclient> class). The C<set_callback> function
-takes pairs of arguments NAME, CODE for setting callback NAME to be
-the given CODE, a subroutine reference. The only callback which is
-required to be set and the only callback whose return value matters is
-the "login" callback (only used when the "new" method constructs an
-IMAP mailstream). Apart from that case, callbacks which have not been
-set are ignored. A callback set to undef is also ignored.
+code via the C<Mail::Cclient::set_callback> function (available for export
+by the C<Mail::Cclient> class). The C<set_callback> function takes pairs
+of arguments NAME, CODE for setting callback NAME to be the given CODE, a
+subroutine reference. The only callback which is required to be set and
+the only callback whose return value matters is the "login" callback (only
+used when the "new" method constructs an IMAP mailstream). Apart from that
+case, callbacks which have not been set are ignored. A callback set to
+undef is also ignored.
 
 =over 15
 
 =item searched(STREAM, MSGNO)
 
-This callback is invoked for each message number satifying the
-CRITERIA of the "search" method, defined above.
+This callback is invoked for each message number satifying the CRITERIA of
+the "search" method, defined above.
 
 =item exists(STREAM, MSGNO)
 
@@ -833,7 +860,7 @@ CRITERIA of the "search" method, defined above.
 
 =item status(STREAM, MAILBOX, [, ATTR, VALUE] ...)
 
-Attribute values passed can be "messages", "recent", "unseen", 
+Attribute values passed can be "messages", "recent", "unseen",
 "uidvalidity", "uidnext".
 
 =item log(STRING, ERRFLAG)
@@ -844,12 +871,11 @@ Attribute values passed can be "messages", "recent", "unseen",
 
 =item login(NETMBXINFO, TRIAL)
 
-The "login" callback is invoked when the c-client library is
-opening an IMAP mailstream and needs to find out the username
-and password required. This callback must return precisely two
-values in the form (USERNAME, PASSWORD). TRIAL is the number of
-the current login attempt (starting at 1). NETMBXINFO is a hash
-reference with the following keys:
+The "login" callback is invoked when the c-client library is opening an
+IMAP mailstream and needs to find out the username and password required.
+This callback must return precisely two values in the form (USERNAME,
+PASSWORD). TRIAL is the number of the current login attempt (starting at
+1). NETMBXINFO is a hash reference with the following keys:
 
 =over 11
 
@@ -871,18 +897,18 @@ The mailbox name requested.
 
 =item anoflag
 
-Set to 1 if anonymous access has been requested otherwise this
-key is not created at all.
+Set to 1 if anonymous access has been requested otherwise this key is not
+created at all.
 
 =item dbgflag
 
-Set to 1 if debugging access has been requested otherwise this
-key is not created at all.
+Set to 1 if debugging access has been requested otherwise this key is not
+created at all.
 
 =item secflag
 
-Set to 1 if secure access has been requested otherwise this
-key is not created at all.
+Set to 1 if secure access has been requested otherwise this key is not
+created at all.
 
 =item sslflag
 
@@ -903,26 +929,26 @@ key is not created at all.
 
 =head1 ENVELOPES, BODIES, ADDRESSES and ELTS
 
-The results of the C<fetchstructure> and C<elt> methods involve
-objects in the classes C<Mail::Cclient::Envelope>,
-C<Mail::Cclient::Body>, C<Mail::Cclient::Address> and C<Mail::Cclient::Elt>.
-These will be referred to as Envelope, Body, Address and Elt objects
-respectively. These objects are all "read-only" and only have methods
-for picking out particular fields.
+The results of the C<fetch_structure> and C<elt> methods involve objects
+in the classes C<Mail::Cclient::Envelope>, C<Mail::Cclient::Body>,
+C<Mail::Cclient::Address> and C<Mail::Cclient::Elt>. These will be
+referred to as Envelope, Body, Address and Elt objects respectively. These
+objects are all "read-only" and only have methods for picking out
+particular fields.
 
 
 =head2 Address objects
 
-An Address object represents a single email address and has the
-following fields, available as methods or, if Perl 5.005 or later
-is being used, as pseudo-hash keys.
+An Address object represents a single email address and has the following
+fields, available as methods or, if Perl 5.005 or later is being used, as
+pseudo-hash keys.
 
 =over 5
 
 =item personal
 
-The personal phrase of the address (i.e. the part contained in
-parentheses or outside the angle brackets).
+The personal phrase of the address (i.e. the part contained in parentheses
+or outside the angle brackets).
 
 =item adl
 
@@ -930,8 +956,8 @@ The at-domain-list or source route (not usually used).
 
 =item mailbox
 
-The mailbox name (i.e. the part before the @ which is usually
-a username or suchlike).
+The mailbox name (i.e. the part before the @ which is usually a username
+or suchlike).
 
 =item host
 
@@ -939,47 +965,46 @@ The hostname (i.e. the part after the @).
 
 =item error
 
-Only set if the address has delivery errors when C<smtp_mail> is
-called. Since that function hasn't been implemented in the Perl
-module yet, this isn't any use.
+Only set if the address has delivery errors when C<smtp_mail> is called.
+Since that function hasn't been implemented in the Perl module yet, this
+isn't any use.
 
 =back
 
 
 =head2 Envelope objects
 
-An Envelope object represents a structured form of the header of
-a message. It has the following fields, available as methods or,
-if Perl 5.005 or later is being used, as pseudo-hash keys.
+An Envelope object represents a structured form of the header of a
+message. It has the following fields, available as methods or, if Perl
+5.005 or later is being used, as pseudo-hash keys.
 
 =over 2
 
-=item remail, date, subject, in_reply_to, message_id, newsgroups, 
+=item remail, date, subject, in_reply_to, message_id, newsgroups,
 followup_to, references,
 
 These are all strings.
 
 =item return_path, from, sender, reply_to, to, cc, bcc
 
-These are all references to lists which contain one or more
-Address objects.
+These are all references to lists which contain one or more Address
+objects.
 
 =back
 
 
 =head2 Body objects
 
-A Body object represents the structure of a message body (not
-its contents).It has the following fields, available as methods
-or, if Perl 5.005 or later is being used, as pseudo-hash keys.
+A Body object represents the structure of a message body (not its
+contents).It has the following fields, available as methods or, if Perl
+5.005 or later is being used, as pseudo-hash keys.
 
-=over 11
+=over 12
 
 =item type
 
-The MIME type (as a string) of the message (currently in
-uppercase as returned from the c-client library). For example,
-"TEXT" or "MULTIPART".
+The MIME type (as a string) of the message (currently in uppercase as
+returned from the c-client library). For example, "TEXT" or "MULTIPART".
 
 =item encoding
 
@@ -987,8 +1012,8 @@ The MIME encoding (as a string) of the message.
 
 =item subtype
 
-The MIME subtype (as a string) of the message. For example,
-"PLAIN", "HTML" or "MIXED".
+The MIME subtype (as a string) of the message. For example, "PLAIN",
+"HTML" or "MIXED".
 
 =item parameter
 
@@ -1004,14 +1029,13 @@ The MIME description of the body part.
 
 =item nested
 
-If (and only if) the body is of MIME type multipart, then this
-field is a reference to a list of Body objects, each representing
-one of the sub parts of the message. If (and only if) the body is
-of MIME type message/rfc822, then this field is a reference to a list
-of the form (ENVELOPE, BODY) which are, respectively, the Body and
-Envelope objects referring to the encapsulated message. If the
-message is not of MIME type multipart or message/rfc822 then this
-field is undef.
+If (and only if) the body is of MIME type multipart, then this field is a
+reference to a list of Body objects, each representing one of the sub
+parts of the message. If (and only if) the body is of MIME type
+message/rfc822, then this field is a reference to a list of the form
+(ENVELOPE, BODY) which are, respectively, the Body and Envelope objects
+referring to the encapsulated message. If the message is not of MIME type
+multipart or message/rfc822 then this field is undef.
 
 =item lines
 
@@ -1027,17 +1051,17 @@ The MD5 checksum of the body.
 
 =item disposition
 
-The content disposition of the body: a reference to a list
-consisting of the disposition type followed by a (possibly empty)
-list of parameter key/value pairs.
+The content disposition of the body: a reference to a list consisting of
+the disposition type followed by a (possibly empty) list of parameter
+key/value pairs.
 
 =back
 
 
 =head2 Elt objects
 
-These have fields containing flag information for a given message,
-along with internal date information and the RFC822 message size.
+These have fields containing flag information for a given message, along
+with internal date information and the RFC822 message size.
 
 =over 4
 
@@ -1048,31 +1072,41 @@ The message number.
 =item date
 
 This contains the internal date information (spread about a series of
-bitfields in the underlying c-client library C structure) in the form
-of a string:
+bitfields in the underlying c-client library C structure) in the form of a
+string:
 
     yyyy-mm-dd hh:mm:ss [+-]hhmm
 
 =item flags
 
-A reference to a list of flags associated with the message. The flags
-are in the forms of their RFC2060 names (e.g. \Deleted, \Seen) for
-official flags and the user-chosen name for user-defined flags.
+A reference to a list of flags associated with the message. The flags are
+in the forms of their RFC2060 names (e.g. \Deleted, \Seen) for official
+flags and the user-chosen name for user-defined flags.
 
 =item rfc822_size
 
 The RFC822 size of the message.
+
+=item imapdate
+
+This contains the internal date information (spread about a series of
+bitfields in the underlying c-client library C structure) in the form of a
+string:
+
+    dd-mmm-yyyy hh:mm:ss [+-]hhmm
+
+This form is needed by IMAP servers.
 
 =back
 
 
 =head1 SEARCHING CRITERIA
 
-Searching criteria consist of one or more search keys. When multiple keys 
-are specified, the result is the intersection (AND function) of all the 
+Searching criteria consist of one or more search keys. When multiple keys
+are specified, the result is the intersection (AND function) of all the
 messages that match those keys. A search key can also be a parenthesized
-list of one or more search keys. In all search keys that use strings, a 
-message matches the key if the string is a substring of the field. The 
+list of one or more search keys. In all search keys that use strings, a
+message matches the key if the string is a substring of the field. The
 matching is case-insensitive.
 
 The defined search keys are as follows.
@@ -1130,7 +1164,7 @@ FROM field.
 =item HEADER <field-name> <string>
 
 Messages that have a header with the specified field-name (as defined in
-[RFC-822]) and that contains the specified string in the [RFC-822] 
+[RFC-822]) and that contains the specified string in the [RFC-822]
 field-body.
 
 =item KEYWORD <flag>
@@ -1144,8 +1178,8 @@ octets.
 
 =item NEW
 
-Messages that have the B<\Recent> flag set but not the B<\Seen> flag.
-This is functionally equivalent to "(RECENT UNSEEN)".
+Messages that have the B<\Recent> flag set but not the B<\Seen> flag. This
+is functionally equivalent to "(RECENT UNSEEN)".
 
 =item NOT <search-key>
 
@@ -1211,7 +1245,7 @@ field.
 
 =item UID <message set>
 
-Messages with unique identifiers corresponding to the specified unique 
+Messages with unique identifiers corresponding to the specified unique
 identifier set.
 
 =item UNANSWERED
@@ -1242,44 +1276,38 @@ Messages that do not have the B<\Seen> flag set.
 
 =head1 CAVEATS
 
-This CAVEATS section was contributed by Bruce Gingery
-<bgingery@gtcs.com>.
+This CAVEATS section was contributed by Bruce Gingery <bgingery@gtcs.com>.
 
-The Mail::Cclient::B<mailbox> method returns the actual full path
-opened, which may not give an accurate string comparison with
-the mailbox that was requested to be opened.  This is especially
-true with remote mailboxes.
+The Mail::Cclient::B<mailbox> method returns the actual full path opened,
+which may not give an accurate string comparison with the mailbox that was
+requested to be opened.  This is especially true with remote mailboxes.
 
-The C-Client library is VERY intolerant of logic errors, and
-does not automatically garbage collect.  Use the C<gc> method
-as it makes sense for your application.
+The C-Client library is VERY intolerant of logic errors, and does not
+automatically garbage collect.  Use the C<gc> method as it makes sense for
+your application.
 
-Some POP3 servers B<delete and expunge WITHOUT instruction to 
-do so.>  This is not a malfunction in either the C-Client code
-nor the Mail::Cclient modules.
+Some POP3 servers B<delete and expunge WITHOUT instruction to do so.> This
+is not a malfunction in either the C-Client code nor the Mail::Cclient
+modules.
 
-The C<open> method can be used to extend a C<halfopen>
-connection (e.g. use the same c-client instance to read
-a mailbox that was previously halfopened for a list of
-mailboxes.  This may or may not be a good idea, depending
-upon your needs.  It does, however, eliminate the problem
-of opening multiple connections, such as has been noted in 
-Netscape 4.x mail handling, and which plagues some servers
-badly.  It may be better, however, to C<close> the connection
-used for C<list>, and re-instantiate to process the mailbox.
+The C<open> method can be used to extend a C<halfopen> connection (e.g.
+use the same c-client instance to read a mailbox that was previously
+halfopened for a list of mailboxes. This may or may not be a good idea,
+depending upon your needs.  It does, however, eliminate the problem of
+opening multiple connections, such as has been noted in Netscape 4.x mail
+handling, and which plagues some servers badly.  It may be better,
+however, to C<close> the connection used for C<list>, and re-instantiate
+to process the mailbox.
 
-C-Client may not support headers you need for send.  Note
-that other modules I<can> be used in place of sending with
-the c-client.  These include Net::SMTP, local invocation of 
-piped sendmail (or other E-mail insertion software), or 
-sendto: URLs under libwww POST.
+C-Client may not support headers you need for send. Note that other
+modules I<can> be used in place of sending with the c-client. These
+include Net::SMTP, local invocation of piped sendmail (or other E-mail
+insertion software), or sendto: URLs under libwww POST.
 
-C<Elt> information for remote mailboxes is server dependent,
-as well.  You may or may not get rfc822_size in elt returns,
-for example.
+C<Elt> information for remote mailboxes is server dependent, as well. You 
+may or may not get rfc822_size in elt returns, for example.
 
-Multiple c-client instances open simultaneously may not
-work as expected.
+Multiple c-client instances open simultaneously may not work as expected.
 
 =head1 AUTHOR
 
@@ -1289,7 +1317,7 @@ Maintained by Henrique Dias, hdias@esb.ucp.pt.
 
 =head1 VERSION
 
-version 1.6
+version 1.7
 
 =head1 SEE ALSO
 

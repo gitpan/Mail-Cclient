@@ -1,4 +1,4 @@
-		  Perl Mail::Cclient module, Version 1.6
+		  Perl Mail::Cclient module, Version 1.7
 
 		Copyright (c) 1998 - 2002, Malcolm Beattie
 
@@ -33,7 +33,7 @@ Washington IMAP daemon (written by Mark Crispin).
 INSTALLATION
 
 Install the University of Washington imapd source distribution
-(e.g. version imap-2001 or above) and build at least the c-client library
+(e.g. version imap-2002.RC4 or above) and build at least the c-client library
 (c-client/c-client.a). The home site for the UW imapd is
     ftp://ftp.cac.washington.edu/mail/imap.tar.Z
 
@@ -94,8 +94,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.6 submitted by Henrique Dias
+Version 1.7 submitted by Henrique Dias
 Questions, bug reports, useful code bits, and suggestions for
-Mail-Cclient-1.6 should just be sent to to me at hdias@esb.ucp.pt
+Mail-Cclient-1.7 should just be sent to me at hdias@esb.ucp.pt
 Henrique Dias
-26 Apr 2002
+14 Sep 2002

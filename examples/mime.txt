@@ -15,5 +15,5 @@ my $stream = shift;
 my $msgno = shift;
 $c = Mail::Cclient->new($stream) or die "can't open mailstream $stream\n";
 while ($section = shift) {
-    print "*** $section ***\n", $c->fetchbody($msgno, $section);
+    print "*** $section ***\n", $c->fetch_body($msgno, $section);
 }

@@ -1,5 +1,6 @@
 /*
  *	Cclient.xs
+ *	Last Edited: Sat Sep 14 14:44:04 WEST 2002
  *
  *	Copyright (c) 1998 - 2002 Malcolm Beattie
  *
@@ -538,11 +539,14 @@ make_envelope(ENVELOPE *envelope) {
 /*
  * make_elt turns a C-client MESSAGECACHE ("elt") into a Perl list
  * ref of the form
- *     [keyref, msgno, date, flags, rfc822_size]
+ *     [keyref, msgno, date, flags, rfc822_size, imapdate]
  * blessed into Mail::Cclient::Elt. Date contains the internal date
  * information which held in separate bit fields in the underlying
  * C structure but which is presented in Perl as a string in the form
  *     yyyy-mm-dd hh:mm:ss [+-]hhmm
+ * The imapdate field contains the same date but in the form
+ *     dd-mmm-yyyy hh:mm:ss [+-]hhmm
+ * as specified in RFC2060.
  * The flags field is a ref to a list of strings such as
  * \Deleted, \Flagged, \Answered etc (as per RFC 2060) plus
  * user-defined flag names set via the Mail::Cclient setflag method.
@@ -554,7 +558,10 @@ static SV *
 make_elt(MAILSTREAM *stream, MESSAGECACHE *elt) {
 	AV *av = newAV();
 	AV *flags = newAV();
-	char datebuf[26]; /* to fit "yyyy-mm-dd hh:mm:ss [+-]hhmm\0" */
+
+	char datebuf[27]; /* to fit "dd-mmm-yyyy hh:mm:ss [+-]hhmm\0" */
+	static char *months[] = { "", "Jan", "Feb", "Mar", "Apr", "May",
+		"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	int i;
     
 	av_push(av, SvREFCNT_inc(elt_fields));
@@ -595,6 +602,11 @@ make_elt(MAILSTREAM *stream, MESSAGECACHE *elt) {
 	}
 	av_push(av, newRV_noinc((SV*)flags));
 	av_push(av, newSViv(elt->rfc822_size)); 
+	sprintf(datebuf, "%02d-%s-%04d %02d:%02d:%02d %c%02d%02d",
+		elt->day, months[elt->month], BASEYEAR + elt->year, elt->hours,
+		elt->minutes, elt->seconds,
+		elt->zoccident ? '-' : '+', elt->zhours, elt->zminutes);
+		av_push(av, newSVpv(datebuf, sizeof(datebuf)));
 	return sv_bless(newRV_noinc((SV*)av), stash_Elt);
 }
 
@@ -1278,9 +1290,11 @@ MODULE = Mail::Cclient	PACKAGE = Mail::Cclient	PREFIX = mail_
  #
 
 void
-mail_fetchfast(stream, sequence, ...)
+mail_fetch_fast(stream, sequence, ...)
 	Mail::Cclient	stream
-	char *		sequence
+	char 		*sequence
+    ALIAS:
+	Mail::Cclient::fetchfast = 1
     PREINIT:
 	int i;
 	long flags = 0;
@@ -1290,17 +1304,19 @@ mail_fetchfast(stream, sequence, ...)
 	    if (strEQ(flag, "uid"))
 		flags |= FT_UID;
 	    else {
-		croak("unknown flag \"%s\" passed to Mail::Cclient::fetchfast",
+		croak("unknown flag \"%s\" passed to Mail::Cclient::fetch_fast",
 		      flag);
 	    }
 	}
-	mail_fetchfast_full(stream, sequence, flags);
+	mail_fetch_fast(stream, sequence, flags);
 	ST(0) = &sv_yes;
 
 void
-mail_fetchflags(stream, sequence, ...)
+mail_fetch_flags(stream, sequence, ...)
 	Mail::Cclient	stream
-	char *		sequence
+	char 		*sequence
+    ALIAS:
+	Mail::Cclient::fetchflags = 1
     PREINIT:
 	int i;
 	long flags = 0;
@@ -1311,16 +1327,18 @@ mail_fetchflags(stream, sequence, ...)
 		flags |= FT_UID;
 	    else {
 		croak("unknown flag \"%s\" passed to"
-		      " Mail::Cclient::fetchflags", flag);
+		      " Mail::Cclient::fetch_flags", flag);
 	    }
 	}
-	mail_fetchflags_full(stream, sequence, flags);
+	mail_fetch_flags(stream, sequence, flags);
 	ST(0) = &sv_yes;
 
 void
-mail_fetchstructure(stream, msgno, ...)
+mail_fetch_structure(stream, msgno, ...)
 	Mail::Cclient	stream
 	unsigned long	msgno
+    ALIAS:
+	Mail::Cclient::fetchstructure = 1
     PREINIT:
 	int i;
 	long flags = 0;
@@ -1334,12 +1352,12 @@ mail_fetchstructure(stream, msgno, ...)
 		flags |= FT_UID;
 	    else {
 		croak("unknown flag \"%s\" passed to"
-		      " Mail::Cclient::fetchstructure", flag);
+		      " Mail::Cclient::fetch_structure", flag);
 	    }
 	}
 	if (GIMME == G_ARRAY)
 	    bodyp = &body;
-	e = mail_fetchstructure_full(stream, msgno, bodyp, flags);
+	e = mail_fetch_structure(stream, msgno, bodyp, flags);
 	XPUSHs(sv_2mortal(make_envelope(e)));
 	if (GIMME == G_ARRAY)
 	    XPUSHs(sv_2mortal(make_body(body)));
@@ -1499,27 +1517,57 @@ mail_sort(stream, ...)
 
 
 void
-mail_fetchheader(stream, msgno, ...)
+mail_fetch_message(stream, msgno, ...)
 	Mail::Cclient	stream
 	unsigned long	msgno
     PREINIT:
 	int i;
 	long flags = 0;
+	unsigned long len;
+	char *msg;
+    PPCODE:
+	for (i = 2; i < items; i++) {
+	    char *flag = SvPV(ST(i), na);
+	    if (strEQ(flag, "uid"))
+		flags |= FT_UID;
+	    else {
+		croak("unknown flag \"%s\" passed to"
+		    " Mail::Cclient::fetch_message", flag);
+	    }
+	}
+	msg = mail_fetch_message(stream, msgno, &len, flags);
+	XPUSHs(sv_2mortal(newSVpv(msg, len)));
+
+
+void
+mail_fetch_header(stream, msgno, ...)
+	Mail::Cclient	stream
+	unsigned long	msgno
+    ALIAS:
+	Mail::Cclient::fetchheader = 1
+    PREINIT:
+	int i;
+	int n = 2;
+	char *section = NIL;
+	long flags = 0;
 	STRINGLIST *lines = 0;
 	unsigned long len;
 	char *hdr;
     PPCODE:
-	for (i = 2; i < items; i++) {
+	if(ix == 0 && items > 2) {
+	    section = SvPV(ST(2), na);
+	    n++;
+	}
+	for (i = n; i < items; i++) {
 	    SV *sv = ST(i);
 	    if (SvROK(sv)) {
 		sv = (SV*)SvRV(sv);
 		if (SvTYPE(sv) != SVt_PVAV) {
 		    croak("reference to non-list passed to"
-			  " Mail::Cclient::fetchheader");
+			  " Mail::Cclient::fetch_header");
 		}
 		lines = av_to_stringlist((AV*)sv);
-	    }
-	    else {
+	    } else {
 		char *flag = SvPV(sv, na);
 		if (strEQ(flag, "uid"))
 		    flags |= FT_UID;
@@ -1531,26 +1579,35 @@ mail_fetchheader(stream, msgno, ...)
 		    flags |= FT_PREFETCHTEXT;
 		else {
 		    croak("unknown flag \"%s\" passed to"
-			  " Mail::Cclient::fetchheader", flag);
+			  " Mail::Cclient::fetch_header", flag);
 		}
 	    }
 	}
-	hdr = mail_fetchheader_full(stream, msgno, lines, &len, flags);
+	hdr = mail_fetch_header(stream, msgno, section, lines, &len, flags);
 	XPUSHs(sv_2mortal(newSVpv(hdr, len)));
 	if(lines)
 	    mail_free_stringlist(&lines);
 
+
 void
-mail_fetchtext(stream, msgno, ...)
+mail_fetch_text(stream, msgno, ...)
 	Mail::Cclient	stream
 	unsigned long	msgno
+    ALIAS:
+	Mail::Cclient::fetchtext = 1
     PREINIT:
 	int i;
+	int n = 2;
+	char *section = NIL;
 	long flags = 0;
 	unsigned long len;
 	char *text;
     PPCODE:
-	for (i = 2; i < items; i++) {
+	if(ix == 0 && items > 2) {
+	    section = SvPV(ST(2), na);
+	    n++;
+	}
+	for (i = n; i < items; i++) {
 	    char *flag = SvPV(ST(i), na);
 	    if (strEQ(flag, "uid"))
 		flags |= FT_UID;
@@ -1560,17 +1617,46 @@ mail_fetchtext(stream, msgno, ...)
 		flags |= FT_INTERNAL;
 	    else {
 		croak("unknown flag \"%s\" passed to"
-		      " Mail::Cclient::fetchtext", flag);
+		      " Mail::Cclient::fetch_text", flag);
 	    }
 	}
-	text = mail_fetchtext_full(stream, msgno, &len, flags);
+	text = mail_fetch_text(stream, msgno, section, &len, flags);
 	XPUSHs(sv_2mortal(newSVpv(text, len)));
 
+
 void
-mail_fetchbody(stream, msgno, section, ...)
+mail_fetch_mime(stream, msgno, section = NIL, ...)
+	Mail::Cclient	stream
+	unsigned long	msgno   
+	char 		*section
+    PREINIT:
+	int i;
+        long flags = 0;
+        unsigned long len;
+        char *mime;
+    PPCODE:
+	for (i = 3; i < items; i++) {
+	    char *flag = SvPV(ST(i), na);
+	    if (strEQ(flag, "uid"))
+		flags |= FT_UID;
+	    else if (strEQ(flag, "internal"))
+		flags |= FT_INTERNAL;
+	    else {
+		croak("unknown flag \"%s\" passed to"
+			" Mail::Cclient::fetch_mime", flag);
+	    }
+	}
+	mime = mail_fetch_mime(stream, msgno, section, &len, flags);
+	XPUSHs(sv_2mortal((mime) ? newSVpvn(mime, len) : newSVpv("", 0)));
+
+
+void
+mail_fetch_body(stream, msgno, section = NIL, ...)
 	Mail::Cclient	stream
 	unsigned long	msgno
 	char *		section
+    ALIAS:
+	Mail::Cclient::fetchbody = 1
     PREINIT:
 	int i;
 	long flags = 0;
@@ -1586,11 +1672,11 @@ mail_fetchbody(stream, msgno, section, ...)
 	    else if (strEQ(flag, "internal"))
 		flags |= FT_INTERNAL;
 	    else {
-		croak("unknown flag \"%s\" passed to Mail::Cclient::fetchbody",
+		croak("unknown flag \"%s\" passed to Mail::Cclient::fetch_body",
 		      flag);
 	    }
 	}
-	body = mail_fetchbody_full(stream, msgno, section, &len, flags);
+	body = mail_fetch_body(stream, msgno, section, &len, flags);
 	XPUSHs(sv_2mortal(newSVpv(body, len)));
 
 
@@ -1711,7 +1797,7 @@ mail_append(stream, mailbox, message, date = 0, flags = 0)
     CODE:
 	str = SvPV(message, len);
 	CCLIENT_LOCAL_INIT(&s, mail_string, (void *)str, len);
-	RETVAL = mail_append_full(stream, mailbox, date, flags, &s);
+	RETVAL = mail_append_full(stream, mailbox, flags, date, &s);
      OUTPUT:
 	RETVAL
 
@@ -2188,7 +2274,7 @@ rfc822_base64(source)
 	PPCODE:
 		s = (unsigned char*)SvPV(source, srcl);
 		s = rfc822_base64(s, (unsigned long)srcl, &len);
-		XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
+		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
 
 void
 rfc822_qprint(source)
@@ -2200,7 +2286,7 @@ rfc822_qprint(source)
 	PPCODE:
 		s = (unsigned char*)SvPV(source, srcl);
 		s = rfc822_qprint(s, (unsigned long)srcl, &len);
-		XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
+		XPUSHs(sv_2mortal((s) ? newSVpvn((char*)s, (STRLEN)len) : newSVpv("", 0)));
 
 
 void            

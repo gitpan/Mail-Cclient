@@ -12,7 +12,7 @@ my $c = Mail::Cclient->new($mailbox, 'readonly') or print "not ";
 
 print "ok 2\n";
 
-$c->fetchbody(1, "1") or print "not ";
+$c->fetch_text(1) or print "not ";
 
 print "ok 3\n";
 

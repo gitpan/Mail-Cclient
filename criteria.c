@@ -4,7 +4,7 @@
  *
  * Author:	Helena Gomes <hpgomes@mail.pt>
  * Date:	18 July 2001
- * Last Edited:	15 October 2001
+ * Last Edited:	Tue Sep  3 12:45:33 WEST 2002
  *
  * Parts of code from sources of c-client (Mark Crispin)
  * Copyright 2001 University of Washington.
@@ -364,8 +364,13 @@ long _crit_number(unsigned long *number, char **arg) {
 
 SEARCHPGM *make_criteria(char *criteria) {
 	SEARCHPGM *spgm;
+	char tmp[MAILTMPLEN];
 
 	if(!criteria) return NIL;
-	_parse_criteria(spgm = mail_newsearchpgm(), &criteria, 0, 0, 0);
+	if(!_parse_criteria(spgm = mail_newsearchpgm(), &criteria, 0, 0, 0)) {
+		sprintf(tmp, "Invalid search criteria string: %s", criteria);   
+		MM_LOG(tmp, ERROR);
+		return NIL;
+	}
 	return spgm;
 }
