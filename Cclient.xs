@@ -15,7 +15,10 @@
  * we actually need the cclient INIT macro so we copy its definition
  * from mail.h and call it CCLIENT_LOCAL_INIT instead. This macro
  * therefore needs keeping in sync with mail.h.
+ * For imap-2000 we also need to include stddef.h first to ensure
+ * size_t is defined since misc.h needs it.
  */
+#include <stddef.h>
 #include "mail.h"
 #include "misc.h"
 #include "rfc822.h"
@@ -1116,6 +1119,11 @@ mail_append(stream, mailbox, message, date = 0, flags = 0)
 	RETVAL = mail_append_full(stream, mailbox, date, flags, &s);
      OUTPUT:
 	RETVAL
+
+void
+mail_search(stream, criteria)
+	Mail::Cclient	stream
+	char *		criteria
 
 void
 mail_real_gc(stream, ...)

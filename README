@@ -1,4 +1,4 @@
-		     Perl Mail::Cclient module, Version 0.5
+		     Perl Mail::Cclient module, Version 1.1
 
 		Copyright (c) 1998, 1999, 2000, Malcolm Beattie
 
@@ -33,9 +33,9 @@ Washington IMAP daemon (written by Mark Crispin).
 INSTALLATION
 
 Install the University of Washington imapd source distribution
-(e.g. version 4.5) and build at least the c-client library
+(e.g. version imap-2000) and build at least the c-client library
 (c-client/c-client.a). The home site for the UW imapd is
-    ftp://ftp.cac.washington.edu/mail/imap-4.5.tar.Z
+    ftp://ftp.cac.washington.edu/mail/imap-2000.tar.Z
 
 If your platform needs any additional LIBS entries, edit Makefile.PL
 and add them. Do
@@ -63,19 +63,13 @@ Once the extension has been built, you can do
 
 to complete the installation.
 
-TESTING
-
-Don't type "make test". The test files t/*.t are *not* automated ones
-which produce "ok ..." output but reading them should show how a few
-of the basics work.
-
 DOCUMENTATION
 
-Cclient.pm includes fairly complete (but rather hurriedly-written)
-documentation which the build/installation process will turn into
-a man page. You may also want to read the $CCLIENT_DIR/docs/Internal.doc
-which documents the underlying c-client library. However, that
-documentation is at odds with the actual code in a few places.
+Cclient.pm includes fairly complete documentation which the
+build/installation process will turn into a man page. You may also
+want to read the $CCLIENT_DIR/docs/Internal.doc which documents the
+underlying c-client library. However, that documentation is at odds
+with the actual code in a few places.
 
 Malcolm Beattie
-7 June 1999
+31 Oct 2000

@@ -13,9 +13,10 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.0";
+$VERSION = "1.1";
 @ISA = qw(Exporter DynaLoader);
-@EXPORT_OK = qw(set_callback get_callback);
+@EXPORT_OK = qw(set_callback get_callback
+		rfc822_base64 rfc822_qprint rfc822_date);
 
 =head1 NAME
 
@@ -50,6 +51,8 @@ Mail::Cclient - Mailbox access via the c-client library API
     $c->copy(SEQUENCE, MAILBOX [, FLAG ...]);
     $c->move(SEQUENCE, MAILBOX [, FLAG ...]);
     $c->append(MAILBOX, MESSAGE [, DATE [, FLAGS]);
+
+    $c->search(CRITERIA);		# uses "search" callback
 
     $c->ping;
     $c->check;				# uses "log" callback
@@ -351,6 +354,14 @@ included) to mailbox MAILBOX.
 Append a raw message (MESSAGE is an ordinary string) to MAILBOX,
 giving it an optional date and FLAGS (again, simply strings).
 
+=item search(CRITERIA)
+
+Search for messages satisfying CRITERIA. The "search" callback (q.v.)
+is called for each matching message. CRITERIA is a string containing
+a search specification as defined on pages 15-16 of RFC1176. Note
+that this is an IMAP2 search specification--this method does not
+support the more advanced IMAP4rev1 search specification.
+
 =back
 
 The following methods provide access to information about mailboxes.
@@ -452,7 +463,7 @@ ANONYMOUSHOME.
 
 =back
 
-The following functions (not methods) perform data conversion.
+The following are utility functions (not methods).
 
 =over
 
@@ -463,6 +474,10 @@ Returns the SOURCE text converted to base64 format.
 =item Mail::Cclient::rfc822_qprint(SOURCE)
 
 Returns the SOURCE text converted to quoted printable format.
+
+=item Mail::Cclient::rfc822_date()
+
+Returns the current date in RFC822 format.
 
 =back
 
@@ -483,6 +498,9 @@ set are ignored. A callback set to undef is also ignored.
 =over
 
 =item searched(STREAM, MSGNO)
+
+This callback is invoked for each message number satifying the
+CRITERIA of the "search" method, defined above.
 
 =item exists(STREAM, MSGNO)
 
@@ -657,11 +675,11 @@ The MIME description of the body part.
 If (and only if) the body is of MIME type multipart, then this
 field is a reference to a list of Body objects, each representing
 one of the sub parts of the message. If (and only if) the body is
-of MIME type message, then this field is a reference to a list of
-the form (ENVELOPE, BODY) which are, respectively, the Body and
+of MIME type message/rfc822, then this field is a reference to a list
+of the form (ENVELOPE, BODY) which are, respectively, the Body and
 Envelope objects referring to the encapsulated message. If the
-message is not of MIME type multipart or message then this field
-is undef.
+message is not of MIME type multipart or message/rfc822 then this
+field is undef.
 
 =item lines
 

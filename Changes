@@ -1,3 +1,14 @@
+1.1
+31 Oct 2000
+
+* Added "search" method.
+
+* Fixed documentation to match tightened MIME message/rfc822 check.
+
+* Renamed "t" directory to "examples".
+
+* Added rfc822_date to @EXPORT_OK and documentation.
+
 1.0
 10 May 2000
 
