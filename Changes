@@ -1,5 +1,14 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.6
+26 Apr 2002
+* The make_thread function was rewritten.
+  (from code submitted by Raul Dias <raul@dias.com.br>)
+
+* Added "t" directory and test scripts.
+
+* Added "testmbx" directory and a mailbox file for tests.
+
 1.5
 01 Dec 2001
 
@@ -114,7 +123,6 @@ Revision history for Perl extension Mail::Cclient.
   hold of a date which includes the timezone name)
 
 * Added $body->disposition to get content-disposition information
-
 
 0.5
 7 Jun 1999

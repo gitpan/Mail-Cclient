@@ -1,7 +1,7 @@
 /*
  *	Cclient.xs
  *
- *	Copyright (c) 1998,1999,2000,2001 Malcolm Beattie
+ *	Copyright (c) 1998 - 2002 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -604,21 +604,31 @@ make_elt(MAILSTREAM *stream, MESSAGECACHE *elt) {
 static AV *
 make_thread(THREADNODE *thr) {
 	AV *av = newAV();
+	AV *av_branch;
+	AV *av_branch_tmp = newAV();
+	I32 i = 0;
+	I32 i_max;
 	THREADNODE *t;
 	while(thr) {
 		if(thr->num) {
-			av_push(av, newSViv(thr->num));
+			av_branch = newAV();
+			av_push(av_branch, newSViv(thr->num));
 			if(t = thr->next) {
-				while (t) {
+				while(t) {
 					if(t->branch) {
-						av_push(av, newRV_noinc((SV*)make_thread(t)));
+						av_branch_tmp = make_thread(t);
+						i_max = av_len(av_branch_tmp);
+						for(i=0; i<= i_max; i++)
+							av_push(av_branch, av_shift(av_branch_tmp));
+						av_undef(av_branch_tmp);
 						t = NIL;
 					} else {
-						av_push(av, newSViv(t->num));
+						av_push(av_branch, newSViv(t->num));
 						t = t->next;
 					}
 				}
 			}
+			av_push(av, newRV_noinc((SV*)av_branch));
 		} else {
 			av_push(av, newRV_noinc((SV*)make_thread(thr->next)));
 		}

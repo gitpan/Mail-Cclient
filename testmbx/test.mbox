@@ -1,0 +1,2974 @@
+From ahu@home.ds9a.nl  Sat Oct  7 23:29:30 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@outpost.ds9a.nl
+Received: from home.ds9a.nl (3dyn35.com21.casema.net [212.64.94.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id 70B887504B
+	for <lartc@outpost.ds9a.nl>; Sat,  7 Oct 2000 23:29:30 +0200 (CEST)
+Received: (qmail 4779 invoked by uid 500); 7 Oct 2000 22:24:03 -0000
+Date: Sun, 8 Oct 2000 00:24:03 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Message-ID: <20001008002403.B4733@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+Subject: [LARTC] testing
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-IMAPbase: 1005784835 1666
+Status: RO
+X-Status: 
+X-Keywords:                   
+X-UID: 1
+
+testing
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+
+From ahu@home.ds9a.nl  Sat Oct  7 23:32:22 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@outpost.ds9a.nl
+Received: from home.ds9a.nl (3dyn35.com21.casema.net [212.64.94.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id 0FC3A7504B
+	for <lartc@outpost.ds9a.nl>; Sat,  7 Oct 2000 23:32:22 +0200 (CEST)
+Received: (qmail 4795 invoked by uid 500); 7 Oct 2000 22:26:55 -0000
+Date: Sun, 8 Oct 2000 00:26:55 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] testing
+Message-ID: <20001008002655.A4787@home.ds9a.nl>
+References: <20001008002403.B4733@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <20001008002403.B4733@home.ds9a.nl>; from ahu@ds9a.nl on Sun, Oct 08, 2000 at 12:24:03AM +0200
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+Status: RO
+X-Status: 
+X-Keywords:                 
+X-UID: 2
+
+On Sun, Oct 08, 2000 at 12:24:03AM +0200, bert hubert wrote:
+> testing
+> 
+> -- 
+> PowerDNS                     Versatile DNS Services  
+> Trilab                       The Technology People   
+> 'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+> 
+> 
+> _______________________________________________
+> LARTC mailing list
+> LARTC@mailman.ds9a.nl
+> http://mailman.ds9a.nl/mailman/listinfo/lartc
+> 
+
+en nu?
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+
+From ahu@home.ds9a.nl  Sat Oct  7 23:34:52 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@outpost.ds9a.nl
+Received: from home.ds9a.nl (3dyn35.com21.casema.net [212.64.94.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id 944DC7504B
+	for <lartc@outpost.ds9a.nl>; Sat,  7 Oct 2000 23:34:52 +0200 (CEST)
+Received: (qmail 4820 invoked by uid 500); 7 Oct 2000 22:29:26 -0000
+Date: Sun, 8 Oct 2000 00:29:26 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] testing
+Message-ID: <20001008002925.B4787@home.ds9a.nl>
+References: <20001008002403.B4733@home.ds9a.nl> <20001008002655.A4787@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <20001008002655.A4787@home.ds9a.nl>; from ahu@ds9a.nl on Sun, Oct 08, 2000 at 12:26:55AM +0200
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+Status: RO
+X-Status: 
+X-Keywords:                 
+X-UID: 3
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+
+From ahu@home.ds9a.nl  Sat Oct  7 23:56:40 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@outpost.ds9a.nl
+Received: from home.ds9a.nl (3dyn35.com21.casema.net [212.64.94.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id 0E0327504B
+	for <lartc@outpost.ds9a.nl>; Sat,  7 Oct 2000 23:56:39 +0200 (CEST)
+Received: (qmail 4915 invoked by uid 500); 7 Oct 2000 22:51:13 -0000
+Date: Sun, 8 Oct 2000 00:51:12 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Message-ID: <20001008005112.A4909@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+Subject: [LARTC] testing
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+Status: RO
+X-Status: 
+X-Keywords:                 
+X-UID: 4
+
+boe
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+
+From sibon@triple-it.nl  Fri Oct 27 23:37:09 2000
+Return-Path: <sibon@triple-it.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from www.triple-it.nl (quake.multiweb.nl [195.114.255.130])
+	by outpost.ds9a.nl (Postfix) with ESMTP id F02B17504B
+	for <lartc@mailman.ds9a.nl>; Fri, 27 Oct 2000 23:37:08 +0200 (CEST)
+Received: from www.triple-it.nl (sibon@www.triple-it.nl [195.114.255.130])
+	by www.triple-it.nl (8.9.3/8.9.3) with ESMTP id XAA30166
+	for <lartc@mailman.ds9a.nl>; Fri, 27 Oct 2000 23:37:02 +0200
+Date: Fri, 27 Oct 2000 23:37:02 +0200 (CEST)
+From: Clemens Sibon <sibon@triple-it.nl>
+To: lartc@mailman.ds9a.nl
+Message-ID: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Subject: [LARTC] ingress still not working :-(
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 104
+Status: RO
+Content-Length: 497
+Lines: 19
+
+Hi there,
+
+I am still having troubles getting ingress policy shaping to work. I run
+2.2.16-3 kernel with all QoS options enabled (and in the kernel, not as
+modules), installed iproute.2.2.4-2 from RPM (running Red Hat here).
+
+Shaping in the 'other direction' is working by the way.
+
+I try the following (as found in multiple documents):
+tc qdisc add dev eth0 handle ffff: ingress
+
+The error I get is:
+RTNETLINK answers: No such file or directory
+
+Any help is greatly appreciated,
+
+Clemens Sibon
+
+
+
+From revans@ozarkaircraftsystems.com  Fri Oct 27 23:51:20 2000
+Return-Path: <revans@ozarkaircraftsystems.com>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from stargate.ozarkaircraftsystems.com (fwall.ozarkaircraftsystems.com [12.10.100.210])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 0F1BE7504B
+	for <lartc@mailman.ds9a.nl>; Fri, 27 Oct 2000 23:51:19 +0200 (CEST)
+Received: from localhost (revans@localhost)
+	by stargate.ozarkaircraftsystems.com (8.9.3/8.9.3) with ESMTP id QAA28924
+	for <lartc@mailman.ds9a.nl>; Fri, 27 Oct 2000 16:51:15 -0500
+Date: Fri, 27 Oct 2000 16:51:15 -0500 (CDT)
+From: <revans@ozarkaircraftsystems.com>
+To: lartc@mailman.ds9a.nl
+In-Reply-To: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl>
+Message-ID: <Pine.LNX.4.10.10010271649100.28845-100000@stargate.ozarkaircraftsystems.com>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Subject: [LARTC] tc filters
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 105
+Status: O
+Content-Length: 156
+Lines: 7
+
+Is it possible to specify a "NOT" in a tc filter src or dst address?  In
+ipchains a simple "!" does it, but that does not seem to work with tc.
+
+
+Thanks.
+
+
+
+From s940195@student.ulg.ac.be  Sat Oct 28 10:17:15 2000
+Return-Path: <s940195@student.ulg.ac.be>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from darkstalker.darkness.be (212-100-178-65.adsl.easynet.be [212.100.178.65])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 7B5B37504B
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 10:17:14 +0200 (CEST)
+Received: from student.ulg.ac.be (localhost [127.0.0.1])
+	by darkstalker.darkness.be (8.10.1/8.10.1) with ESMTP id e9S8H9v17896
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 10:17:13 +0200
+Message-ID: <39FA8B84.8CF1DF80@student.ulg.ac.be>
+Date: Sat, 28 Oct 2000 10:17:08 +0200
+From: Raffaele Brancaleoni <s940195@student.ulg.ac.be>
+Organization: =?iso-8859-1?Q?Universit=E9?= de =?iso-8859-1?Q?Li=E8ge?=
+X-Mailer: Mozilla 4.75 [en] (X11; U; Linux 2.2.17 i686)
+X-Accept-Language: en
+MIME-Version: 1.0
+To: lartc@mailman.ds9a.nl
+References: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Subject: [LARTC] Limits of CBQ process under Linux
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 106
+Status: O
+Content-Length: 1015
+Lines: 35
+
+Hi!,
+I'm in the process of building a load generator to stress test some networking
+equipment for my thesis and I'm wondering how Linux would support doing
+egress traffic shaping with on several hundreds(!) virtual ip's defined on
+the machine doing the QoS itself.
+
+I have to limit the transmission rate for each virtual ip at, let say, 300Kbit
+output
+rate.
+
+I currently use CBQ with SFQ queue policy and get good behaviour from the
+setup but I only use <10 virtual ip's for now. ( This implies 10 different classes
+
+in CBQ process)
+
+I would like to know if anyone have experience with this kind of setup or if
+anyone
+does know the limits of the CBQ process with Linux kernels.
+
+Thanks for your help,
+
+Raffaele
+
+
+
+--
+_______________________________________________________________________________
+Raffaele Brancaleoni                          Email : s940195@student.ulg.ac.be
+Licence en Informatique
+Université de Liège - Belgium
+_______________________________________________________________________________
+
+
+
+
+
+From ahu@home.ds9a.nl  Sat Oct 28 14:03:23 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (3dyn109.com21.casema.net [212.64.94.109])
+	by outpost.ds9a.nl (Postfix) with SMTP id D25887504B
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 14:03:19 +0200 (CEST)
+Received: (qmail 4058 invoked by uid 500); 28 Oct 2000 12:57:32 -0000
+Date: Sat, 28 Oct 2000 14:57:32 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] ingress still not working :-(
+Message-ID: <20001028145731.A4047@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl>; from sibon@triple-it.nl on Fri, Oct 27, 2000 at 11:37:02PM +0200
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 108
+Status: O
+Content-Length: 550
+Lines: 20
+
+On Fri, Oct 27, 2000 at 11:37:02PM +0200, Clemens Sibon wrote:
+
+> I try the following (as found in multiple documents):
+> tc qdisc add dev eth0 handle ffff: ingress
+> 
+> The error I get is:
+> RTNETLINK answers: No such file or directory
+
+This is a known issue. I try to find the people who wrote the ingress
+policer. I'll also put a note in the HOWTO.
+
+Regards,
+
+bert hubert
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From sibon@triple-it.nl  Sat Oct 28 15:25:54 2000
+Return-Path: <sibon@triple-it.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from www.triple-it.nl (quake.multiweb.nl [195.114.255.130])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 529447504B
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 15:25:54 +0200 (CEST)
+Received: from www.triple-it.nl (sibon@www.triple-it.nl [195.114.255.130])
+	by www.triple-it.nl (8.9.3/8.9.3) with ESMTP id PAA01151
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 15:25:51 +0200
+Date: Sat, 28 Oct 2000 15:25:51 +0200 (CEST)
+From: Clemens Sibon <sibon@triple-it.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] ingress still not working :-(
+In-Reply-To: <20001028145731.A4047@home.ds9a.nl>
+Message-ID: <Pine.LNX.4.10.10010281518450.1127-100000@www.triple-it.nl>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 109
+Status: O
+Content-Length: 926
+Lines: 28
+
+
+On Sat, 28 Oct 2000, bert hubert wrote:
+
+> On Fri, Oct 27, 2000 at 11:37:02PM +0200, Clemens Sibon wrote:
+> 
+> > The error I get is:
+> > RTNETLINK answers: No such file or directory
+> 
+> This is a known issue. I try to find the people who wrote the ingress
+> policer. I'll also put a note in the HOWTO.
+
+When I read the help in the kernel-menu, I saw something under Kernel/User
+netlink socket (CONFIG_NETLINK) about a device that should be made having
+major mode 36. Could this be the thing missing that generates the above
+error?
+
+I have no idea how to find out if I have the device or how to make it,
+since the name isn't mentioned anywhere.
+
+I have been looking for a /dev/ingress but that doesn't exist..
+
+Do I have to upgrade to a 2.4.X kernel to get ingress policer to work
+without the errors? If that's the case, I am willing to give it a try
+(and probably I should convert my ipchains to iptables?)
+
+Clemens Sibon
+
+
+
+From ahu@home.ds9a.nl  Sat Oct 28 15:54:38 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (3dyn109.com21.casema.net [212.64.94.109])
+	by outpost.ds9a.nl (Postfix) with SMTP id B9AB37504B
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 15:54:37 +0200 (CEST)
+Received: (qmail 4229 invoked by uid 500); 28 Oct 2000 14:48:43 -0000
+Date: Sat, 28 Oct 2000 16:48:43 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] ingress still not working :-(
+Message-ID: <20001028164843.B4047@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <20001028145731.A4047@home.ds9a.nl> <Pine.LNX.4.10.10010281518450.1127-100000@www.triple-it.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <Pine.LNX.4.10.10010281518450.1127-100000@www.triple-it.nl>; from sibon@triple-it.nl on Sat, Oct 28, 2000 at 03:25:51PM +0200
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 110
+Status: O
+Content-Length: 947
+Lines: 29
+
+On Sat, Oct 28, 2000 at 03:25:51PM +0200, Clemens Sibon wrote:
+
+> When I read the help in the kernel-menu, I saw something under Kernel/User
+> netlink socket (CONFIG_NETLINK) about a device that should be made having
+> major mode 36. Could this be the thing missing that generates the above
+> error?
+
+No, that's not it.
+
+> I have been looking for a /dev/ingress but that doesn't exist..
+
+And it shouldn't - these filters have no corresponding entries in /dev.
+
+> Do I have to upgrade to a 2.4.X kernel to get ingress policer to work
+> without the errors? If that's the case, I am willing to give it a try
+> (and probably I should convert my ipchains to iptables?)
+
+It doesn't work in 2.4 either. I'll post some mail about this problem here
+shortly.
+
+Regards,
+
+bert hubert
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From ahu@home.ds9a.nl  Sat Oct 28 16:57:24 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (3dyn109.com21.casema.net [212.64.94.109])
+	by outpost.ds9a.nl (Postfix) with SMTP id 010B27504B
+	for <lartc@mailman.ds9a.nl>; Sat, 28 Oct 2000 16:57:23 +0200 (CEST)
+Received: (qmail 4441 invoked by uid 500); 28 Oct 2000 15:51:23 -0000
+Date: Sat, 28 Oct 2000 17:51:23 +0200
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] Limits of CBQ process under Linux
+Message-ID: <20001028175122.A4433@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl> <39FA8B84.8CF1DF80@student.ulg.ac.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <39FA8B84.8CF1DF80@student.ulg.ac.be>; from s940195@student.ulg.ac.be on Sat, Oct 28, 2000 at 10:17:08AM +0200
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 111
+Status: O
+Content-Length: 912
+Lines: 24
+
+On Sat, Oct 28, 2000 at 10:17:08AM +0200, Raffaele Brancaleoni wrote:
+> Hi!,
+> I'm in the process of building a load generator to stress test some networking
+> equipment for my thesis and I'm wondering how Linux would support doing
+> egress traffic shaping with on several hundreds(!) virtual ip's defined on
+> the machine doing the QoS itself.
+
+You should probably ask this on netdev (netdev@oss.sgi.com). However, I've
+seen the code and I know the quality of Jamal and Alexeys work, I would
+suspect that Linux will not ever be your bottleneck.
+
+Lots of places use hashtables to speed up processing. I got mail from a guy
+who did really incredible things with Linux and shaping, also with hundreds
+of interfaces.
+
+Regards,
+
+bert hubert
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From rzm@icm.edu.pl  Wed Nov  1 02:31:13 2000
+Return-Path: <rzm@icm.edu.pl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from atol.icm.edu.pl (atol.icm.edu.pl [212.87.0.35])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 0846A7504B
+	for <lartc@mailman.ds9a.nl>; Wed,  1 Nov 2000 02:31:12 +0100 (CET)
+Received: from burza.icm.edu.pl ([148.81.208.198]:12183 "EHLO burza.icm.edu.pl"
+	ident: "IDENT-NONSENSE") by atol.icm.edu.pl with ESMTP
+	id <S421987AbQKAB3f>; Wed, 1 Nov 2000 02:29:35 +0100
+Received: (from rzm@localhost)
+	by burza.icm.edu.pl (8.9.3/8.9.3/rzm-2.6/icm) id CAA07690
+	for lartc@mailman.ds9a.nl; Wed, 1 Nov 2000 02:28:13 +0100 (MET)
+Date:	Wed, 1 Nov 2000 02:28:13 +0100
+From: Rafal Maszkowski <rzm@icm.edu.pl>
+To: lartc@mailman.ds9a.nl
+Message-ID: <20001101022813.A7199@burza.icm.edu.pl>
+References: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl> <39FA8B84.8CF1DF80@student.ulg.ac.be> <20001028175122.A4433@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.1i
+In-Reply-To: <20001028175122.A4433@home.ds9a.nl>; from ahu@ds9a.nl on Sat, Oct 28, 2000 at 05:51:23PM +0200
+Subject: [LARTC] how many u32 filters?
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 121
+Status: O
+Content-Length: 1442
+Lines: 37
+
+I asked already on netdev. Maybe my description is too obscure? Could you try
+to answer or help me to make the question clearer?
+
+
+I am adding u32 filters with commands like:
+tc filter add dev eth0 parent 10:0 protocol ip prio 100 handle 800::2 u32 match ip dst 10.30.40.3 flowid 10:2
+...
+
+getting:
+filter parent 10: protocol ip pref 100 u32
+filter parent 10: protocol ip pref 100 u32 fh 800: ht divisor 1
+filter parent 10: protocol ip pref 100 u32 fh 800::2 order 2 key ht 800 bkt 0 flowid 10:2
+  match 0a1e2803/ffffffff at 16
+filter parent 10: protocol ip pref 100 u32 fh 800::3 order 3 key ht 800 bkt 0 flowid 10:3
+  match 0a1e2809/ffffffff at 16
+...
+
+and then I can delete them with
+tc filter del  dev eth0 parent 10:0 protocol ip prio 100 handle 800::2 u32 match ip dst 10.30.40.3 flowid 10:2
+
+It looks like the highest handle is 800::7ff (or maybe fff) and there may be
+only 2048 (4k?) filters with unique handles. They have to be unique to make
+single filters deletions possible.
+
+Is it possible to setup the u32 filters in such a way that 64k or more unique
+handles would be available?
+
+I do not know if a single system would be able to carry such load but maybe it
+is possible, I hope to be able to test it in the future. A company I work for
+in principle may need tens of thousands of limits, putting every 2k of limits
+on a separate machine would be limiting us to much.
+
+R.
+-- 
+W iskier krzesaniu ¿ywem/Materia³ to rzecz g³ówna
+
+
+
+From ahu@home.ds9a.nl  Sun Nov  5 22:01:26 2000
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (3dyn134.com21.casema.net [212.64.94.134])
+	by outpost.ds9a.nl (Postfix) with SMTP id C192A7504B
+	for <lartc@mailman.ds9a.nl>; Sun,  5 Nov 2000 22:01:25 +0100 (CET)
+Received: (qmail 18132 invoked by uid 500); 5 Nov 2000 21:55:23 -0000
+Date: Sun, 5 Nov 2000 22:55:23 +0100
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] how many u32 filters?
+Message-ID: <20001105225523.B18069@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <Pine.LNX.4.10.10010272332070.30105-100000@www.triple-it.nl> <39FA8B84.8CF1DF80@student.ulg.ac.be> <20001028175122.A4433@home.ds9a.nl> <20001101022813.A7199@burza.icm.edu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <20001101022813.A7199@burza.icm.edu.pl>; from rzm@icm.edu.pl on Wed, Nov 01, 2000 at 02:28:13AM +0100
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 139
+Status: O
+Content-Length: 532
+Lines: 16
+
+On Wed, Nov 01, 2000 at 02:28:13AM +0100, Rafal Maszkowski wrote:
+> I asked already on netdev. Maybe my description is too obscure? Could you try
+> to answer or help me to make the question clearer?
+
+Ask the diffserv list, that's where jamal and alexey hang out, they may
+know. Google for the diffserv address (http://www.google.com)
+
+Regards,
+
+bert hubert
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From andrewd@uccsda.org  Tue Nov 14 13:46:08 2000
+Return-Path: <andrewd@uccsda.org>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from uccs3.uccsda.org (unknown [204.76.174.2])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 03F4E7504C
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 13:46:07 +0100 (CET)
+Received: from ORION by uccs3.uccsda.org with SMTP (Microsoft Exchange Internet Mail Service Version 5.0.1458.49)
+	id WMLKAH2V; Mon, 13 Nov 2000 14:52:53 -0800
+Message-ID: <3A107206.1C5303AC@uccsda.org>
+Date: Mon, 13 Nov 2000 14:58:14 -0800
+From: Andrew <andrewd@uccsda.org>
+X-Mailer: Mozilla 4.75 [en] (X11; U; Linux 2.2.17smp.1 i686)
+X-Accept-Language: en
+MIME-Version: 1.0
+To: lartc@mailman.ds9a.nl
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Subject: [LARTC] A complicated routing scenario (for me at least)
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 159
+Status: RO
+Content-Length: 2876
+Lines: 66
+
+Greetings:
+
+I've been pouring over every piece of documentaiton on the subject I can
+find, and I've concluded that advanced routing + ipchains is what I
+need. It also appears that the people that can answer some of the more
+in depth questions I have, read this list.
+
+I'm fairly new to this so please forgive me if I ask stupid questions.
+Anyway.
+
+Here is what I'm trying to accomplish in ASCII art:
+
+                                 LAN
+                                  | (172...)
+                                  |
+         _/\__/\_             +---+----+            _/\__/\_
+        /        \   (63...)  |        | (204...)  /        \
+       ( Internet )-----------+ Router +----------( Internet )
+        \_  __  _/            |        |           \_  __  _/
+          \/  \/              +----+---+             \/  \/ 
+                                   | 63..
+                                   | 204..
+                                   |
+                 --+---------------+----------+--  <---single physical
+net
+                   |                          |        (i.e. one hub)
+                   |                          |
+               +---+---+ 63..1            +---+---+ 63..2
+               | Linux | 63..4            | Linux | 63..3
+               +-------+ 204..1           +-------+ 204..2
+                         204..4                     204..3
+
+The desired end result is a redundant connection to two dns/mail servers
+from the 
+internet. I'm willing to fight through this, but I have a few specific
+question's 
+for now that I'm hoping someone can answer.
+
+1. From a server's perspective, do incoming packets get responded to on
+the same interface they came in on? Does it matter if the interface in
+question is an alias?
+
+2. if I tag a packet coming into the router/firwall above with ipchains
+for routing purposes, will the tag persist to the reply packets? Or do I
+have to tag the reply packets with ipchains from the responding server?
+
+3. In reading the various documentation, I noticed several references to
+files in the /etc/iproute2 directory. Related to this directory:
+	a) is there any documentation on the names and syntax of the various
+files other than the source code, and the casual references I've found?
+	b) I don't currently have this directory in /etc. Is it something I
+just create, and does it's existance imply that the kernel will read
+configureation data from it on boot?
+
+Incidentally I'm currently using kernel 2.2.17 on my boxes. Since I'm
+already going to be meticulously documenting my setup, I'd be willing to
+do so in a format that could be posted as a HOWTO or as an example in
+someone else's HOWTO, whatever would be most usefull.
+
+Suggestions in this area are much appreciated since I have no experiance
+in HOWTO writing. (Plenty of writing experiance, just not howtos)
+
+Anyway, Thanks for the help.
+
+-Andrew
+
+
+From arthurvl@sci.kun.nl  Tue Nov 14 15:34:43 2000
+Return-Path: <arthurvl@sci.kun.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from wn1.sci.kun.nl (wn1.sci.kun.nl [131.174.8.1])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 4CA127504B
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 15:34:43 +0100 (CET)
+Received: from studs3.sci.kun.nl by wn1.sci.kun.nl
+	via studs3.sci.kun.nl [131.174.124.4] with ESMTP
+	id PAA04514 (8.8.8/3.30); Tue, 14 Nov 2000 15:34:28 +0100 (MET)
+Date: Tue, 14 Nov 2000 15:34:36 +0100 (MET)
+From: Arthur van Leeuwen <arthurvl@sci.kun.nl>
+To: Andrew <andrewd@uccsda.org>
+Cc: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+In-Reply-To: <3A107206.1C5303AC@uccsda.org>
+Message-ID: <Pine.GSO.4.21.0011141525040.2868-100000@studs3.sci.kun.nl>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 160
+Status: O
+Content-Length: 4683
+Lines: 112
+
+On Mon, 13 Nov 2000, Andrew wrote:
+
+> Greetings:
+
+> I've been pouring over every piece of documentaiton on the subject I can
+> find, and I've concluded that advanced routing + ipchains is what I
+> need. It also appears that the people that can answer some of the more
+> in depth questions I have, read this list.
+
+Might be true, might be true. ;)
+
+> I'm fairly new to this so please forgive me if I ask stupid questions.
+> Anyway.
+
+We're all fairly new to this. It isn't older than a year or two, three at the
+most.
+
+> Here is what I'm trying to accomplish in ASCII art:
+
+>                                  LAN
+>                                   | (172...)
+>                                   |
+>          _/\__/\_             +---+----+            _/\__/\_
+>         /        \   (63...)  |        | (204...)  /        \
+>        ( Internet )-----------+ Router +----------( Internet )
+>         \_  __  _/            |        |           \_  __  _/
+>           \/  \/              +----+---+             \/  \/ 
+>                                    | 63..
+>                                    | 204..
+>                                    |
+>                  --+---------------+----------+--  <---single physical
+> net
+>                    |                          |        (i.e. one hub)
+>                    |                          |
+>                +---+---+ 63..1            +---+---+ 63..2
+>                | Linux | 63..4            | Linux | 63..3
+>                +-------+ 204..1           +-------+ 204..2
+>                          204..4                     204..3
+
+Hmmm. Right.
+
+> The desired end result is a redundant connection to two dns/mail servers
+> from the internet. I'm willing to fight through this, but I have a 
+> few specific question's for now that I'm hoping someone can answer.
+
+> 1. From a server's perspective, do incoming packets get responded to on
+> the same interface they came in on? 
+
+No, unfortunately not. In fact, unless you specifically set things up so
+that it will go right the kernel will even play haywire with which interface
+packets with certain IP addresses are routed out.
+
+> Does it matter if the interface in
+> question is an alias?
+
+No. By the way, drop the mental concept of alias. With the iproute2 ip tool
+it only serves to confuse matters. Interfaces kan have multiple IP addresses
+attached to them. This is *much* more portable to IPv6... :)
+
+> 2. if I tag a packet coming into the router/firwall above with ipchains
+> for routing purposes, will the tag persist to the reply packets? 
+
+No.
+
+> Or do I have to tag the reply packets with ipchains from the responding 
+> server?
+
+Yes.
+
+> 3. In reading the various documentation, I noticed several references to
+> files in the /etc/iproute2 directory. Related to this directory:
+> 	a) is there any documentation on the names and syntax of the various
+> files other than the source code, and the casual references I've found?
+> 	b) I don't currently have this directory in /etc. Is it something I
+> just create, and does it's existance imply that the kernel will read
+> configureation data from it on boot?
+
+a. There are examples for these files in /usr/doc/iproute-2.2.4/iproute2/ on
+   RedHat 6.2 systems with iproute2 installed and in
+   /usr/share/doc/iproute-2.2.4/iproute2/ on RedHat 7.0 systems.
+   These files all have names starting with rt_, and should also be in
+   the iproute2 tarball, but I'm too lazy to check :).
+b. The directory can contain the files rt_dsfield, rt_protos, rt_realms,
+   rt_scopes and rt_tables. Most of the values in these files are user
+   settable, and will be read when the files exist. If they do not exist you
+   do not get nice names and have to deal with the raw numbers. Note: they
+   are *not* necessary for operation, just useful from a user's point of
+   view.
+
+> Incidentally I'm currently using kernel 2.2.17 on my boxes. Since I'm
+> already going to be meticulously documenting my setup, I'd be willing to
+> do so in a format that could be posted as a HOWTO or as an example in
+> someone else's HOWTO, whatever would be most usefull.
+
+> Suggestions in this area are much appreciated since I have no experiance
+> in HOWTO writing. (Plenty of writing experiance, just not howtos)
+
+Well, an ASCII-gram such as the one above and step by step explanations of
+your setup and *why* you've taken those steps would be great. ;)
+
+> Anyway, Thanks for the help.
+
+No problem.
+
+Doei, Arthur.
+
+-- 
+  /\    / |      arthurvl@sci.kun.nl      | Work like you don't need the money
+ /__\  /  | A friend is someone with whom | Love like you have never been hurt
+/    \/__ | you can dare to be yourself   | Dance like there's nobody watching
+
+
+
+From s965817@uia.ua.ac.be  Tue Nov 14 15:44:11 2000
+Return-Path: <s965817@uia.ua.ac.be>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from gems.uia.ac.be (hgems.uia.ac.be [143.169.254.10])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 69F8E7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 15:44:11 +0100 (CET)
+Received: from localhost (s965817@localhost)
+	by gems.uia.ac.be (8.11.0/8.11.0) with ESMTP id eAEEi9V03777
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 15:44:09 +0100 (MET)
+Date: Tue, 14 Nov 2000 15:44:09 +0100 (MET)
+From: "Wingtung.Leung" <s965817@uia.ua.ac.be>
+X-Sender:  <s965817@hgems>
+Cc: Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+In-Reply-To: <3A107206.1C5303AC@uccsda.org>
+Message-ID: <Pine.GS4.4.30.0011141538500.2281-100000@hgems>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 161
+Status: O
+Content-Length: 1140
+Lines: 31
+
+On Mon, 13 Nov 2000, Andrew wrote:
+
+> 2. if I tag a packet coming into the router/firwall above with ipchains
+> for routing purposes, will the tag persist to the reply packets? Or do I
+> have to tag the reply packets with ipchains from the responding server?
+
+You'll have to tag them whenever they enter your gateway. The reply
+packets are just packets, at ip level there is no difference between them.
+Only the very first packets, which initiate the connection, carry some
+extra flags.
+
+> 3. In reading the various documentation, I noticed several references to
+> files in the /etc/iproute2 directory. Related to this directory:
+> 	b) I don't currently have this directory in /etc. Is it something I
+> just create, and does it's existance imply that the kernel will read
+> configureation data from it on boot?
+
+I believe you can just create that directory and the files.
+
+> Suggestions in this area are much appreciated since I have no experiance
+> in HOWTO writing. (Plenty of writing experiance, just not howtos)
+
+There is an HOWTO about writing HOWTO's, I think. Try
+http://www.linuxdoc.org/ for more elaborate info.
+
+Salukes,
+
+Tung
+
+
+
+
+From andrewd@uccsda.org  Tue Nov 14 21:11:52 2000
+Return-Path: <andrewd@uccsda.org>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from uccs3.uccsda.org (unknown [204.76.174.2])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 6857D7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 21:11:51 +0100 (CET)
+Received: from ORION by uccs3.uccsda.org with SMTP (Microsoft Exchange Internet Mail Service Version 5.0.1458.49)
+	id WMLKA2HN; Tue, 14 Nov 2000 12:10:27 -0800
+Message-ID: <3A119D73.E5F9D7E8@uccsda.org>
+Date: Tue, 14 Nov 2000 12:15:47 -0800
+From: Andrew <andrewd@uccsda.org>
+X-Mailer: Mozilla 4.75 [en] (X11; U; Linux 2.2.17smp.1 i686)
+X-Accept-Language: en
+MIME-Version: 1.0
+To: lartc@mailman.ds9a.nl
+Cc: arthurvl@sci.kun.nl
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+References: <Pine.GSO.4.21.0011141525040.2868-100000@studs3.sci.kun.nl>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 162
+Status: O
+Content-Length: 3281
+Lines: 69
+
+Thanks for the reply, Here are a few more questions
+
+> >                                  LAN
+> >                                   | (172...)
+> >                                   |  (eth1)
+> >          _/\__/\_             +---+----+            _/\__/\_
+> >         /        \   (63...)  |        | (204...)  /        \
+> >        ( Internet )-----------+ Router +----------( Internet )
+> >         \_  __  _/    (eth0)  |        |  (eth2)   \_  __  _/
+> >           \/  \/              +----+---+             \/  \/
+> >                              (eth3)| 63..
+> >                                    | 204..
+> >                                    |
+> >                  --+---------------+----------+--  <---single physical
+> > net
+> >                    |                          |        (i.e. one hub)
+> >                    |                          |
+> >                +---+---+ 63..1            +---+---+ 63..2
+> >                | Linux | 63..4            | Linux | 63..3
+> >                +-------+ 204..1           +-------+ 204..2
+> >                          204..4                     204..3
+> a. There are examples for these files in /usr/doc/iproute-2.2.4/iproute2/ on
+>    RedHat 6.2 systems with iproute2 installed and in
+>    /usr/share/doc/iproute-2.2.4/iproute2/ on RedHat 7.0 systems.
+>    These files all have names starting with rt_, and should also be in
+>    the iproute2 tarball, but I'm too lazy to check :).
+> b. The directory can contain the files rt_dsfield, rt_protos, rt_realms,
+>    rt_scopes and rt_tables. Most of the values in these files are user
+>    settable, and will be read when the files exist. If they do not exist you
+>    do not get nice names and have to deal with the raw numbers. Note: they
+>    are *not* necessary for operation, just useful from a user's point of
+>    view.
+
+OK.. someplace else to look. Are the examples the only thing available
+in the way of file syntax? Also could someone help me understand how
+these files are read at startup if they exist. (what code/script is
+responsible for doing it, and what happens if there are syntax errors. I
+have a redhat 6.2 system.)
+
+> Well, an ASCII-gram such as the one above and step by step explanations of
+> your setup and *why* you've taken those steps would be great. ;)
+
+If/When I get this written up, is this mailing list the place to post
+it? Would there be any value in puting it into a separate (mini)-HOWTO?
+
+Based on what everyone's said, here is what I'm contemplating (this
+still assumes that
+that packets are answered on the same interface they come in on. I'm
+getting conflicting information for this. Someone said they do, and
+someone else said they don't. I suppose if they don't I could use an
+explicit source address hint in a routing table entry.):
+
+Packets coming in on eth0,1, and 2 would be marked with
+different TOS values based on what interface they came in on using
+ipchains, and routed through the proper address on eth3 using the
+advanced routing.
+
+Since the TOS field doesn't change (an assumption, is this true?) I
+would know which interface to route the packet back through while at the
+same time being able to reset the TOS field back to zero for routing on
+the internet.
+
+Comments? Suggestions?
+
+Thanks,
+
+-Andrew
+depaan@bibleinfo.com
+
+
+From whit@transpect.com  Tue Nov 14 22:47:46 2000
+Return-Path: <whit@transpect.com>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from transpect.com (china.patternbook.com [216.254.75.60])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 23BDB7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 14 Nov 2000 22:47:39 +0100 (CET)
+Received: (from root@localhost)
+	by transpect.com (8.9.3/8.8.7) id QAA01674;
+	Tue, 14 Nov 2000 16:47:28 -0500
+Date: Tue, 14 Nov 2000 16:47:28 -0500
+From: Whit <whit@transpect.com>
+To: Andrew <andrewd@uccsda.org>
+Cc: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+Message-ID: <20001114164728.B1644@www.transpect.com>
+References: <Pine.GSO.4.21.0011141525040.2868-100000@studs3.sci.kun.nl> <3A119D73.E5F9D7E8@uccsda.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.2.5i
+In-Reply-To: <3A119D73.E5F9D7E8@uccsda.org>; from andrewd@uccsda.org on Tue, Nov 14, 2000 at 12:15:47PM -0800
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 163
+Status: O
+Content-Length: 724
+Lines: 18
+
+Andrew,
+
+I'm awfully glad you're asking these questions, since I'm contemplating a
+similar setup and am not yet to that wonderful place where this presently
+obscure new technology resolves into clarity. So I'll be trying to follow
+along closely as you work out your scheme.
+
+One question I have, in addition to those you're asking, is whether iproute2
+in itself is adequate to handle fallover routing when one of the outside
+links goes down - that is, can it just be set up with lower priority rules
+to route the other way, or does something like mon
+(http://www.kernel.org/software/mon/) need to be set up to actively change
+the routing tables when an outside line goes down?
+
+ \/\/ I-I I T 
+ Blauvelt
+ whit@transpect.com
+
+
+From s965817@uia.ua.ac.be  Wed Nov 15 00:10:45 2000
+Return-Path: <s965817@uia.ua.ac.be>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from gems.uia.ac.be (hgems.uia.ac.be [143.169.254.10])
+	by outpost.ds9a.nl (Postfix) with ESMTP id BBEA37504B
+	for <lartc@mailman.ds9a.nl>; Wed, 15 Nov 2000 00:10:44 +0100 (CET)
+Received: from localhost (s965817@localhost)
+	by gems.uia.ac.be (8.11.0/8.11.0) with ESMTP id eAENAfh29360
+	for <lartc@mailman.ds9a.nl>; Wed, 15 Nov 2000 00:10:41 +0100 (MET)
+Date: Wed, 15 Nov 2000 00:10:41 +0100 (MET)
+From: "Wingtung.Leung" <s965817@uia.ua.ac.be>
+X-Sender:  <s965817@hgems>
+Cc: Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+In-Reply-To: <3A119D73.E5F9D7E8@uccsda.org>
+Message-ID: <Pine.GS4.4.30.0011150001560.27826-100000@hgems>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 164
+Status: O
+Content-Length: 1156
+Lines: 29
+
+On Tue, 14 Nov 2000, Andrew wrote:
+
+> OK.. someplace else to look. Are the examples the only thing available
+> in the way of file syntax? Also could someone help me understand how
+> these files are read at startup if they exist. (what code/script is
+> responsible for doing it, and what happens if there are syntax errors. I
+> have a redhat 6.2 system.)
+
+Maybe you should try it first and experiment a bit. It's rather hard to
+answer on vague questions.
+
+> Since the TOS field doesn't change (an assumption, is this true?) I
+> would know which interface to route the packet back through while at the
+> same time being able to reset the TOS field back to zero for routing on
+> the internet.
+
+As far as I understand your question: you can change the TOS based on the
+incoming interface (and lots of other options). And I think it isn't
+usefull to reset the TOS field when you send out the packets into the
+internet, because most routers won't use the field and simply ignore it.
+When a packets comes back, you should route it dependand on the
+destination, not on the TOS field because that can be anything.
+
+I hope I haven't told complete nonsense.
+
+Tung
+
+
+
+
+From arthurvl@sci.kun.nl  Wed Nov 15 11:49:52 2000
+Return-Path: <arthurvl@sci.kun.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from wn1.sci.kun.nl (wn1.sci.kun.nl [131.174.8.1])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 299FB7504C
+	for <lartc@mailman.ds9a.nl>; Wed, 15 Nov 2000 11:49:52 +0100 (CET)
+Received: from studs3.sci.kun.nl by wn1.sci.kun.nl
+	via studs3.sci.kun.nl [131.174.124.4] with ESMTP for <lartc@mailman.ds9a.nl>
+	id LAA18843 (8.8.8/3.30); Wed, 15 Nov 2000 11:49:41 +0100 (MET)
+Date: Wed, 15 Nov 2000 11:49:50 +0100 (MET)
+From: Arthur van Leeuwen <arthurvl@sci.kun.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+In-Reply-To: <20001114164728.B1644@www.transpect.com>
+Message-ID: <Pine.GSO.4.21.0011151145410.24989-100000@studs3.sci.kun.nl>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 165
+Status: O
+Content-Length: 1274
+Lines: 31
+
+On Tue, 14 Nov 2000, Whit wrote:
+
+> Andrew,
+
+> I'm awfully glad you're asking these questions, since I'm contemplating a
+> similar setup and am not yet to that wonderful place where this presently
+> obscure new technology resolves into clarity. So I'll be trying to follow
+> along closely as you work out your scheme.
+
+Hey, I've never done stuff like Andrew's proposing either. It's cool. I want
+to know if it'll work. :)
+
+> One question I have, in addition to those you're asking, is whether iproute2
+> in itself is adequate to handle fallover routing when one of the outside
+> links goes down - that is, can it just be set up with lower priority rules
+> to route the other way, or does something like mon
+> (http://www.kernel.org/software/mon/) need to be set up to actively change
+> the routing tables when an outside line goes down?
+
+Hmmm. Methinks that with the preferences associated with routes and the
+effects of neighbor unreachability detection this should work. This 
+remark is wholly untested, though.
+
+Doei, Arthur. 
+
+-- 
+  /\    / |      arthurvl@sci.kun.nl      | Work like you don't need the money
+ /__\  /  | A friend is someone with whom | Love like you have never been hurt
+/    \/__ | you can dare to be yourself   | Dance like there's nobody watching
+
+
+
+From arthurvl@sci.kun.nl  Wed Nov 15 12:27:32 2000
+Return-Path: <arthurvl@sci.kun.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from wn1.sci.kun.nl (wn1.sci.kun.nl [131.174.8.1])
+	by outpost.ds9a.nl (Postfix) with ESMTP id C74FF75066
+	for <lartc@mailman.ds9a.nl>; Wed, 15 Nov 2000 12:27:31 +0100 (CET)
+Received: from studs3.sci.kun.nl by wn1.sci.kun.nl
+	via studs3.sci.kun.nl [131.174.124.4] with ESMTP
+	id MAA25419 (8.8.8/3.30); Wed, 15 Nov 2000 12:27:20 +0100 (MET)
+Date: Wed, 15 Nov 2000 12:27:29 +0100 (MET)
+From: Arthur van Leeuwen <arthurvl@sci.kun.nl>
+To: "Wingtung.Leung" <s965817@uia.ua.ac.be>
+Cc: Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: [LARTC] A complicated routing scenario (for me at least)
+In-Reply-To: <Pine.GS4.4.30.0011150001560.27826-100000@hgems>
+Message-ID: <Pine.GSO.4.21.0011151152560.24989-100000@studs3.sci.kun.nl>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 166
+Status: O
+Content-Length: 1664
+Lines: 43
+
+On Wed, 15 Nov 2000, Wingtung.Leung wrote:
+
+> 
+> On Tue, 14 Nov 2000, Andrew wrote:
+> 
+> > OK.. someplace else to look. Are the examples the only thing available
+> > in the way of file syntax? Also could someone help me understand how
+> > these files are read at startup if they exist. (what code/script is
+> > responsible for doing it, and what happens if there are syntax errors. I
+> > have a redhat 6.2 system.)
+> 
+> Maybe you should try it first and experiment a bit. It's rather hard to
+> answer on vague questions.
+
+But not impossible. There is the iproute2 code that does the actual
+parsing of the files in /etc/iproute2, and there is some information in the
+ip-cref doc. The parser is the function rtnl_tab_initialize in
+lib/rt_names.c of the iproute2 source tree. The syntax is one of the
+following for scanf formats (read the manpage for scanf if you can't parse
+these by sight):
+
+0x%x %s\n
+0x%x %s #
+%d %s\n
+%d %s #
+
+Implied is basically a key-value table, with decimal or hexadecimal numbers
+as keys and strings as values. Comments are allowed and whitespace is mostly
+ignored. There has to be some between keys and values though. :)
+
+If there are syntax errors you will only see numbers instead of nice user
+friendly names, after the ip or tc tool has complained about 'Database <xyz>
+is corrupted at <foobar>', with one of the files instead of <xyz> and part
+of the file instead of <foobar>
+
+Doei, Arthur.
+
+-- 
+  /\    / |      arthurvl@sci.kun.nl      | Work like you don't need the money
+ /__\  /  | A friend is someone with whom | Love like you have never been hurt
+/    \/__ | you can dare to be yourself   | Dance like there's nobody watching
+
+
+
+From thomas@habets.pp.se  Wed Nov 22 15:04:00 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id AF2197504B
+	for <LARTC@mailman.ds9a.nl>; Wed, 22 Nov 2000 15:03:55 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13yaUx-0002i3-01
+	for <LARTC@mailman.ds9a.nl>; Wed, 22 Nov 2000 15:03:43 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13yNO6-0006vV-00
+	for <LARTC@mailman.ds9a.nl>; Wed, 22 Nov 2000 01:03:46 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: LARTC@mailman.ds9a.nl
+Date: Wed, 22 Nov 2000 01:00:08 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+MIME-Version: 1.0
+Message-Id: <00112201000800.01070@marvin>
+Content-Transfer-Encoding: 8bit
+Subject: [LARTC] Bandwidth limiting
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 204
+Status: O
+Content-Length: 811
+Lines: 27
+
+Hello.
+
+I need help with limiting bandwidth. I have read every tutorial I've come 
+over and I just can't make anything work.
+
+Ok, here's the scenario:
+
+I have a gateway, which has five network interfaces (eth0 -> eth4), eth0 is 
+the 'external' one and eth[1-4] are supposed to be limited to 128Kbit/s each. 
+
+The interfaces eth[1-4] each have a C-class net, 192.168.[1-4].0/24.
+
+Thanks for any and all help.
+
+linux 2.4.0-test9
+debian 2.2 (potato)
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From daniel@netatonce.se  Wed Nov 22 15:24:41 2000
+Return-Path: <daniel@netatonce.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail.citynet.nu (mail.citynet.nu [217.10.96.131])
+	by outpost.ds9a.nl (Postfix) with ESMTP id B96D87504B
+	for <LARTC@mailman.ds9a.nl>; Wed, 22 Nov 2000 15:24:40 +0100 (CET)
+Received: from winnt [10.1.2.101] by mail.citynet.nu
+  (SMTPD32-6.05) id A70E78302A2; Wed, 22 Nov 2000 15:24:14 +0100
+From: "Daniel Bergqvist" <daniel@netatonce.se>
+To: "Thomas Habets" <thomas@habets.pp.se>, <LARTC@mailman.ds9a.nl>
+Subject: SV: [LARTC] Bandwidth limiting
+Date: Wed, 22 Nov 2000 15:25:18 +0100
+Message-ID: <NEBBIJLBNOJDKHPENGGNGEJMCAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+Importance: Normal
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+In-Reply-To: <00112201000800.01070@marvin>
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 205
+Status: O
+Content-Length: 1050
+Lines: 43
+
+Hi,
+
+What doesn't work? Do you get error messages when you run TC or don't you
+know how to use TC?
+
+Regards,
+Daniel
+
+-----Ursprungligt meddelande-----
+Från: lartc-admin@mailman.ds9a.nl [mailto:lartc-admin@mailman.ds9a.nl]För
+Thomas Habets
+Hello.
+
+I need help with limiting bandwidth. I have read every tutorial I've come
+over and I just can't make anything work.
+
+Ok, here's the scenario:
+
+I have a gateway, which has five network interfaces (eth0 -> eth4), eth0 is
+the 'external' one and eth[1-4] are supposed to be limited to 128Kbit/s
+each.
+
+The interfaces eth[1-4] each have a C-class net, 192.168.[1-4].0/24.
+
+Thanks for any and all help.
+
+linux 2.4.0-test9
+debian 2.2 (potato)
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B
+B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+
+
+
+From thomas@habets.pp.se  Wed Nov 22 17:34:28 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 2DB517504B
+	for <lartc@mailman.ds9a.nl>; Wed, 22 Nov 2000 17:34:25 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13ycqh-0003ke-00; Wed, 22 Nov 2000 17:34:19 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13ycux-0008NW-00; Wed, 22 Nov 2000 17:38:43 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: daniel@netatonce.se, lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] Bandwidth limiting
+Date: Wed, 22 Nov 2000 17:35:04 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+MIME-Version: 1.0
+Message-Id: <00112217350400.00481@marvin>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 208
+Status: O
+Content-Length: 670
+Lines: 18
+
+(I got this answer from the archives, I have not received it by mail. Odd)
+
+>What doesn't work? Do you get error messages when you run TC or don't you
+>know how to use TC?
+
+I don't know how to use TC, which got me to read tutorials and try things for 
+hours and hours. Nothing I've tried limits bandwidth.
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From daniel@netatonce.se  Wed Nov 22 17:58:08 2000
+Return-Path: <daniel@netatonce.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail.citynet.nu (mail.citynet.nu [217.10.96.131])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 1F0477504C
+	for <lartc@mailman.ds9a.nl>; Wed, 22 Nov 2000 17:58:08 +0100 (CET)
+Received: from winnt [10.1.2.101] by mail.citynet.nu
+  (SMTPD32-6.05) id AB0A1CA021C; Wed, 22 Nov 2000 17:57:46 +0100
+From: "Daniel Bergqvist" <daniel@netatonce.se>
+To: "Thomas Habets" <thomas@habets.pp.se>, <lartc@mailman.ds9a.nl>
+Subject: SV: [LARTC] Bandwidth limiting
+Date: Wed, 22 Nov 2000 17:58:49 +0100
+Message-ID: <NEBBIJLBNOJDKHPENGGNEEJOCAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+Importance: Normal
+In-Reply-To: <00112217350400.00481@marvin>
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 209
+Status: O
+Content-Length: 1328
+Lines: 44
+
+Try:
+
+tc qdisc add dev eth1 root tbf rate 10kbit buffer 5kb/8 limit 10kb
+
+This adds an token bucket flow qdisc to eth1 and limits traffic to 10kbit/s.
+Note: It only limits outgoing traffic, not incomming traffic.
+
+Regards
+Daniel
+
+-----Ursprungligt meddelande-----
+Från: lartc-admin@mailman.ds9a.nl [mailto:lartc-admin@mailman.ds9a.nl]För
+Thomas Habets
+Skickat: Wednesday, November 22, 2000 5:35 PM
+Till: daniel@netatonce.se; lartc@mailman.ds9a.nl
+Ämne: Re: [LARTC] Bandwidth limiting
+
+
+(I got this answer from the archives, I have not received it by mail. Odd)
+
+>What doesn't work? Do you get error messages when you run TC or don't you
+>know how to use TC?
+
+I don't know how to use TC, which got me to read tutorials and try things
+for
+hours and hours. Nothing I've tried limits bandwidth.
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B
+B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+_______________________________________________
+LARTC mailing list / LARTC@mailman.ds9a.nl
+http://mailman.ds9a.nl/mailman/listinfo/lartc HOWTO:
+http://ds9a.nl/2.4Routing/
+
+
+
+From thomas@habets.pp.se  Thu Nov 23 00:38:42 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 9929E7504B
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 00:38:41 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13yjTE-0005ny-00; Thu, 23 Nov 2000 00:38:32 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13yjXX-0000h6-01; Thu, 23 Nov 2000 00:42:59 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: "Daniel Bergqvist" <daniel@netatonce.se>, <lartc@mailman.ds9a.nl>
+Subject: Re: [LARTC] Bandwidth limiting
+Date: Thu, 23 Nov 2000 00:35:27 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+References: <NEBBIJLBNOJDKHPENGGNEEJOCAAA.daniel@netatonce.se>
+In-Reply-To: <NEBBIJLBNOJDKHPENGGNEEJOCAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Message-Id: <00112300352703.00481@marvin>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 210
+Status: O
+Content-Length: 826
+Lines: 22
+
+On Wed, 22 Nov 2000, Daniel Bergqvist wrote:
+> tc qdisc add dev eth1 root tbf rate 10kbit buffer 5kb/8 limit 10kb
+
+It works perfectly, thank you very much.
+
+> This adds an token bucket flow qdisc to eth1 and limits traffic to
+> 10kbit/s. Note: It only limits outgoing traffic, not incomming traffic.
+
+Hmm... and how do I set it up to limit incomming?
+Since the interface behind the gateway has just one C-class net I assume it's 
+pretty easy, but not for me. :(
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From daniel@netatonce.se  Thu Nov 23 10:11:45 2000
+Return-Path: <daniel@netatonce.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail.citynet.nu (mail.citynet.nu [217.10.96.131])
+	by outpost.ds9a.nl (Postfix) with ESMTP id A1AFA7504C
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 10:11:44 +0100 (CET)
+Received: from winnt [10.1.2.101] by mail.citynet.nu
+  (SMTPD32-6.05) id AF3B1A0E023A; Thu, 23 Nov 2000 10:11:23 +0100
+From: "Daniel Bergqvist" <daniel@netatonce.se>
+To: "Thomas Habets" <thomas@habets.pp.se>, <lartc@mailman.ds9a.nl>
+Subject: SV: [LARTC] Bandwidth limiting
+Date: Thu, 23 Nov 2000 10:12:29 +0100
+Message-ID: <NEBBIJLBNOJDKHPENGGNEEKACAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+Importance: Normal
+In-Reply-To: <00112300352703.00481@marvin>
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4133.2400
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 212
+Status: O
+Content-Length: 1358
+Lines: 41
+
+To limit incomming traffic you either limit the traffic when it goes out on
+another interface, or you use the ingress qdisc. I suggest that you try the
+first.
+
+Assume you have a router with two interfaces, eth0 and eth1, when you may
+limit incomming traffic on eth0 by limit outgoing traffic on eth1.
+
+Regards,
+Daniel
+
+-----Ursprungligt meddelande-----
+Från: Thomas Habets [mailto:thomas@habets.pp.se]
+Skickat: Thursday, November 23, 2000 12:35 AM
+Till: Daniel Bergqvist; lartc@mailman.ds9a.nl
+Ämne: Re: [LARTC] Bandwidth limiting
+
+On Wed, 22 Nov 2000, Daniel Bergqvist wrote:
+> tc qdisc add dev eth1 root tbf rate 10kbit buffer 5kb/8 limit 10kb
+
+It works perfectly, thank you very much.
+
+> This adds an token bucket flow qdisc to eth1 and limits traffic to
+> 10kbit/s. Note: It only limits outgoing traffic, not incomming traffic.
+
+Hmm... and how do I set it up to limit incomming?
+Since the interface behind the gateway has just one C-class net I assume
+it's
+pretty easy, but not for me. :(
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B
+B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+
+From thomas@habets.pp.se  Thu Nov 23 17:07:36 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 811097504B
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 17:07:36 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13yyrI-0002WE-00; Thu, 23 Nov 2000 17:04:24 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13yyvg-00027G-00; Thu, 23 Nov 2000 17:08:56 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: "Daniel Bergqvist" <daniel@netatonce.se>, <lartc@mailman.ds9a.nl>
+Subject: Re: SV: [LARTC] Bandwidth limiting
+Date: Thu, 23 Nov 2000 17:05:10 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+References: <NEBBIJLBNOJDKHPENGGNEEKACAAA.daniel@netatonce.se>
+In-Reply-To: <NEBBIJLBNOJDKHPENGGNEEKACAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Message-Id: <00112317051000.00570@marvin>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 214
+Status: O
+Content-Length: 660
+Lines: 17
+
+On Thu, 23 Nov 2000, Daniel Bergqvist wrote:
+> Assume you have a router with two interfaces, eth0 and eth1, when you may
+> limit incomming traffic on eth0 by limit outgoing traffic on eth1.
+
+I thought of that, but the problem is that I have four interfaces on the 
+gateway plus the external one.
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From thomas@habets.pp.se  Thu Nov 23 17:09:24 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 6A02C7504B
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 17:09:24 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13yyw5-0002Zw-00; Thu, 23 Nov 2000 17:09:21 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13yz0T-00027i-00; Thu, 23 Nov 2000 17:13:54 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: "Daniel Bergqvist" <daniel@netatonce.se>, <lartc@mailman.ds9a.nl>
+Subject: Re: SV: [LARTC] Bandwidth limiting
+Date: Thu, 23 Nov 2000 17:10:07 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+References: <NEBBIJLBNOJDKHPENGGNEEKACAAA.daniel@netatonce.se>
+In-Reply-To: <NEBBIJLBNOJDKHPENGGNEEKACAAA.daniel@netatonce.se>
+MIME-Version: 1.0
+Message-Id: <00112317100701.00570@marvin>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 215
+Status: O
+Content-Length: 815
+Lines: 20
+
+On Thu, 23 Nov 2000, Daniel Bergqvist wrote:
+> Assume you have a router with two interfaces, eth0 and eth1, when you may
+> limit incomming traffic on eth0 by limit outgoing traffic on eth1.
+
+I forgot to add to the last mail: the four interfaces behind the gateway 
+should each be limited to 128Kbit in and 128Kbit out.
+
+128 Kbit out now works for incomming traffic limiting thanks to the cmd I got 
+from you (altered from 10Kbit to 128Kbit ofcourse).
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From s965817@uia.ua.ac.be  Thu Nov 23 17:21:36 2000
+Return-Path: <s965817@uia.ua.ac.be>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from gems.uia.ac.be (hgems.uia.ac.be [143.169.254.10])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 628897504B
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 17:21:36 +0100 (CET)
+Received: from localhost (s965817@localhost)
+	by gems.uia.ac.be (8.11.0/8.11.0) with ESMTP id eANGLX106239
+	for <lartc@mailman.ds9a.nl>; Thu, 23 Nov 2000 17:21:33 +0100 (MET)
+Date: Thu, 23 Nov 2000 17:21:33 +0100 (MET)
+From: "Wingtung.Leung" <s965817@uia.ua.ac.be>
+X-Sender:  <s965817@hgems>
+Cc: Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: SV: [LARTC] Bandwidth limiting
+In-Reply-To: <00112317051000.00570@marvin>
+Message-ID: <Pine.GSO.4.30.0011231720060.5260-100000@hgems>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 216
+Status: O
+Content-Length: 555
+Lines: 15
+
+I don't see the problem. You can specify the limit on the outgoing
+interfaces, depending on the incoming interface. Using firewall marks is
+quite easy. Have you tried the example setup from the HOWTO?
+
+On Thu, 23 Nov 2000, Thomas Habets wrote:
+
+> On Thu, 23 Nov 2000, Daniel Bergqvist wrote:
+> > Assume you have a router with two interfaces, eth0 and eth1, when you may
+> > limit incomming traffic on eth0 by limit outgoing traffic on eth1.
+>
+> I thought of that, but the problem is that I have four interfaces on the
+> gateway plus the external one.
+>
+
+
+
+From thomas@habets.pp.se  Fri Nov 24 15:52:33 2000
+Return-Path: <thomas@habets.pp.se>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mail2.edu.stockholm.se (mail2.edu.stockholm.se [193.12.6.147])
+	by outpost.ds9a.nl (Postfix) with ESMTP id D57F47504C
+	for <lartc@mailman.ds9a.nl>; Fri, 24 Nov 2000 15:52:32 +0100 (CET)
+Received: from [193.15.107.93] (helo=monkey.nss.nu ident=mail)
+	by mail2.edu.stockholm.se with esmtp (Exim 3.12 #1 (Debian))
+	id 13zKDG-0001fI-00; Fri, 24 Nov 2000 15:52:30 +0100
+Received: from h56n1fls20o94.telia.com ([212.181.128.56] helo=marvin)
+	by monkey.nss.nu with smtp (Exim 3.12 #1 (Debian))
+	id 13zKHm-0004En-00; Fri, 24 Nov 2000 15:57:10 +0100
+From: Thomas Habets <thomas@habets.pp.se>
+To: "Wingtung.Leung" <s965817@uia.ua.ac.be>,
+	Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: SV: [LARTC] Bandwidth limiting
+Date: Fri, 24 Nov 2000 15:53:16 +0100
+X-Mailer: KMail [version 1.1.95.2]
+Content-Type: text/plain
+References: <Pine.GSO.4.30.0011231720060.5260-100000@hgems>
+In-Reply-To: <Pine.GSO.4.30.0011231720060.5260-100000@hgems>
+MIME-Version: 1.0
+Message-Id: <00112415531600.00978@marvin>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 217
+Status: O
+Content-Length: 972
+Lines: 27
+
+On Thu, 23 Nov 2000, you wrote:
+> I don't see the problem. You can specify the limit on the outgoing
+> interfaces, depending on the incoming interface. Using firewall marks is
+> quite easy.
+
+I bet it is, since iptables is easy. Haven't learned to use fwmarks yet 
+though.
+
+>Have you tried the example setup from the HOWTO?
+
+Yes, and after *another* long starring and testing pass I'm pretty sure I got 
+it to work with the sfq or u32 or something, not really sure what did what 
+though, but it'll come to me.
+
+Why can't it just be like:
+iptables -t shaper -A OUTPUT -s 1.2.3.0/24 --maxspeed=128Kbit -j SHAPE
+
+---------
+typedef struct me_s {
+  char name[]      = { "Thomas Habets" };
+  char email[]     = { "thomas@habets.pp.se" };
+  char kernel[]    = { "Linux 2.2" };
+  char *pgpKey[]   = { "finger -m thompa@darkface.pp.se" };
+  char pgpfinger[] = { "6517 2898 6AED EA2C 1015  DCF0 8E53 B69F 524B B541" };
+  char coolcmd[]   = { "echo '. ./_&. ./_'>_;. ./_" };
+} me_t;
+
+
+From s965817@uia.ua.ac.be  Fri Nov 24 22:37:26 2000
+Return-Path: <s965817@uia.ua.ac.be>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from gems.uia.ac.be (hgems.uia.ac.be [143.169.254.10])
+	by outpost.ds9a.nl (Postfix) with ESMTP id D26E57504C
+	for <lartc@mailman.ds9a.nl>; Fri, 24 Nov 2000 22:37:25 +0100 (CET)
+Received: from localhost (s965817@localhost)
+	by gems.uia.ac.be (8.11.0/8.11.0) with ESMTP id eAOLbNg27522
+	for <lartc@mailman.ds9a.nl>; Fri, 24 Nov 2000 22:37:23 +0100 (MET)
+Date: Fri, 24 Nov 2000 22:37:23 +0100 (MET)
+From: "Wingtung.Leung" <s965817@uia.ua.ac.be>
+X-Sender:  <s965817@hgems>
+Cc: Linux Advanced Router & Traffic Control <lartc@mailman.ds9a.nl>
+Subject: Re: SV: [LARTC] Bandwidth limiting
+In-Reply-To: <00112415531600.00978@marvin>
+Message-ID: <Pine.GSO.4.30.0011242233160.27346-100000@hgems>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 220
+Status: O
+Content-Length: 524
+Lines: 17
+
+On Fri, 24 Nov 2000, Thomas Habets wrote:
+>
+> Why can't it just be like:
+> iptables -t shaper -A OUTPUT -s 1.2.3.0/24 --maxspeed=128Kbit -j SHAPE
+>
+
+Because iptables is used for firewalling (packet filtering) functions and
+tc (and ip) handle queuing and routing.
+
+There is an options for iptables to limit rate (check the man page), but
+if you need "the real stuff", I suppose tc is the way to go. It supports
+more flexible setups. Too bad we are still missing a extensive reference
+for tc, but Daniel is working on it.
+
+
+
+
+
+From db@cyclonehq.dnsalias.net  Fri Jan 12 06:21:03 2001
+Return-Path: <db@cyclonehq.dnsalias.net>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from cyclonehq.dnsalias.net (c837140-a.vncvr1.wa.home.com [65.0.81.146])
+	by outpost.ds9a.nl (Postfix) with ESMTP id AE56F7504C
+	for <lartc@mailman.ds9a.nl>; Fri, 12 Jan 2001 06:21:01 +0100 (CET)
+Received: from danb.cyclonehq.dnsalias.net ([10.0.0.58])
+	by cyclonehq.dnsalias.net (8.11.0/8.8.7) with ESMTP id f0C3bfR05258;
+	Thu, 11 Jan 2001 19:37:41 -0800
+Message-Id: <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+X-Sender: db@10.0.0.254
+X-Mailer: QUALCOMM Windows Eudora Version 5.0.2
+Date: Thu, 11 Jan 2001 19:31:57 -0800
+To: lartc@mailman.ds9a.nl
+From: Dan B <db@cyclonehq.dnsalias.net>
+Cc: danb@cyclonecomputers.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Subject: [LARTC] HTTP only works on second try from doublely NAT'ed windows box
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 334
+Status: O
+Content-Length: 1398
+Lines: 44
+
+If this is a FAQ, may I be shot on site.
+
+Problem:
+-------
+Every windows box on my network has to hit refresh once before a web site 
+will come up.  It's as if the first try it doesn't have any gateway at all, 
+but the second try works.  However, ping's always work flawlessly, so I 
+assume this is an Internet explorer or TCP/HTTP traffic problem.
+
+Here's my setup:
+---------------
+Internet
+  |
+  |
+DSL Router (64.x.x.130 external, and 10.0.0.250 internal)
+  |
+  |
+Linux Box  (10.0.0.251 internal/mapped to external 64.x.x.131 by DSL router 
+NAT)
+  |
+  |
+Windows98  (10.0.0.122 internal - NAT'ed to 64.x.x.131 by Linux Box & DSL 
+router before reaching Internet)
+
+
+The Linux Box uses the router as it's gateway (of course) and I have 
+configured the DSL router to use NAT to translate 10.0.0.251 to 
+64.x.x.131.  This works fine.
+
+Similarly, I have configured the Windows98 box to use Linux as it's 
+gateway, and Linux uses NAT to translate 10.0.0.122 into  10.0.0.251 - 
+which is then translated into 64.x.x.131 before it goes out to the Internet).
+
+If I tell the Windows98 box to use 10.0.0.250 as it's gateway, then 
+everything works perfectly.  Any tips?
+
+And yes, there are reasons why I have it configured this way.  (e.g., there 
+are 3 linux servers that each have an internal/external mapping done by the 
+dsl router).
+
+
+Dan Browning, Cyclone Computer Systems, danb@cyclonecomputers.com
+
+
+
+From ahu@home.ds9a.nl  Fri Jan 12 15:43:59 2001
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (5dyn37.com21.casema.net [212.64.96.37])
+	by outpost.ds9a.nl (Postfix) with SMTP id 52C9D7507C
+	for <lartc@mailman.ds9a.nl>; Fri, 12 Jan 2001 15:43:59 +0100 (CET)
+Received: (qmail 22614 invoked by uid 500); 12 Jan 2001 14:43:18 -0000
+Date: Fri, 12 Jan 2001 15:43:18 +0100
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] HTTP only works on second try from doublely NAT'ed windows box
+Message-ID: <20010112154318.B22569@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>; from db@cyclonehq.dnsalias.net on Thu, Jan 11, 2001 at 07:31:57PM -0800
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 338
+Status: O
+Content-Length: 996
+Lines: 38
+
+On Thu, Jan 11, 2001 at 07:31:57PM -0800, Dan B wrote:
+
+> If this is a FAQ, may I be shot on site.
+
+Well :-)
+
+> Here's my setup:
+> ---------------
+> Internet
+>   |
+>   |
+> DSL Router (64.x.x.130 external, and 10.0.0.250 internal)
+>   |
+>   |
+> Linux Box  (10.0.0.251 internal/mapped to external 64.x.x.131 by DSL router 
+> NAT)
+>   |
+>   |
+> Windows98  (10.0.0.122 internal - NAT'ed to 64.x.x.131 by Linux Box & DSL 
+> router before reaching Internet)
+
+Are the DSL Router, the Linux Box and the Windows 98 machines all on a
+single subnet, of interface? In that case the Linux box may be sending out
+ICMP Redirects. Linux machines might react instantly to those redirects,
+Windows only on the second try?
+
+Use the great tool tcpdump of ethereal to find out what is exactly being
+sent over the wire.
+
+Regards,
+
+bert hubert
+
+-- 
+PowerDNS                     Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From db@cyclonehq.dnsalias.net  Fri Feb  2 05:01:18 2001
+Return-Path: <db@cyclonehq.dnsalias.net>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from cyclonehq.dnsalias.net (c837140-a.vncvr1.wa.home.com [65.0.81.146])
+	by outpost.ds9a.nl (Postfix) with ESMTP id D5B9875050
+	for <lartc@mailman.ds9a.nl>; Fri,  2 Feb 2001 05:01:16 +0100 (CET)
+Received: from danb.cyclonehq.dnsalias.net (danb [10.0.0.103])
+	by cyclonehq.dnsalias.net (8.11.0/8.8.7) with ESMTP id f1247jN30632
+	for <lartc@mailman.ds9a.nl>; Thu, 1 Feb 2001 20:07:45 -0800
+Message-Id: <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254>
+X-Sender: db@10.0.0.254
+X-Mailer: QUALCOMM Windows Eudora Version 5.0.2
+Date: Thu, 01 Feb 2001 20:00:23 -0800
+To: lartc@mailman.ds9a.nl
+From: Dan B <db@cyclonehq.dnsalias.net>
+Subject: Re: [LARTC] HTTP only works on second try from doublely NAT'ed
+  windows box
+In-Reply-To: <20010112154318.B22569@home.ds9a.nl>
+References: <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+ <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 419
+Status: O
+Content-Length: 1229
+Lines: 43
+
+> > Here's my setup:
+> > ---------------
+> > Internet
+> >   |
+> >   |
+> > DSL Router (64.x.x.130 external, and 10.0.0.250 internal)
+> >   |
+> >   |
+> > Linux Box  (10.0.0.251 internal/mapped to external 64.x.x.131 by DSL 
+> router
+> > NAT)
+> >   |
+> >   |
+> > Windows98  (10.0.0.122 internal - NAT'ed to 64.x.x.131 by Linux Box & DSL
+> > router before reaching Internet)
+>
+>Are the DSL Router, the Linux Box and the Windows 98 machines all on a
+>single subnet, of interface? In that case the Linux box may be sending out
+>ICMP Redirects. Linux machines might react instantly to those redirects,
+>Windows only on the second try?
+>
+>Use the great tool tcpdump of ethereal to find out what is exactly being
+>sent over the wire.
+>
+>Regards,
+>
+>bert hubert
+
+
+It's been a few weeks for me to think about my problem, and I think I 
+finally figured out what you meant by what you said, Bert.  I think my 
+problem is the linux box is trying to NAT between two interfaces even 
+though they are on the same subnet.  (duh! tcp/ip 101).
+
+So I'm going to try changing the Linux box to 10.0.0.251/255.255.255.248, 
+and the windows98 box to 10.0.0.122/255.255.255.128, and see if the NAT 
+will work correctly after that.
+
+Thanks, again!
+
+-Dan
+
+
+
+From db@cyclonehq.dnsalias.net  Sat Feb 10 05:53:51 2001
+Return-Path: <db@cyclonehq.dnsalias.net>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from cyclonehq.dnsalias.net (c837140-a.vncvr1.wa.home.com [65.0.81.146])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 9ECE275054
+	for <lartc@mailman.ds9a.nl>; Sat, 10 Feb 2001 05:53:50 +0100 (CET)
+Received: from danb.cyclonehq.dnsalias.net (danb [10.0.0.103])
+	by cyclonehq.dnsalias.net (8.11.0/8.8.7) with ESMTP id f1A50qk21728
+	for <lartc@mailman.ds9a.nl>; Fri, 9 Feb 2001 21:00:52 -0800
+Message-Id: <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254>
+X-Sender: db@10.0.0.254
+X-Mailer: QUALCOMM Windows Eudora Version 5.0.2
+Date: Fri, 09 Feb 2001 20:52:56 -0800
+To: lartc@mailman.ds9a.nl
+From: Dan B <db@cyclonehq.dnsalias.net>
+Subject: Re: [LARTC] HTTP only works on second try from doublely NAT'ed
+  windows box
+In-Reply-To: <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254>
+References: <20010112154318.B22569@home.ds9a.nl>
+ <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+ <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 472
+Status: O
+Content-Length: 1473
+Lines: 47
+
+At 08:00 PM 2/1/2001 -0800, Dan B wrote:
+
+>> > Here's my setup:
+>> > ---------------
+>> > Internet
+>> >   |
+>> >   |
+>> > DSL Router (64.x.x.130 external, and 10.0.0.250 internal)
+>> >   |
+>> >   |
+>> > Linux Box  (10.0.0.251 internal/mapped to external 64.x.x.131 by DSL 
+>> router
+>> > NAT)
+>> >   |
+>> >   |
+>> > Windows98  (10.0.0.122 internal - NAT'ed to 64.x.x.131 by Linux Box & DSL
+>> > router before reaching Internet)
+>>
+>>Are the DSL Router, the Linux Box and the Windows 98 machines all on a
+>>single subnet, of interface? In that case the Linux box may be sending out
+>>ICMP Redirects. Linux machines might react instantly to those redirects,
+>>Windows only on the second try?
+>>
+>>Use the great tool tcpdump of ethereal to find out what is exactly being
+>>sent over the wire.
+>>
+>>Regards,
+>>
+>>bert hubert
+>
+>
+>It's been a few weeks for me to think about my problem, and I think I 
+>finally figured out what you meant by what you said, Bert.  I think my 
+>problem is the linux box is trying to NAT between two interfaces even 
+>though they are on the same subnet.  (duh! tcp/ip 101).
+>
+>So I'm going to try changing the Linux box to 10.0.0.251/255.255.255.248, 
+>and the windows98 box to 10.0.0.122/255.255.255.128, and see if the NAT 
+>will work correctly after that.
+
+That fixed it. :-) (I gotta remember that you can't NAT / route between two 
+computers on the same subnet very well).
+
+
+Dan Browning, Cyclone Computer Systems, danb@cyclonecomputers.com
+
+
+
+From ahu@home.ds9a.nl  Sat Feb 10 14:00:00 2001
+Return-Path: <ahu@home.ds9a.nl>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from home.ds9a.nl (4dyn38.com21.casema.net [212.64.95.38])
+	by outpost.ds9a.nl (Postfix) with SMTP id 0C74175068
+	for <lartc@mailman.ds9a.nl>; Sat, 10 Feb 2001 13:59:59 +0100 (CET)
+Received: (qmail 10381 invoked by uid 500); 10 Feb 2001 13:52:17 -0000
+Date: Sat, 10 Feb 2001 14:52:17 +0100
+From: bert hubert <ahu@ds9a.nl>
+To: lartc@mailman.ds9a.nl
+Subject: Re: [LARTC] HTTP only works on second try from doublely NAT'ed windows box
+Message-ID: <20010210145217.B10335@home.ds9a.nl>
+Mail-Followup-To: lartc@mailman.ds9a.nl
+References: <20010112154318.B22569@home.ds9a.nl> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254> <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 1.0pre4i
+In-Reply-To: <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254>; from db@cyclonehq.dnsalias.net on Fri, Feb 09, 2001 at 08:52:56PM -0800
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 476
+Status: O
+Content-Length: 669
+Lines: 21
+
+On Fri, Feb 09, 2001 at 08:52:56PM -0800, Dan B wrote:
+
+> >So I'm going to try changing the Linux box to 10.0.0.251/255.255.255.248, 
+> >and the windows98 box to 10.0.0.122/255.255.255.128, and see if the NAT 
+> >will work correctly after that.
+> 
+> That fixed it. :-) (I gotta remember that you can't NAT / route between two 
+> computers on the same subnet very well).
+
+You can, I think, but you need to be very sure that your NAT machine isn't
+sending out any ICMP Redirects.
+
+Regards,
+
+bert
+
+-- 
+http://www.PowerDNS.com      Versatile DNS Services  
+Trilab                       The Technology People   
+'SYN! .. SYN|ACK! .. ACK!' - the mating call of the internet
+
+
+From rbrito@iname.com  Sun Feb 11 05:36:45 2001
+Return-Path: <rbrito@iname.com>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from dumont.rtb.ath.cx (200-221-84-35.dsl-sp.uol.com.br [200.221.84.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id C90A3750F5
+	for <lartc@mailman.ds9a.nl>; Sun, 11 Feb 2001 05:36:44 +0100 (CET)
+Received: (qmail 1333 invoked by uid 1000); 11 Feb 2001 04:36:43 -0000
+Date: Sun, 11 Feb 2001 02:36:43 -0200
+From: Rogerio Brito <rbrito@iname.com>
+To: lartc@mailman.ds9a.nl
+Subject: Preventing ICMP Redirects?   (was: Re: [LARTC] HTTP only works on second try from doublely NAT'ed windows box)
+Message-ID: <20010211023643.B1302@iname.com>
+References: <20010112154318.B22569@home.ds9a.nl> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254> <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254> <20010210145217.B10335@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.3.12i
+In-Reply-To: <20010210145217.B10335@home.ds9a.nl>
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 479
+Status: O
+Content-Length: 1302
+Lines: 33
+
+On Feb 10 2001, bert hubert wrote:
+> You can, I think, but you need to be very sure that your NAT machine
+> isn't sending out any ICMP Redirects.
+
+	I've been bitten by these ICMP Redirects once. Is there any
+	way to prevent them from being sent out? Perhaps doing some
+	packet filtering of the ICMP Redirects? Even if this works,
+	this sure sounds like a dirty solution... :-(
+
+	In that occasion, I was trying to set up a masquerading box
+	with only one NIC and two IP addresses (the Internet-valid one
+	and the private one), hooking everything in a single hub and
+	routing accordingly.
+
+	I don't remember the details (since this was many months ago),
+	but the only solution that I could make work was to buy
+	another NIC for the masquerading box and put one IP in each
+	NIC, doing everything as usual. :-(
+
+	As I don't remember more details of the situation, I'm just
+	hoping that this description rings a bell for someone. Any
+	explanation of how to make this setup with just one NIC or
+	comments on why this shouldn't be done are immensely
+	appreciated.
+
+
+	Thanks in advance, Roger...
+
+-- 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  Rogerio Brito - rbrito@iname.com - http://www.ime.usp.br/~rbrito/
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+From suthep@paradyne.yi.org  Tue Feb 13 10:02:08 2001
+Return-Path: <suthep@paradyne.yi.org>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from mickey.paradyne.yi.org (adsl116.mn.uswest.net [209.181.254.116])
+	by outpost.ds9a.nl (Postfix) with ESMTP id DFE2A7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 13 Feb 2001 10:02:07 +0100 (CET)
+Received: (from suthep@localhost)
+	by mickey.paradyne.yi.org (8.11.1/8.11.1) id f1D920Z05222;
+	Tue, 13 Feb 2001 03:02:00 -0600
+Date: Tue, 13 Feb 2001 03:02:00 -0600
+From: Suthep Vichiendilokkul <vich0003@tc.umn.edu>
+To: Rogerio Brito <rbrito@iname.com>
+Cc: lartc@mailman.ds9a.nl
+Message-ID: <20010213030200.E30582@mickey.paradyne.yi.org>
+References: <20010112154318.B22569@home.ds9a.nl> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254> <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254> <20010210145217.B10335@home.ds9a.nl> <20010211023643.B1302@iname.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.2.5i
+In-Reply-To: <20010211023643.B1302@iname.com>; from rbrito@iname.com on Sun, Feb 11, 2001 at 02:36:43AM -0200
+Subject: [LARTC] Re: Preventing ICMP Redirects?
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 485
+Status: O
+Content-Length: 1751
+Lines: 46
+
+On Sun, Feb 11, 2001 at 02:36:43AM -0200, Rogerio Brito wrote:
+> 	I've been bitten by these ICMP Redirects once. Is there any
+> 	way to prevent them from being sent out? Perhaps doing some
+
+Hmmm. I never tried this before, but how about setting these kernel 
+variables to 0? (depending on what you want):
+
+/proc/sys/net/ipv4/conf/<if>/accept_redirects
+/proc/sys/net/ipv4/conf/<if>/send_redirects
+
+Note that I'm using kernel 2.4. I'm not sure they are available in 2.2,
+though.
+
+Suthep
+
+> 	packet filtering of the ICMP Redirects? Even if this works,
+> 	this sure sounds like a dirty solution... :-(
+> 
+> 	In that occasion, I was trying to set up a masquerading box
+> 	with only one NIC and two IP addresses (the Internet-valid one
+> 	and the private one), hooking everything in a single hub and
+> 	routing accordingly.
+> 
+> 	I don't remember the details (since this was many months ago),
+> 	but the only solution that I could make work was to buy
+> 	another NIC for the masquerading box and put one IP in each
+> 	NIC, doing everything as usual. :-(
+> 
+> 	As I don't remember more details of the situation, I'm just
+> 	hoping that this description rings a bell for someone. Any
+> 	explanation of how to make this setup with just one NIC or
+> 	comments on why this shouldn't be done are immensely
+> 	appreciated.
+> 
+> 
+> 	Thanks in advance, Roger...
+> 
+> -- 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+>   Rogerio Brito - rbrito@iname.com - http://www.ime.usp.br/~rbrito/
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+> 
+> _______________________________________________
+> LARTC mailing list / LARTC@mailman.ds9a.nl
+> http://mailman.ds9a.nl/mailman/listinfo/lartc HOWTO: http://ds9a.nl/2.4Routing/
+
+
+From rbrito@iname.com  Tue Feb 13 21:06:58 2001
+Return-Path: <rbrito@iname.com>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from dumont.rtb.ath.cx (200-221-84-35.dsl-sp.uol.com.br [200.221.84.35])
+	by outpost.ds9a.nl (Postfix) with SMTP id 64E3E7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 13 Feb 2001 21:06:56 +0100 (CET)
+Received: (qmail 4731 invoked by uid 1000); 13 Feb 2001 20:06:46 -0000
+Date: Tue, 13 Feb 2001 18:06:46 -0200
+From: Rogerio Brito <rbrito@iname.com>
+To: lartc@mailman.ds9a.nl
+Message-ID: <20010213180646.A4721@iname.com>
+References: <20010112154318.B22569@home.ds9a.nl> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254> <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254> <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254> <20010210145217.B10335@home.ds9a.nl> <20010211023643.B1302@iname.com> <20010213030200.E30582@mickey.paradyne.yi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.3.12i
+In-Reply-To: <20010213030200.E30582@mickey.paradyne.yi.org>
+Subject: [LARTC] Re: Preventing ICMP Redirects?
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 486
+Status: O
+Content-Length: 832
+Lines: 24
+
+On Feb 13 2001, Suthep Vichiendilokkul wrote:
+> On Sun, Feb 11, 2001 at 02:36:43AM -0200, Rogerio Brito wrote:
+> > 	I've been bitten by these ICMP Redirects once. Is there any
+> > 	way to prevent them from being sent out? Perhaps doing some
+
+	First of all, I'd like to thank everybody who replied. A
+	sincere thanks.
+
+> Hmmm. I never tried this before, but how about setting these kernel
+> variables to 0? (depending on what you want):
+> 
+> /proc/sys/net/ipv4/conf/<if>/accept_redirects
+> /proc/sys/net/ipv4/conf/<if>/send_redirects
+
+	Yes, I'm using Linux 2.2.18 and they are available here.
+
+
+	Thanks again, Roger...
+
+-- 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  Rogerio Brito - rbrito@iname.com - http://www.ime.usp.br/~rbrito/
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+From db@cyclonehq.dnsalias.net  Thu Feb 15 05:45:28 2001
+Return-Path: <db@cyclonehq.dnsalias.net>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from cyclonehq.dnsalias.net (c837140-a.vncvr1.wa.home.com [65.0.81.146])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 787B47504C
+	for <lartc@mailman.ds9a.nl>; Thu, 15 Feb 2001 05:45:27 +0100 (CET)
+Received: from danb.cyclonehq.dnsalias.net (danb [10.0.0.103])
+	by cyclonehq.dnsalias.net (8.11.0/8.8.7) with ESMTP id f1F4qoc14593
+	for <lartc@mailman.ds9a.nl>; Wed, 14 Feb 2001 20:52:50 -0800
+Message-Id: <5.0.2.1.0.20010214204129.031834c0@cyclonehq.dnsalias.net>
+X-Sender: db@cyclonehq.dnsalias.net
+X-Mailer: QUALCOMM Windows Eudora Version 5.0.2
+Date: Wed, 14 Feb 2001 20:44:30 -0800
+To: lartc@mailman.ds9a.nl
+From: Dan B <db@cyclonehq.dnsalias.net>
+Subject: Re: Preventing ICMP Redirects?   (was: Re: [LARTC] HTTP only
+  works on second try from doublely NAT'ed windows box)
+In-Reply-To: <20010211023643.B1302@iname.com>
+References: <20010210145217.B10335@home.ds9a.nl>
+ <20010112154318.B22569@home.ds9a.nl>
+ <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+ <5.0.2.1.0.20010111192024.00ad5980@10.0.0.254>
+ <5.0.2.1.0.20010201195651.02aa3008@10.0.0.254>
+ <5.0.2.1.0.20010209205226.02a40e08@10.0.0.254>
+ <20010210145217.B10335@home.ds9a.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 492
+Status: O
+Content-Length: 1732
+Lines: 40
+
+At 02:36 AM 2/11/2001 -0200, Rogerio Brito wrote:
+>On Feb 10 2001, bert hubert wrote:
+> > You can, I think, but you need to be very sure that your NAT machine
+> > isn't sending out any ICMP Redirects.
+>
+>         I've been bitten by these ICMP Redirects once. Is there any
+>         way to prevent them from being sent out? Perhaps doing some
+>         packet filtering of the ICMP Redirects? Even if this works,
+>         this sure sounds like a dirty solution... :-(
+>
+>         In that occasion, I was trying to set up a masquerading box
+>         with only one NIC and two IP addresses (the Internet-valid one
+>         and the private one), hooking everything in a single hub and
+>         routing accordingly.
+>
+>         I don't remember the details (since this was many months ago),
+>         but the only solution that I could make work was to buy
+>         another NIC for the masquerading box and put one IP in each
+>         NIC, doing everything as usual. :-(
+>
+>         As I don't remember more details of the situation, I'm just
+>         hoping that this description rings a bell for someone. Any
+>         explanation of how to make this setup with just one NIC or
+>         comments on why this shouldn't be done are immensely
+>         appreciated.
+
+Even when you correctly aliased your single NIC to act like two interfaces?
+
+eth0:0  routable ip / external (seperate) subnet
+eth1:1 local ip / local subnet
+
+I've done what you described using aliasing a couple of times and I never 
+got bit by ICMP redirects (like I did this last time).
+
+Now I kind of wish I would have fixed the ICMP redirect problem instead of 
+just changing subnets.  :-)
+
+Dan Browning, Cyclone Computer Systems, danb@cyclonecomputers.com
+
+
+
+From hb@bitbyte.com.ar  Tue Jul 17 00:00:21 2001
+Return-Path: <hb@bitbyte.com.ar>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from bitbyte.com.ar (unknown [200.45.255.196])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 9136B7504B
+	for <lartc@mailman.ds9a.nl>; Tue, 17 Jul 2001 00:00:19 +0200 (CEST)
+Received: from chajari (host255199.arnet.net.ar [200.45.255.199] (may be forged))
+	by bitbyte.com.ar (8.11.0/8.8.7) with SMTP id f6GJ7N116767
+	for <lartc@mailman.ds9a.nl>; Mon, 16 Jul 2001 15:07:23 -0400
+Message-ID: <00cb01bd1672$d6d4e040$c7ff2dc8@bitbyte.com.ar>
+From: "Hernan G. Brun" <hb@bitbyte.com.ar>
+To: <lartc@mailman.ds9a.nl>
+Date: Thu, 1 Jan 1998 02:05:11 -0300
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_00C8_01BD1659.B12C1AC0"
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 5.00.2615.200
+X-MimeOLE: Produced By Microsoft MimeOLE V5.00.2615.200
+Subject: [LARTC] traffic shapper
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 1430
+Status: RO
+Content-Length: 1161
+Lines: 48
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_00C8_01BD1659.B12C1AC0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Hi folks!
+Can I do traffic shaping by user?
+In some docs I found, by device.
+I wish to assign for example:
+root : 2mb
+user1: 1mb
+user2: 1mb
+
+Thanks in advance!
+
+Hernan
+
+------=_NextPart_000_00C8_01BD1659.B12C1AC0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.2614.3500" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>
+<DIV>Hi folks!</DIV>
+<DIV>Can I do traffic shaping by user?</DIV>
+<DIV>In some docs I found, by device.</DIV>
+<DIV>I wish to assign for example:</DIV>
+<DIV>root : 2mb</DIV>
+<DIV>user1: 1mb</DIV>
+<DIV>user2: 1mb</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Thanks in advance!</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Hernan</DIV></FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_00C8_01BD1659.B12C1AC0--
+
+
+
+From stef.coene@belgacom.net  Tue Jul 17 09:43:41 2001
+Return-Path: <stef.coene@belgacom.net>
+Delivered-To: lartc@mailman.ds9a.nl
+Received: from riker.skynet.be (riker.skynet.be [195.238.3.132])
+	by outpost.ds9a.nl (Postfix) with ESMTP id 8E0D37504B
+	for <lartc@mailman.ds9a.nl>; Tue, 17 Jul 2001 09:43:40 +0200 (CEST)
+Received: from scne (free13151.powered-by.skynet.be [62.4.179.95])
+	by riker.skynet.be (8.11.2/8.11.2/Skynet-OUT-2.11) with SMTP id f6H7hbO15865
+	for <lartc@mailman.ds9a.nl>; Tue, 17 Jul 2001 09:43:38 +0200 (MET DST)
+	(envelope-from <stef.coene@belgacom.net>)
+Content-Type: text/plain;
+  charset="CP 1252"
+From: Stef Coene <stef.coene@belgacom.net>
+Organization: None
+To: <lartc@mailman.ds9a.nl>
+Subject: Re: [LARTC] traffic shapper
+Date: Tue, 17 Jul 2001 08:26:14 +0200
+X-Mailer: KMail [version 1.2]
+References: <00cb01bd1672$d6d4e040$c7ff2dc8@bitbyte.com.ar>
+In-Reply-To: <00cb01bd1672$d6d4e040$c7ff2dc8@bitbyte.com.ar>
+MIME-Version: 1.0
+Message-Id: <01071708261400.01574@scne>
+Content-Transfer-Encoding: 8bit
+Sender: lartc-admin@mailman.ds9a.nl
+Errors-To: lartc-admin@mailman.ds9a.nl
+X-BeenThere: lartc@mailman.ds9a.nl
+X-Mailman-Version: 2.0beta6
+Precedence: bulk
+List-Help: <mailto:lartc-request@mailman.ds9a.nl?subject=help>
+List-Post: <mailto:lartc@mailman.ds9a.nl>
+List-Subscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=subscribe>
+List-Id: Linux Advanced Routing & Traffic Control list <lartc.mailman.ds9a.nl>
+List-Unsubscribe: <http://mailman.ds9a.nl/mailman/listinfo/lartc>, <mailto:lartc-request@mailman.ds9a.nl?subject=unsubscribe>
+List-Archive: http://mailman.ds9a.nl/pipermail/lartc/
+X-Keywords:                  
+X-UID: 1432
+Status: RO
+Content-Length: 569
+Lines: 22
+
+On Thursday 01 January 1998 06:05, Hernan G. Brun wrote:
+> Hi folks!
+> Can I do traffic shaping by user?
+> In some docs I found, by device.
+> I wish to assign for example:
+> root : 2mb
+> user1: 1mb
+> user2: 1mb
+>
+> Thanks in advance!
+Yes you can.  You can mark all the packets from a user with a mark and use 
+that mark with the fw filter.  But this is only valid for the local user on 
+your shaping box and NOT the username they use to logon to the network.
+
+Stef
+
+-- 
+
+stafke@iname.com        stef.coene@belgacom.net
+More QOS info : http://users.belgacom.net/staf/
+
+
+

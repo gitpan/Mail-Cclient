@@ -13,7 +13,7 @@ Mail::Cclient - Mailbox access via the c-client library API
 
     ($envelope, $body) = $c->fetchstructure(MSGNO [, FLAG ...] );
     $hdr = $c->fetchheader(MSGNO [, FLAG ...]);
-    $text = $c->fetchtext(MSGNO [, FLAG ..i]);
+    $text = $c->fetchtext(MSGNO [, FLAG ...]);
     $text = $c->fetchbody(MSGNO, SECTION, [, FLAG ...]);
     $elt = $c->elt(MSGNO);
 
@@ -1289,7 +1289,7 @@ Maintained by Henrique Dias, hdias@esb.ucp.pt.
 
 =head1 VERSION
 
-version 1.5
+version 1.6
 
 =head1 SEE ALSO
 
