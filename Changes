@@ -1,5 +1,14 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.11
+06 Oct 2004
+* The line '#include "utf8.h"' in "Cclient.xs" file was moved to line
+  after the '#include "perl.h"' to avoid problems in the "x86_64-linux"
+  architecture.
+* The content of imap "linkage.c" file has been added to "Cclient.xs",
+  because it is not installed in many OS's.
+* The Makefile.PL has changed
+
 1.10
 20 Sep 2004
 * The function make_mail_body has been updated (the XS perl internal

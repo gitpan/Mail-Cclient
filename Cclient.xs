@@ -1,6 +1,6 @@
 /*
  *	Cclient.xs
- *	Last Edited: Mon Sep 20 15:40:21 WEST 2004
+ *	Last Edited: Wed Oct  6 10:35:35 WEST 2004
  *
  *	Copyright (c) 1998 - 2004 Malcolm Beattie
  *
@@ -26,7 +26,6 @@
 #include "rfc822.h"
 #include "misc.h"
 #include "smtp.h"
-#include "utf8.h"
 #include "criteria.h"
 
 #define CCLIENT_LOCAL_INIT(s,d,data,size) \
@@ -47,6 +46,9 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+
+#include "utf8.h"
+#include "Cclient.h"
 
 typedef MAILSTREAM *Mail__Cclient;
 typedef SENDSTREAM *Mail__Cclient__SMTP;
@@ -2501,7 +2503,28 @@ rfc822_output(...)
 
 
 BOOT:
+#if HAVE_IMAP_LINKAGE
 #include "linkage.c"
+#else
+	mail_link (&mboxdriver);	/* link in the mbox driver */
+	mail_link (&imapdriver);	/* link in the imap driver */
+	mail_link (&nntpdriver);	/* link in the nntp driver */
+	mail_link (&pop3driver);	/* link in the pop3 driver */
+	mail_link (&mhdriver);		/* link in the mh driver */
+	mail_link (&mxdriver);		/* link in the mx driver */
+	mail_link (&mbxdriver);		/* link in the mbx driver */
+	mail_link (&tenexdriver);	/* link in the tenex driver */
+	mail_link (&mtxdriver);		/* link in the mtx driver */
+	mail_link (&mmdfdriver);	/* link in the mmdf driver */
+	mail_link (&unixdriver);	/* link in the unix driver */
+	mail_link (&newsdriver);	/* link in the news driver */
+	mail_link (&philedriver);	/* link in the phile driver */
+	mail_link (&dummydriver);	/* link in the dummy driver */
+	auth_link (&auth_md5);		/* link in the md5 authenticator */
+	auth_link (&auth_pla);		/* link in the pla authenticator */
+	auth_link (&auth_log);		/* link in the log authenticator */
+	ssl_onceonlyinit ();
+#endif /* HAVE_IMAP_LINKAGE */
 	mailstream2sv = newHV();
 	stash_Cclient = gv_stashpv("Mail::Cclient", TRUE);
 	stash_Address = gv_stashpv("Mail::Cclient::Address", TRUE);

@@ -1,3 +1,6 @@
+# See lib/ExtUtils/MakeMaker.pm for details of how to influence
+# the contents of the Makefile that is written.
+# Last Modification: Wed Oct  6 13:30:32 WEST 2004
 use ExtUtils::MakeMaker;
 use Getopt::Long();
 use vars qw($opt);
@@ -42,7 +45,14 @@ $LIBS = join(" ", @libs);
 if($CCLIENTLIBS) {
 	print "configure with shared c-client:$CCLIENTLIBS\n";
 	$LIBS .= $CCLIENTLIBS;
-	$CCLIENT_DIR = $IMAP_DIR if($IMAP_DIR);
+	if($IMAP_DIR) {
+		$CCLIENT_DIR = $IMAP_DIR;
+		my $have_linkage = (-e "$IMAP_DIR/linkage.c") ? 1 : 0;
+		unlink("Cclient.h") if(-e "Cclient.h");
+		open(HEADERS, ">", "Cclient.h") or die("$!");
+		print HEADERS "#define HAVE_IMAP_LINKAGE $have_linkage\n";
+		close(HEADERS);
+	}
 }
 if(defined($PAM_DIR)) {
 	my $tmp = " -L$PAM_DIR" if($PAM_DIR);

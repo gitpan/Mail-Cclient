@@ -19,7 +19,7 @@ $smtp->mail(
 	body => {
 		content_type => "text/plain",
 		language     => ["en", "pt"],
-		location     => "http://search.cpan.org/CPAN/authors/id/H/HD/HDIAS/Mail-Cclient-1.10.tar.gz",
+		location     => "http://search.cpan.org/CPAN/authors/id/H/HD/HDIAS/Mail-Cclient-1.11.tar.gz",
 		md5          => "7YtYbnB1w9PvjMd4qbUkcg==",
 		id           => "<8CBACA69-45C3-49C8-B182-D6A99CD9B40D>",
 		encoding     => "quoted-printable",

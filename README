@@ -1,4 +1,4 @@
-		  Perl Mail::Cclient module, Version 1.10
+		  Perl Mail::Cclient module, Version 1.11
 
 		Copyright (c) 1998 - 2004, Malcolm Beattie
 
@@ -41,7 +41,25 @@ pam-devel-xxx.xxx.rpm
 
 INSTALLATION
 
-Minumum instruction (RedHat 8.0, 9 and Fedora Core 1):
+Minumum instruction
+
+(Gentoo)
+
+# emerge mit-krb5
+# emerge uw-imap
+
+perl Makefile.PL \
+    --with-shared_cclient \
+    --with-kerberos=/usr/lib \
+    --with-pam \
+    --with-ssl \
+    --with-cclient-includes=/usr/include/imap
+
+make
+make test
+make install
+
+(RedHat 8.0, 9 and Fedora Core 1):
 
 perl Makefile.PL \
     --with-shared_cclient \
@@ -55,11 +73,11 @@ make install
 
 Build static library without OpenSSL (RedHat 8.0, 9 and Fedora Core 1):
 
-tar xvfz Mail-Cclient-1.10.tar.gz
+tar xvfz Mail-Cclient-1.11.tar.gz
 tar xvfz imap-2004a.tar.Z
 cd imap-2004a
 make lrh SSLTYPE=none 
-cd ../Mail-Cclient-1.10
+cd ../Mail-Cclient-1.11
 perl Makefile.PL --cclient_dir=../imap-2004a/c-client --with-pam
 make
 make test
@@ -129,8 +147,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.10 submitted by Henrique Dias
+Version 1.11 submitted by Henrique Dias
 Questions, bug reports, useful code bits, and suggestions for
-Mail-Cclient-1.10 should just be sent to me at hdias@aesbuc.pt
+Mail-Cclient-1.11 should just be sent to me at hdias@aesbuc.pt
 Henrique Dias
-20 Sep 2004
+06 Oct 2004
