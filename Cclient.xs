@@ -1,7 +1,7 @@
 /*
  *	Cclient.xs
  *
- *	Copyright (c) 1998 Malcolm Beattie
+ *	Copyright (c) 1998,1999 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -416,7 +416,7 @@ void mm_lsub(MAILSTREAM *stream, int delimiter, char *mailbox, long attributes)
 void mm_status(MAILSTREAM *stream, char *mailbox, MAILSTATUS *status)
 {
     dSP;
-    SV *sv = mm_callback("log");
+    SV *sv = mm_callback("status");
     if (!sv)
 	return;
     PUSHMARK(sp);
@@ -619,6 +619,8 @@ mail_open(stream, mailbox, ...)
 		      option);
 	    }
 	}
+	if (stream)
+	    hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
 	RETVAL = mail_open(stream, mailbox, options);
 	if (!RETVAL)
 	    XSRETURN_UNDEF;
@@ -635,6 +637,7 @@ void
 mail_close(stream, ...)
 	Mail::Cclient	stream
     CODE:
+	hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
 	if (items == 1)
 	    mail_close(stream);
 	else {

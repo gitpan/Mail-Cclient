@@ -1,3 +1,16 @@
+0.5
+7 Jun 1999
+
+* $mc->status method was calling back "log" instead of "status"
+
+* Added documentation on the $mc->open method
+
+* The mailstream2sv HV was caching stale objects and the DESTROY
+  method was then causing closes on those stale streams at program
+  exit. That led to segfaults. Stale streams are now deleted from the
+  hash and the destructor has been removed since there's no nice way
+  to keep it clean.
+
 0.4
 14 Sep 1998
 

@@ -39,7 +39,7 @@ WriteMakefile(
     NAME		=> "Mail::Cclient",
     VERSION_FROM	=> "Cclient.pm",
     INC			=> "-I$CCLIENT_DIR",
-    #LIBS		=> ["-lpam"],
+    LIBS		=> ["-lc"],
     OBJECT		=> "Cclient.o @objects"
 );
 

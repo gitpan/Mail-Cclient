@@ -1,7 +1,7 @@
 #
 #	Cclient.pm
 #
-#	Copyright (c) 1998 Malcolm Beattie
+#	Copyright (c) 1998,1999 Malcolm Beattie
 #
 #	You may distribute under the terms of either the GNU General Public
 #	License or the Artistic License, as specified in the README file.
@@ -13,7 +13,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "0.4";
+$VERSION = "0.5";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback);
 
@@ -35,6 +35,7 @@ Mail::Cclient - Mailbox access via the c-client library API
     $c->create(MAILBOX);
     $c->delete(MAILBOX);
     $c->rename(OLDNAME, NEWNAME);
+    $c->open(MAILBOX);
 
     $nmsgs = $c->nmsgs;
 
@@ -180,6 +181,20 @@ don't open a mailbox.
 Silently expunge the oldstream before recycling.
 
 =back
+
+You can use the method
+
+=over
+
+=item open(MAILBOX)
+
+=back
+
+to get the mailstream object to open a different mailbox. The cclient
+library will try to reuse the same IMAP connection where possible in
+the case of IMAP mailboxes but the host part of the mailbox spec must
+be given exactly as in the original connection for this to work.
+
 
 Read-only access to the fields of the underlying mailstream
 of a C<Mail::Cclient> object is supplied by the following methods:
@@ -869,11 +884,6 @@ sub parameters {
 	_parameters(undef, $param, $value);
     }
     return 1;
-}
-
-sub DESTROY {
-    my $stream = shift;
-    Mail::Cclient::close($stream);
 }
 
 bootstrap Mail::Cclient;

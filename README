@@ -1,6 +1,6 @@
-		     Perl Mail::Cclient module, Version 0.4
+		     Perl Mail::Cclient module, Version 0.5
 
-		      Copyright (c) 1998, Malcolm Beattie
+		   Copyright (c) 1998, 1999, Malcolm Beattie
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of either:
@@ -33,9 +33,9 @@ Washington IMAP daemon (written by Mark Crispin).
 INSTALLATION
 
 Install the University of Washington imapd source distribution
-(e.g. 4.1.BETA) and build at least the c-client library
+(e.g. version 4.5) and build at least the c-client library
 (c-client/c-client.a). The home site for the UW imapd is
-    ftp://ftp.cac.washington.edu:/mail/imap-4.1.BETA.tar.Z
+    ftp://ftp.cac.washington.edu/mail/imap-4.5.tar.Z
 
 If your platform needs any additional LIBS entries, edit Makefile.PL
 and add them. Do
@@ -65,8 +65,9 @@ to complete the installation.
 
 TESTING
 
-The test files t/*.t aren't automated ones which produce "ok ..."
-output but reading them should show how a few of the basics work.
+Don't type "make test". The test files t/*.t are *not* automated ones
+which produce "ok ..." output but reading them should show how a few
+of the basics work.
 
 DOCUMENTATION
 
@@ -77,4 +78,4 @@ which documents the underlying c-client library. However, that
 documentation is at odds with the actual code in a few places.
 
 Malcolm Beattie
-1 June 1998
+7 June 1999
