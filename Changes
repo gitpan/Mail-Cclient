@@ -1,5 +1,23 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.5
+01 Dec 2001
+
+* Documentation update.
+
+* Added parameters SSHTIMEOUT and SSLFAILURE to parameters method.
+
+* Added flags "secure" and "tryssl" to open method.
+
+* Addes PNG image type to set_mime_type function (XS).
+  (from code submitted by Helena Gomes <hpgomes@mail.pt>)
+
+* Fixed bug in mail__parameters function. Changed keyword from
+  CODE to PPCODE. Thanks Dmitry Mottl <dima@sinp.msu.ru>
+
+* Added utf8_mime2text method and utf8_mime2text.pl example.
+  (from code submitted by Raul Dias <raul@dias.com.br>)
+
 1.4.1
 31 Oct 2001
 

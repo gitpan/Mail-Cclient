@@ -93,6 +93,8 @@ Mail::Cclient - Mailbox access via the c-client library API
     $text = Mail::Cclient::rfc822_base64(SOURCE);
     $text = Mail::Cclient::rfc822_qprint(SOURCE);
 
+    $text = Mail::Cclient::utf8_mime2text(SOURCE);
+
     $str = Mail::Cclient::rfc822_date;
 
     $str = Mail::Cclient::rfc822_write_address(MAILBOX, HOST, PERSONAL);
@@ -179,8 +181,7 @@ mailbox format handled by the c-client driver "foo" (e.g. "mbx").
 B<!> The options which can be passed to the C<new> are as follows
 (taken almost verbatim from the c-client Internal.doc file):
 
-
-=over 7
+=over 9
 
 =item debug
 
@@ -211,6 +212,14 @@ don't open a mailbox.
 =item expunge
 
 Silently expunge the oldstream before recycling.
+
+=item secure
+
+Don't do non-secure authentication
+
+=item tryssl
+
+Try SSL first
 
 =back
 
@@ -288,6 +297,17 @@ be given exactly as in the original connection for this to work.
 =item list(REF, PAT)
 
 This method returns a list of mailboxes via the list() callback.
+REF should normally be just the server specification
+("{mailserver:110/imap}"), and PAT (pattern) specifies where in the
+mailbox hierarchy to start searching. If you want all mailboxes, pass '*'
+for PAT.
+
+There are two special characters you can pass as part of the PAT: "*" and
+"%". "*" means to return all mailboxes. If you pass PAT as "*", you will
+get a list of the entire mailbox hierarchy. "%" means to return the
+current level only. "%" as the PAT parameter will return only the top
+level mailboxes; "~/mail/%" on UW_IMAPD will return every mailbox in the
+~/mail directory, but none in subfolders of that directory.
 
 =item scan(REF, PAT, CONTENTS)
 
@@ -602,12 +622,12 @@ Returns the msgno associated with message UID.
 With a single argument, gets the current value of parameter PARAM.
 With one or more pairs of PARAM => VALUE arguments, sets those PARAM
 values to the given new values. PARAM can be one of the following
-strings: USERNAME, HOMEDIR, LOCALHOST, SYSINBOX, OPENTIMEOUT,
-READTIMEOUT, WRITETIMEOUT, CLOSETIMEOUT, RSHTIMEOUT, MAXLOGINTRIALS,
-LOOKAHEAD, IMAPPORT, PREFETCH, CLOSEONERROR, POP3PORT, UIDLOOKAHEAD,
-MBXPROTECTION, DIRPROTECTION, LOCKPROTECTION, FROMWIDGET, NEWSACTIVE,
-NEWSSPOOL, NEWSRC, DISABLEFCNTLLOCK, LOCKEACCESERROR, LISTMAXLEVEL,
-ANONYMOUSHOME.
+strings: USERNAME, HOMEDIR, LOCALHOST, SYSINBOX, OPENTIMEOUT, READTIMEOUT,
+WRITETIMEOUT, CLOSETIMEOUT, RSHTIMEOUT, SSHTIMEOUT, SSLFAILURE,
+MAXLOGINTRIALS, LOOKAHEAD, IMAPPORT, PREFETCH, CLOSEONERROR, POP3PORT,
+UIDLOOKAHEAD, MBXPROTECTION, DIRPROTECTION, LOCKPROTECTION, FROMWIDGET,
+NEWSACTIVE, NEWSSPOOL, NEWSRC, DISABLEFCNTLLOCK, LOCKEACCESERROR,
+LISTMAXLEVEL, ANONYMOUSHOME.
 
 =back
 
@@ -727,7 +747,7 @@ This method disables SMTP protocol telemetry
 
 The following are utility functions (not methods).
 
-=over 6
+=over 7
 
 =item Mail::Cclient::rfc822_base64(SOURCE)
 
@@ -736,6 +756,10 @@ Returns the SOURCE text converted to base64 format.
 =item Mail::Cclient::rfc822_qprint(SOURCE)
 
 Returns the SOURCE text converted to quoted printable format.
+
+=item Mail::Cclient::utf8_mime2text(SOURCE)
+
+Returns the MIME-2 SOURCE text converted to UTF-8.
 
 =item Mail::Cclient::rfc822_date()
 
@@ -827,7 +851,7 @@ values in the form (USERNAME, PASSWORD). TRIAL is the number of
 the current login attempt (starting at 1). NETMBXINFO is a hash
 reference with the following keys:
 
-=over 7
+=over 11
 
 =item host
 
@@ -854,6 +878,17 @@ key is not created at all.
 
 Set to 1 if debugging access has been requested otherwise this
 key is not created at all.
+
+=item secflag
+
+Set to 1 if secure access has been requested otherwise this
+key is not created at all.
+
+=item sslflag
+
+=item trysslflag
+
+=item novalidate
 
 =back
 
@@ -1254,7 +1289,7 @@ Maintained by Henrique Dias, hdias@esb.ucp.pt.
 
 =head1 VERSION
 
-version 1.4.1
+version 1.5
 
 =head1 SEE ALSO
 

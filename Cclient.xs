@@ -25,6 +25,7 @@
 #include "rfc822.h"
 #include "misc.h"
 #include "smtp.h"
+#include "utf8.h"
 #include "criteria.h"
 
 #define CCLIENT_LOCAL_INIT(s,d,data,size) \
@@ -163,7 +164,6 @@ char *generate_message_id() {
 }
 
 static void make_mail_envelope(ENVELOPE *env, char *dhost, HV* hv) {
-
 	if(hv_exists(hv, "from", 4)) {
 		SV **value = hv_fetch(hv, "from", 4, 0);
 		rfc822_parse_adrlist(&env->from, SvPV(*value, na), dhost);
@@ -258,7 +258,6 @@ static PARAMETER *make_mail_parameter(SV *sv) {
 	return(param);
 }
 
-
 int set_encoding(char *enc) {
 	return(strcaseEQ(enc, "7bit")
 		? ENC7BIT
@@ -343,10 +342,17 @@ static void set_mime_type(BODY **body) {
 							!strncmp((char *)&(*body)->contents.text.data[6], "JFIF", 4)) {
 			(*body)->type = TYPEIMAGE;
 			(*body)->subtype = cpystr("JPEG");
+		} else if(((*body)->contents.text.size > 3) &&
+			(*body)->contents.text.data[0] == 0x89 &&
+				(*body)->contents.text.data[1] == 'P' &&
+					(*body)->contents.text.data[2] == 'N' &&
+						(*body)->contents.text.data[3] == 'G') {
+			(*body)->type = TYPEIMAGE;
+			(*body)->subtype = cpystr("PNG");
 		} else if(((*body)->contents.text.data[0] == 'M' &&
-				(*body)->contents.text.data[1] == 'M') ||
-					((*body)->contents.text.data[0] == 'I' &&
-						(*body)->contents.text.data[1] == 'I')) {
+			(*body)->contents.text.data[1] == 'M') ||
+				((*body)->contents.text.data[0] == 'I' &&
+					(*body)->contents.text.data[1] == 'I')) {
 			(*body)->type = TYPEIMAGE;
 			(*body)->subtype = cpystr("TIFF");
 		} else if(((*body)->contents.text.data[0] == '%' &&
@@ -389,7 +395,6 @@ static void set_mime_type(BODY **body) {
 }
 
 static void make_mail_body(BODY *body, HV* hv) {
-
 	if(hv_exists(hv, "content_type", 12)) {
 		char *type = NULL, *subtype = NULL;
 		SV **value = hv_fetch(hv, "content_type", 12, 0);
@@ -910,10 +915,18 @@ void mm_login(NETMBX *mb, char *user, char *password, long trial)
     hv_store(hv, "mailbox", 7, str_to_sv(mb->mailbox), 0);
     hv_store(hv, "service", 7, str_to_sv(mb->service), 0);
     hv_store(hv, "port", 4, newSViv(mb->port), 0);
-    if (mb->anoflag)
+    if(mb->anoflag)
 	hv_store(hv, "anoflag", 7, newSViv(1), 0);
-    if (mb->dbgflag)
+    if(mb->dbgflag)
 	hv_store(hv, "dbgflag", 7, newSViv(1), 0);
+    if(mb->secflag)
+	hv_store(hv, "secflag", 7, newSViv(1), 0);
+    if(mb->sslflag)
+	hv_store(hv, "sslflag", 7, newSViv(1), 0);
+    if(mb->trysslflag)
+	hv_store(hv, "trysslflag", 10, newSViv(1), 0);
+    if(mb->novalidate)
+	hv_store(hv, "novalidate", 10, newSViv(1), 0);
     XPUSHs(sv_2mortal(newRV((SV*)hv)));
     SvREFCNT_dec((SV*)hv);
     XPUSHs(sv_2mortal(newSViv(trial)));
@@ -992,71 +1005,76 @@ PROTOTYPES: DISABLE
 
 Mail::Cclient
 mail_open(stream, mailbox, ...)
-	Mail::Cclient	stream
-	char *		mailbox
-    PREINIT:
-	int i;
-	long options = 0;
-    CODE:
-	for (i = 2; i < items; i++) {
-	    char *option = SvPV(ST(i), na);
-	    if (strEQ(option, "debug"))
-		options |= OP_DEBUG;
-	    else if (strEQ(option, "readonly"))
-		options |= OP_READONLY;
-	    else if (strEQ(option, "anonymous"))
-		options |= OP_ANONYMOUS;
-	    else if (strEQ(option, "shortcache"))
-		options |= OP_SHORTCACHE;
-	    else if (strEQ(option, "silent"))
-		options |= OP_SILENT;
-	    else if (strEQ(option, "prototype"))
-		options |= OP_PROTOTYPE;
-	    else if (strEQ(option, "halfopen"))
-		options |= OP_HALFOPEN;
-	    else if (strEQ(option, "expunge"))
-		options |= OP_EXPUNGE;
-	    else {
-		croak("unknown option \"%s\" passed to Mail::Cclient::open",
-		      option);
-	    }
-	}
-	if (stream)
-	    hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
+		Mail::Cclient	stream
+		char *		mailbox
+	PREINIT:
+		int i;
+		long options = 0;
+	CODE:
+		for (i = 2; i < items; i++) {
+			char *option = SvPV(ST(i), na);
+			if(strEQ(option, "debug"))
+				options |= OP_DEBUG;
+			else if(strEQ(option, "readonly"))
+				options |= OP_READONLY;
+			else if(strEQ(option, "anonymous"))
+				options |= OP_ANONYMOUS;
+			else if(strEQ(option, "shortcache"))
+				options |= OP_SHORTCACHE;
+			else if(strEQ(option, "silent"))
+				options |= OP_SILENT;
+			else if(strEQ(option, "prototype"))
+				options |= OP_PROTOTYPE;
+			else if(strEQ(option, "halfopen"))
+				options |= OP_HALFOPEN;
+			else if(strEQ(option, "expunge"))
+				options |= OP_EXPUNGE;
+			else if(strEQ(option, "secure"))
+				options |= OP_SECURE;
+			else if(strEQ(option, "tryssl"))
+				options |= OP_TRYSSL;
+			else if(strEQ(option, "mulnewsrc"))
+				options |= OP_MULNEWSRC;
+			else {
+				croak("unknown option \"%s\" passed to Mail::Cclient::open",
+					option);
+			}
+		}
+		if(stream)
+			hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
 	RETVAL = mail_open(stream, mailbox, options);
-	if (!RETVAL)
-	    XSRETURN_UNDEF;
-    OUTPUT:
-	RETVAL
-    CLEANUP:
+		if(!RETVAL)
+			XSRETURN_UNDEF;
+	OUTPUT:
+		RETVAL
+	CLEANUP:
 #ifdef PERL_CCLIENT_DEBUG
 	fprintf(stderr, "storing stream %p\n", RETVAL); /*debug*/
 #endif
 	hv_store(mailstream2sv, (char*)&RETVAL, sizeof(RETVAL),
-		 SvREFCNT_inc(ST(0)), 0);
+		SvREFCNT_inc(ST(0)), 0);
 
 void
 mail_close(stream, ...)
-	Mail::Cclient	stream
-    CODE:
-	hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
-	if (items == 1)
-	    mail_close(stream);
-	else {
-	    long options = 0;
-	    int i;
-	    for (i = 1; i < items; i++) {
-		char *option = SvPV(ST(i), na);
-		if (strEQ(option, "expunge"))
-		    options |= CL_EXPUNGE;
+		Mail::Cclient	stream
+	CODE:
+		hv_delete(mailstream2sv, (char*)stream, sizeof(stream), G_DISCARD);
+		if(items == 1)
+			mail_close(stream);
 		else {
-		    croak("unknown option \"%s\" passed to"
-			  " Mail::Cclient::close", option);
+			long options = 0;
+			int i;
+			for(i = 1; i < items; i++) {
+				char *option = SvPV(ST(i), na);
+				if(strEQ(option, "expunge"))
+					options |= CL_EXPUNGE;
+				else {
+					croak("unknown option \"%s\" passed to"
+							" Mail::Cclient::close", option);
+				}
 		}
-	    }
-	    mail_close_full(stream, options);
+		mail_close_full(stream, options);
 	}
-
 
 
 void
@@ -1142,6 +1160,9 @@ MODULE = Mail::Cclient	PACKAGE = Mail::Cclient	PREFIX = mailstream_
 #define mailstream_rdonly(stream) stream->rdonly
 #define mailstream_anonymous(stream) stream->anonymous
 #define mailstream_halfopen(stream) stream->halfopen
+#define mailstream_secure(stream) stream->secure
+#define mailstream_tryssl(stream) stream->tryssl
+#define mailstream_mulnewsrc(stream) stream->mulnewsrc
 #define mailstream_perm_seen(stream) stream->perm_seen
 #define mailstream_perm_deleted(stream) stream->perm_deleted
 #define mailstream_perm_flagged(stream) stream->perm_flagged
@@ -1152,6 +1173,7 @@ MODULE = Mail::Cclient	PACKAGE = Mail::Cclient	PREFIX = mailstream_
 #define mailstream_recent(stream) stream->recent
 #define mailstream_uid_validity(stream) stream->uid_validity
 #define mailstream_uid_last(stream) stream->uid_last
+
 
 char *
 mailstream_mailbox(stream)
@@ -1175,6 +1197,18 @@ mailstream_anonymous(stream)
 
 unsigned int
 mailstream_halfopen(stream)
+	Mail::Cclient stream
+
+unsigned int
+mailstream_secure(stream)
+	Mail::Cclient stream
+
+unsigned int
+mailstream_tryssl(stream)
+	Mail::Cclient stream
+
+unsigned int
+mailstream_mulnewsrc(stream)
 	Mail::Cclient stream
 
 unsigned int
@@ -1578,30 +1612,30 @@ mail_elt(stream, msgno)
 
 void
 mail_setflag(stream, sequence, flag, ...)
-	Mail::Cclient	stream
-	char *		sequence
-	char *		flag
-    PREINIT:
-	int i;
-	long flags = 0;
-    ALIAS:
-	clearflag = 1
-    CODE:
-	for (i = 3; i < items; i++) {
-	    char *fl = SvPV(ST(i), na);
-	    if (strEQ(fl, "uid"))
-		flags |= ST_UID;
-	    else if (strEQ(fl, "silent"))
-		flags |= ST_SILENT;
-	    else {
-		croak("unknown flag \"%s\" passed to Mail::Cclient::%s",
-		      fl, ix == 1 ? "setflag" : "clearflag");
-	    }
-	}
-	if (ix == 1)
-	    mail_clearflag_full(stream, sequence, flag, flags);
-	else
-	    mail_setflag_full(stream, sequence, flag, flags);
+		Mail::Cclient	stream
+		char *			sequence
+		char *			flag
+	PREINIT:
+		int i;
+		long flags = 0;
+	ALIAS:
+		clearflag = 1
+	CODE:
+		for(i = 3; i < items; i++) {
+			char *fl = SvPV(ST(i), na);
+			if(strEQ(fl, "uid"))
+				flags |= ST_UID;
+			else if (strEQ(fl, "silent"))
+				flags |= ST_SILENT;
+			else {
+				croak("unknown flag \"%s\" passed to Mail::Cclient::%s",
+					fl, ix == 1 ? "setflag" : "clearflag");
+			}
+		}
+		if(ix == 1)
+			mail_clearflag_full(stream, sequence, flag, flags);
+		else
+			mail_setflag_full(stream, sequence, flag, flags);
 
 
  #
@@ -1815,159 +1849,169 @@ mail_real_gc(stream, ...)
 
 void
 mail__parameters(stream, param, sv = 0)
-	Mail::Cclient	stream
-	char *		param
-	SV *		sv
-    PREINIT:
-	char *res_str = 0;
-	int res_int;
-    CODE:
-	if (strEQ(param, "USERNAME")) {
-	    if (sv)
-		mail_parameters(stream, SET_USERNAME, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_USERNAME, 0);
-	} else if (strEQ(param, "HOMEDIR")) {
-	    if (sv)
-		mail_parameters(stream, SET_HOMEDIR, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_HOMEDIR, 0);
-	} else if (strEQ(param, "LOCALHOST")) {
-	    if (sv)
-		mail_parameters(stream, SET_LOCALHOST, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_LOCALHOST, 0);
-	} else if (strEQ(param, "SYSINBOX")) {
-	    if (sv)
-		mail_parameters(stream, SET_SYSINBOX, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_SYSINBOX, 0);
-	} else if (strEQ(param, "NEWSACTIVE")) {
-	    if (sv)
-		mail_parameters(stream, SET_NEWSACTIVE, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_NEWSACTIVE, 0);
-	} else if (strEQ(param, "NEWSSPOOL")) {
-	    if (sv)
-		mail_parameters(stream, SET_NEWSSPOOL, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_NEWSSPOOL, 0);
-	} else if (strEQ(param, "NEWSRC")) {
-	    if (sv)
-		mail_parameters(stream, SET_NEWSRC, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_NEWSRC, 0);
-	} else if (strEQ(param, "ANONYMOUSHOME")) {
-	    if (sv)
-		mail_parameters(stream, SET_ANONYMOUSHOME, SvPV(sv, na));
-	    else
-		res_str = mail_parameters(stream, GET_ANONYMOUSHOME, 0);
-	} else if (strEQ(param, "OPENTIMEOUT")) {
-	    if (sv)
-		mail_parameters(stream, SET_OPENTIMEOUT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_OPENTIMEOUT, 0);
-	} else if (strEQ(param, "READTIMEOUT")) {
-	    if (sv)
-		mail_parameters(stream, SET_READTIMEOUT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_READTIMEOUT, 0);
-	} else if (strEQ(param, "WRITETIMEOUT")) {
-	    if (sv)
-		mail_parameters(stream, SET_WRITETIMEOUT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_WRITETIMEOUT, 0);
-	} else if (strEQ(param, "CLOSETIMEOUT")) {
-	    if (sv)
-		mail_parameters(stream, SET_CLOSETIMEOUT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_CLOSETIMEOUT, 0);
-	} else if (strEQ(param, "RSHTIMEOUT")) {
-	    if (sv)
-		mail_parameters(stream, SET_RSHTIMEOUT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_RSHTIMEOUT, 0);
-	} else if (strEQ(param, "MAXLOGINTRIALS")) {
-	    if (sv)
-		mail_parameters(stream, SET_MAXLOGINTRIALS, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_MAXLOGINTRIALS, 0);
-	} else if (strEQ(param, "LOOKAHEAD")) {
-	    if (sv)
-		mail_parameters(stream, SET_LOOKAHEAD, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_LOOKAHEAD, 0);
-	} else if (strEQ(param, "IMAPPORT")) {
-	    if (sv)
-		mail_parameters(stream, SET_IMAPPORT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_IMAPPORT, 0);
-	} else if (strEQ(param, "PREFETCH")) {
-	    if (sv)
-		mail_parameters(stream, SET_PREFETCH, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_PREFETCH, 0);
-	} else if (strEQ(param, "CLOSEONERROR")) {
-	    if (sv)
-		mail_parameters(stream, SET_CLOSEONERROR, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_CLOSEONERROR, 0);
-	} else if (strEQ(param, "POP3PORT")) {
-	    if (sv)
-		mail_parameters(stream, SET_POP3PORT, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_POP3PORT, 0);
-	} else if (strEQ(param, "UIDLOOKAHEAD")) {
-	    if (sv)
-		mail_parameters(stream, SET_UIDLOOKAHEAD, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_UIDLOOKAHEAD, 0);
-	} else if (strEQ(param, "MBXPROTECTION")) {
-	    if (sv)
-		mail_parameters(stream, SET_MBXPROTECTION, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_MBXPROTECTION, 0);
-	} else if (strEQ(param, "DIRPROTECTION")) {
-	    if (sv)
-		mail_parameters(stream, SET_DIRPROTECTION, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_DIRPROTECTION, 0);
-	} else if (strEQ(param, "LOCKPROTECTION")) {
-	    if (sv)
-		mail_parameters(stream, SET_LOCKPROTECTION, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_LOCKPROTECTION, 0);
-	} else if (strEQ(param, "FROMWIDGET")) {
-	    if (sv)
-		mail_parameters(stream, SET_FROMWIDGET, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_FROMWIDGET, 0);
-	} else if (strEQ(param, "DISABLEFCNTLLOCK")) {
-	    if (sv)
-		mail_parameters(stream, SET_DISABLEFCNTLLOCK, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_DISABLEFCNTLLOCK, 0);
-	} else if (strEQ(param, "LOCKEACCESERROR")) {
-	    if (sv)
-		mail_parameters(stream, SET_LOCKEACCESERROR, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_LOCKEACCESERROR, 0);
-	} else if (strEQ(param, "LISTMAXLEVEL")) {
-	    if (sv)
-		mail_parameters(stream, SET_LISTMAXLEVEL, (void*)SvIV(sv));
-	    else
-		res_int = (int) mail_parameters(stream, GET_LISTMAXLEVEL, 0);
-	} else {
-	    croak("no such parameter name: %s", param);
-	}
-	if (sv)
-	    ST(0) = &sv_yes;
-	else {
-	    if (res_str)
-		XPUSHs(sv_2mortal(newSVpv(res_str, 0)));
-	    else
-		XPUSHs(sv_2mortal(newSViv(res_int)));
-	}
+		Mail::Cclient	stream
+		char *			param
+		SV *				sv
+	PREINIT:
+		char *res_str = 0;
+		int res_int;
+	PPCODE:
+		if(strEQ(param, "USERNAME")) {
+			if(sv)
+				mail_parameters(stream, SET_USERNAME, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_USERNAME, 0);
+		} else if(strEQ(param, "HOMEDIR")) {
+			if(sv)
+				mail_parameters(stream, SET_HOMEDIR, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_HOMEDIR, 0);
+		} else if(strEQ(param, "LOCALHOST")) {
+			if(sv)
+				mail_parameters(stream, SET_LOCALHOST, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_LOCALHOST, 0);
+		} else if(strEQ(param, "SYSINBOX")) {
+			if(sv)
+				mail_parameters(stream, SET_SYSINBOX, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_SYSINBOX, 0);
+		} else if(strEQ(param, "NEWSACTIVE")) {
+			if(sv)
+				mail_parameters(stream, SET_NEWSACTIVE, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_NEWSACTIVE, 0);
+		} else if (strEQ(param, "NEWSSPOOL")) {
+			if(sv)
+				mail_parameters(stream, SET_NEWSSPOOL, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_NEWSSPOOL, 0);
+		} else if(strEQ(param, "NEWSRC")) {
+			if(sv)
+				mail_parameters(stream, SET_NEWSRC, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_NEWSRC, 0);
+		} else if(strEQ(param, "ANONYMOUSHOME")) {
+			if(sv)
+				mail_parameters(stream, SET_ANONYMOUSHOME, SvPV(sv, na));
+			else
+				res_str = mail_parameters(stream, GET_ANONYMOUSHOME, 0);
+		} else if(strEQ(param, "OPENTIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_OPENTIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_OPENTIMEOUT, 0);
+		} else if(strEQ(param, "READTIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_READTIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_READTIMEOUT, 0);
+		} else if(strEQ(param, "WRITETIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_WRITETIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_WRITETIMEOUT, 0);
+		} else if(strEQ(param, "CLOSETIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_CLOSETIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_CLOSETIMEOUT, 0);
+		} else if(strEQ(param, "RSHTIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_RSHTIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_RSHTIMEOUT, 0);
+		} else if(strEQ(param, "SSHTIMEOUT")) {
+			if(sv)
+				mail_parameters(stream, SET_SSHTIMEOUT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_SSHTIMEOUT, 0);
+		} else if(strEQ(param, "SSLFAILURE")) {
+			if(sv)
+				mail_parameters(stream, SET_SSLFAILURE, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_SSLFAILURE, 0);
+		} else if(strEQ(param, "MAXLOGINTRIALS")) {
+			if(sv)
+				mail_parameters(stream, SET_MAXLOGINTRIALS, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_MAXLOGINTRIALS, 0);
+		} else if(strEQ(param, "LOOKAHEAD")) {
+			if(sv)
+				mail_parameters(stream, SET_LOOKAHEAD, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_LOOKAHEAD, 0);
+		} else if(strEQ(param, "IMAPPORT")) {
+			if(sv)
+				mail_parameters(stream, SET_IMAPPORT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_IMAPPORT, 0);
+		} else if(strEQ(param, "PREFETCH")) {
+			if(sv)
+				mail_parameters(stream, SET_PREFETCH, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_PREFETCH, 0);
+		} else if(strEQ(param, "CLOSEONERROR")) {
+			if(sv)
+				mail_parameters(stream, SET_CLOSEONERROR, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_CLOSEONERROR, 0);
+		} else if(strEQ(param, "POP3PORT")) {
+			if(sv)
+				mail_parameters(stream, SET_POP3PORT, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_POP3PORT, 0);
+		} else if(strEQ(param, "UIDLOOKAHEAD")) {
+			if(sv)
+				mail_parameters(stream, SET_UIDLOOKAHEAD, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_UIDLOOKAHEAD, 0);
+		} else if(strEQ(param, "MBXPROTECTION")) {
+			if(sv)
+				mail_parameters(stream, SET_MBXPROTECTION, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_MBXPROTECTION, 0);
+		} else if(strEQ(param, "DIRPROTECTION")) {
+			if(sv)
+				mail_parameters(stream, SET_DIRPROTECTION, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_DIRPROTECTION, 0);
+		} else if(strEQ(param, "LOCKPROTECTION")) {
+			if(sv)
+				mail_parameters(stream, SET_LOCKPROTECTION, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_LOCKPROTECTION, 0);
+		} else if(strEQ(param, "FROMWIDGET")) {
+			if(sv)
+				mail_parameters(stream, SET_FROMWIDGET, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_FROMWIDGET, 0);
+		} else if(strEQ(param, "DISABLEFCNTLLOCK")) {
+			if(sv)
+				mail_parameters(stream, SET_DISABLEFCNTLLOCK, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_DISABLEFCNTLLOCK, 0);
+		} else if(strEQ(param, "LOCKEACCESERROR")) {
+			if(sv)
+				mail_parameters(stream, SET_LOCKEACCESERROR, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_LOCKEACCESERROR, 0);
+		} else if(strEQ(param, "LISTMAXLEVEL")) {
+			if(sv)
+				mail_parameters(stream, SET_LISTMAXLEVEL, (void*)SvIV(sv));
+			else
+				res_int = (int) mail_parameters(stream, GET_LISTMAXLEVEL, 0);
+		} else {
+			croak("no such parameter name: %s", param);
+		}
+		if(sv)
+			ST(0) = &sv_yes;
+		else {
+			if (res_str)
+				XPUSHs(sv_2mortal(newSVpv(res_str, 0)));
+			else
+				XPUSHs(sv_2mortal(newSViv(res_int)));
+		}
 
  #
  # Utility Functions
@@ -2148,6 +2192,21 @@ rfc822_qprint(source)
 		s = rfc822_qprint(s, (unsigned long)srcl, &len);
 		XPUSHs(sv_2mortal(newSVpv((char*)s, (STRLEN)len)));
 
+
+void            
+utf8_mime2text(source)
+		SV *	source
+	PREINIT:
+		SIZEDTEXT src;
+		SIZEDTEXT dst;
+		STRLEN srcl;  
+		unsigned char *ptr;
+	PPCODE:
+		ptr = (unsigned char*)SvPV(source, srcl);
+		src.data = ptr;
+		src.size = (unsigned long)srcl;
+		utf8_mime2text(&src, &dst);   
+		XPUSHs(sv_2mortal(newSVpv((char*)dst.data, (STRLEN)dst.size)));
 
  #
  # Utility functions
