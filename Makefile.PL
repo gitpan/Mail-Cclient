@@ -34,7 +34,11 @@ unless($CCLIENTLIBS) {
 		if(!-r "$CCLIENT_DIR/c-client.a");
 }
 
-$LIBS = "-lc";
+my $osname = lc($^O);
+my @libs = "-lc";
+push(@libs, "-lm") if($osname eq "aix");
+$LIBS = join(" ", @libs);
+
 if($CCLIENTLIBS) {
 	print "configure with shared c-client:$CCLIENTLIBS\n";
 	$LIBS .= $CCLIENTLIBS;

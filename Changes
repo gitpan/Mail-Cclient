@@ -1,5 +1,20 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.10
+20 Sep 2004
+* The function make_mail_body has been updated (the XS perl internal
+  function AvFill was deprecated and has been replaced by av_len
+  function).
+
+* Small documentation improvements.
+
+* The example script smtp_mail.pl was updated.
+
+* A bug has been fixed in XS make_mail_body function.
+
+* The Makefile.PL has been fixed to compile in AIX.
+  (Thanks to Peter Arien <Peter.Arien@cc.kuleuven.ac.be>)
+
 1.9
 20 Apr 2004
 * Use of uninitialized value in subroutine open_full as been fixed.

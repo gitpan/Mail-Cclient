@@ -5,7 +5,7 @@ print "1..3\n";
 print "ok 1\n";
 
 my $smtp = Mail::Cclient::SMTP->new(
-	hostlist => "rosa.esb.ucp.pt",
+	hostlist => "rosa.aesbuc.pt",
 	service  => "smtp",
 	options  => "dsn",
 );

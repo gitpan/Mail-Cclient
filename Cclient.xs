@@ -1,8 +1,8 @@
 /*
  *	Cclient.xs
- *	Last Edited: Sat Jun 14 16:33:02 WEST 2003
+ *	Last Edited: Mon Sep 20 15:40:21 WEST 2004
  *
- *	Copyright (c) 1998 - 2003 Malcolm Beattie
+ *	Copyright (c) 1998 - 2004 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -103,7 +103,7 @@ static STRINGLIST *av_to_stringlist(AV *av) {
 	STRINGLIST **s = &rets;
 	SV **svp = AvARRAY(av);
 	I32 count;
-	for (count = AvFILL(av); count >= 0; count--) {
+	for (count = av_len(av); count >= 0; count--) {
 		STRLEN len;
 		*s =  mail_newstringlist();
 		(*s)->text.data = cpystr(SvPV(*svp, len));
@@ -448,7 +448,7 @@ static void make_mail_body(BODY *body, HV* hv) {
 	}
 	if(hv_exists(hv, "language", 8)) {
 		SV **value = hv_fetch(hv, "language", 8, 0);
-		body->language = av_to_stringlist((AV*)value);
+		body->language = av_to_stringlist((AV*)SvRV(*value));
 	}
 #ifdef DR_NONEWMAIL
 	if(hv_exists(hv, "location", 8)) {

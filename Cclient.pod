@@ -766,21 +766,21 @@ List of hash references.
 
 The MIME description of the body part.
 
-=item language 
+=item language => ["en", "pt", ...]
 
-body language list reference
+body language list reference (header "Content-Language: ").
 
 =item location
 
-body content URI
+body content URI (header "Content-Location: ").
 
 =item id
 
-The message ID.
+The message ID (header "Content-ID: ")
 
 =item md5
 
-The MD5 checksum of the body.
+The MD5 checksum of the body (header "Content-MD5: ").
 
 =item data
 
@@ -1365,7 +1365,7 @@ Maintained by Henrique Dias, hdias@aesbuc.pt.
 
 =head1 VERSION
 
-version 1.9
+version 1.10
 
 =head1 SEE ALSO
 
