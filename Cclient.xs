@@ -1,7 +1,7 @@
 /*
  *	Cclient.xs
  *
- *	Copyright (c) 1998,1999 Malcolm Beattie
+ *	Copyright (c) 1998,1999,2000 Malcolm Beattie
  *
  *	You may distribute under the terms of either the GNU General Public
  *	License or the Artistic License, as specified in the README file.
@@ -27,6 +27,9 @@
 #ifdef OP_PROTOTYPE
 #undef OP_PROTOTYPE
 #endif
+
+/* Ensure na and sv_undef get defined */
+#define PERL_POLLUTE
 
 #include "EXTERN.h"
 #include "perl.h"
@@ -222,9 +225,13 @@ make_elt(MAILSTREAM *stream, MESSAGECACHE *elt)
 	av_push(flags, newSVpv("\\Recent", 7));
     if (elt->searched)
 	av_push(flags, newSVpv("\\Searched", 9));
-    for (i = 0; i < NUSERFLAGS; i++)
-	if (elt->user_flags & (1 << i))
-	    av_push(flags, newSVpv(stream->user_flags[i], 0));
+    for (i = 0; i < NUSERFLAGS; i++) {
+	if (elt->user_flags & (1 << i)) {
+	    char *fl = stream->user_flags[i];
+	    SV *sv = fl ? newSVpv(fl, 0) : newSVpvf("user_flag_%d", i);
+	    av_push(flags, sv);
+	}
+    }
     av_push(av, newRV_noinc((SV*)flags));
     av_push(av, newSViv(elt->rfc822_size)); 
     return sv_bless(newRV_noinc((SV*)av), stash_Elt);
@@ -287,7 +294,7 @@ make_body(BODY *body)
 	    av_push(parts, make_body(&p->body));
 	nest = newRV_noinc((SV*)parts);
     }
-    else if (body->type == TYPEMESSAGE) {
+    else if (body->type == TYPEMESSAGE && strEQ(body->subtype, "RFC822")) {
 	AV *mess = newAV();
 	MESSAGE *msg = body->nested.msg;
 	av_push(mess, msg ? make_envelope(msg->env) : &sv_undef);

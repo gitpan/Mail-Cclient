@@ -1,3 +1,18 @@
+1.0
+10 May 2000
+
+* Make the elt method fill in a flag name of the form "user_flag_%d"
+  when a message's flag bitmap has a bit set which does not
+  correspond to a name in the stream's user_flags array.
+
+* Tighten check for MIME non-multipart nested messages from message/*
+  to message/rfc822.
+
+* Define PERL_POLLUTE so that na and sv_undef are defined for Perl 5.6.
+
+* Bump version to 1.0 since it's been working decently for a couple
+  of years without major changes.
+
 0.6
 17 Jun 1999
 
