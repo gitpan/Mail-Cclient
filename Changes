@@ -1,5 +1,12 @@
 Revision history for Perl extension Mail::Cclient.
 
+1.12
+09 Oct 2004
+* A serious bug that caused a crash after compilation in "x86_64-linux" 
+  architecture was fixed.
+* The information in README file was updated.
+* The Makefile.PL has changed again.
+
 1.11
 06 Oct 2004
 * The line '#include "utf8.h"' in "Cclient.xs" file was moved to line

@@ -1,6 +1,6 @@
 #
 #	Cclient.pm
-#       Last Edited: Wed Oct  6 10:35:08 WEST 2004
+#       Last Edited: Sat Oct  9 18:14:12 WEST 2004
 #
 #	Copyright (c) 1998 - 2004 Malcolm Beattie
 #
@@ -14,7 +14,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.11";
+$VERSION = "1.12";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_binary
 		rfc822_qprint rfc822_8bit utf8_mime2text rfc822_date

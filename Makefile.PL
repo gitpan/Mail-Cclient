@@ -37,6 +37,7 @@ unless($CCLIENTLIBS) {
 		if(!-r "$CCLIENT_DIR/c-client.a");
 }
 
+my %headers = ();
 my $osname = lc($^O);
 my @libs = "-lc";
 push(@libs, "-lm") if($osname eq "aix");
@@ -47,11 +48,7 @@ if($CCLIENTLIBS) {
 	$LIBS .= $CCLIENTLIBS;
 	if($IMAP_DIR) {
 		$CCLIENT_DIR = $IMAP_DIR;
-		my $have_linkage = (-e "$IMAP_DIR/linkage.c") ? 1 : 0;
-		unlink("Cclient.h") if(-e "Cclient.h");
-		open(HEADERS, ">", "Cclient.h") or die("$!");
-		print HEADERS "#define HAVE_IMAP_LINKAGE $have_linkage\n";
-		close(HEADERS);
+		$headers{'HAVE_IMAP_LINKAGE'} = 1 if(-e "$IMAP_DIR/linkage.c");
 	}
 }
 if(defined($PAM_DIR)) {
@@ -65,13 +62,22 @@ if(defined($SSL_DIR)) {
 	$tmp .= " -lcrypto -lssl";
 	print "configure with ssl:$tmp\n";
 	$LIBS .= $tmp;
+	$headers{'HAVE_IMAP_SSL'} = 1;
 }
+
 if(defined($KRB_DIR)) {
 	my $tmp = " -L$KRB_DIR" if($KRB_DIR);
 	$tmp .= " -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err";
 	print "configure with kerberos:$tmp\n";
 	$LIBS .= $tmp;
 }
+
+unlink("Cclient.h") if(-e "Cclient.h");
+open(HEADERS, ">", "Cclient.h") or die("$!");
+while(my ($key, $value) = each(%headers)) {
+	print HEADERS "#define $key $value\n";
+}
+close(HEADERS);
 
 unless($CCLIENTLIBS) {
 	#

@@ -1,4 +1,4 @@
-		  Perl Mail::Cclient module, Version 1.11
+		  Perl Mail::Cclient module, Version 1.12
 
 		Copyright (c) 1998 - 2004, Malcolm Beattie
 
@@ -71,13 +71,28 @@ make
 make test
 make install
 
-Build static library without OpenSSL (RedHat 8.0, 9 and Fedora Core 1):
+Build static library without OpenSSL
 
-tar xvfz Mail-Cclient-1.11.tar.gz
+(Gentoo)
+
+tar xvfz Mail-Cclient-1.12.tar.gz
+tar xvfz imap-2004a.tar.Z
+cd imap-2004a
+make slx SSLTYPE=none
+(if x86_64-linux - AMD64: make slx SSLTYPE=none EXTRACFLAGS=-fPIC)
+cd ../Mail-Cclient-1.12
+perl Makefile.PL --cclient_dir=../imap-2004a/c-client --with-pam
+make
+make test
+make install
+
+(RedHat 8.0, 9 and Fedora Core 1):
+
+tar xvfz Mail-Cclient-1.12.tar.gz
 tar xvfz imap-2004a.tar.Z
 cd imap-2004a
 make lrh SSLTYPE=none 
-cd ../Mail-Cclient-1.11
+cd ../Mail-Cclient-1.12
 perl Makefile.PL --cclient_dir=../imap-2004a/c-client --with-pam
 make
 make test
@@ -147,8 +162,8 @@ with the actual code in a few places.
 Malcolm Beattie
 31 Oct 2000
 
-Version 1.11 submitted by Henrique Dias
+Version 1.12 submitted by Henrique Dias
 Questions, bug reports, useful code bits, and suggestions for
-Mail-Cclient-1.11 should just be sent to me at hdias@aesbuc.pt
+Mail-Cclient-1.12 should just be sent to me at hdias@aesbuc.pt
 Henrique Dias
-06 Oct 2004
+09 Oct 2004

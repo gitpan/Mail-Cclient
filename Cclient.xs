@@ -1,6 +1,6 @@
 /*
  *	Cclient.xs
- *	Last Edited: Wed Oct  6 10:35:35 WEST 2004
+ *	Last Edited: Sat Oct  9 18:07:58 WEST 2004
  *
  *	Copyright (c) 1998 - 2004 Malcolm Beattie
  *
@@ -2503,7 +2503,7 @@ rfc822_output(...)
 
 
 BOOT:
-#if HAVE_IMAP_LINKAGE
+#ifdef HAVE_IMAP_LINKAGE
 #include "linkage.c"
 #else
 	mail_link (&mboxdriver);	/* link in the mbox driver */
@@ -2523,7 +2523,9 @@ BOOT:
 	auth_link (&auth_md5);		/* link in the md5 authenticator */
 	auth_link (&auth_pla);		/* link in the pla authenticator */
 	auth_link (&auth_log);		/* link in the log authenticator */
+#ifdef HAVE_IMAP_SSL
 	ssl_onceonlyinit ();
+#endif /* HAVE_IMAP_SSL */
 #endif /* HAVE_IMAP_LINKAGE */
 	mailstream2sv = newHV();
 	stash_Cclient = gv_stashpv("Mail::Cclient", TRUE);
