@@ -13,7 +13,7 @@ use Exporter;
 use strict;
 use vars qw($VERSION @ISA @EXPORT_OK %_callback);
 
-$VERSION = "1.2";
+$VERSION = "1.3";
 @ISA = qw(Exporter DynaLoader);
 @EXPORT_OK = qw(set_callback get_callback rfc822_base64 rfc822_qprint
 		rfc822_date rfc822_parse_adrlist rfc822_write_address);
@@ -57,10 +57,11 @@ Mail::Cclient - Mailbox access via the c-client library API
 	CHARSET   => "MIME character",
 	SEARCH    => "string",
 	FLAG      => [flag_1, ..., flag_n] / "flag" );
-    $c->search(			# results via "search" callback
+    $c->search(				# uses "search" callback
 	SEARCH    => "string",
 	CHARSET   => "MIME character",
 	FLAG      => ["flag_1", ..., "flag_n"] / "flag");
+    $c->search_msg(MSGNO, CRITERIA [, CHARSET]);
     $arrayref = $c->thread(
 	THREADING => "orderedsubject/references",
 	CHARSET   => "MIME character",
@@ -373,7 +374,7 @@ included) to mailbox MAILBOX.
 Append a raw message (MESSAGE is an ordinary string) to MAILBOX,
 giving it an optional date and FLAGS (again, simply strings).
 
-=item sort(KEY => VALUE [, KEY1 => VALUE2 ...])
+=item sort(KEY => VALUE [, KEY1 => VALUE1 ...])
 
 Returns an array reference of message numbers sorted by the given pairs of
 parameters (KEY => VALUE). The B<SORT> keyword value is a array reference,
@@ -383,38 +384,37 @@ The argument rev_1, ... rev_n is 0 or 1 if reverse sorting. The B<CHARSET>
 keyword value is a MIME character set to use when sorting strings. The
 B<SEARCH> keyword value is a string like, ALL, SEEN, UNSEEN, ANSWERED,
 UNANSWERED, FLAGGED, UNFLAGGED, SEARCHED or like SEARCH keyword in search
-method and return only messages that meet specified search criteria. The
-B<FLAG> keyword value can be a array reference or a string. Flags:
-"B<uid>" return uid's instead of sequence numbers; "B<searchfree>" return
-the search program to free storage after finishing (internal use only);
-"B<noprefetch>" don't prefetch searched messages; "B<sortfree>" return the
-sort program to free storage after finishing (internal use only). The
-B<SORT> keyword/value is not optional. All others keywords are optional.
+method and return only messages that meet specified search criteria (See
+the searching criteria section for details). The B<FLAG> keyword value can
+be a array reference or a string. Flags: "B<uid>" return uid's instead of
+sequence numbers; "B<searchfree>" return the search program to free
+storage after finishing (internal use only); "B<noprefetch>" don't
+prefetch searched messages; "B<sortfree>" return the sort program to free
+storage after finishing (internal use only). The B<SORT> keyword/value is
+not optional. All others keywords are optional.
 
-=item search(KEY => VALUE [, KEY1 => VALUE2 ...])
+=item search(KEY => VALUE [, KEY1 => VALUE1 ...])
 
 Search for messages satisfying B<SEARCH> keyword value. The "search"
 callback (q.v.) is called for each matching message. The B<SEARCH> keyword
 value is a string containing a search specification as defined in item
-SEARCH Command (6.4.4.) of RFC2060 (imap2000/docs/rfc/rfc2060.txt).
-The B<SEARCH> keyword value is like 'ANSWERED TO "malcolm"' or 'FLAGGED
-SINCE 1-Feb-1994 NOT FROM "Smith"'. B<SEARCH> keyword value can be a
-combination of one or more of the following strings: ALL, NEW, OLD,
-RECENT, ANSWERED, UNASWERED, SEEN, UNSEEN, DELETED, UNDELETED, DRAFT,
-UNDRAFT, FLAGGED, UNFLAGGED, FROM <string>, TO <string>, CC <string>, BCC
-<string>, SUBJECT <string>, BODY <string>, TEXT <string>, HEADER
-<field-name> <string>, KEYWORD <flag>, UNKEYWORD <flag>, LARGER <n>,
-SMALLER <n>, SENTBEFORE <date>, SENTO <date>, SENTSINCE <date>, SINCE
-<date>, ON <date>, BEFORE <date>, NOT <search-key>, OR <search-key1>
-<search-key2>, UID <message set>. The B<CHARSET> keyword value is a MIME
-character set to use when searching strings. The B<FLAG> keyword value can
-be a array reference or a string. Flags: "B<uid>" return a message uid's
-instead of sequence numbers; "B<searchfree>" return the search program to
-free storage after finishing (internal use only); "B<noprefetch>" don't
-prefetch searched messages. The B<SEARCH> keyword/value is not optional.
-All others keywords are optional.
+SEARCH Command (6.4.4.) of RFC2060 (imap2000/docs/rfc/rfc2060.txt). The
+B<SEARCH> keyword value is like 'ANSWERED TO "malcolm"' or 'FLAGGED SINCE
+1-Feb-1994 NOT FROM "Smith"' (See the searching criteria section for
+details). The B<CHARSET> keyword value is a MIME character set to use when
+searching strings. The B<FLAG> keyword value can be a array reference or a
+string. Flags: "B<uid>" return a message uid's instead of sequence
+numbers; "B<searchfree>" return the search program to free storage after
+finishing (internal use only); "B<noprefetch>" don't prefetch searched
+messages. The B<SEARCH> keyword/value is not optional. All others keywords
+are optional.
 
-=item thread(KEY => VALUE [, KEY1 => VALUE2 ...])
+=item search_msg(MSGNO, CRITERIA [, CHARSET])
+
+It inspects the message B<MSGNO> on that stream to see if it matches 
+the B<CRITERIA> or not. If it matches, 1 is returned, else 0.
+
+=item thread(KEY => VALUE [, KEY1 => VALUE1 ...])
 
 This method returns a array reference of message sequence numbers and/or
 lists of lists of message numbers. The B<THREADING> keyword value can take
@@ -433,19 +433,6 @@ is "B<orderedsubject>".
 Example:
 
 ARRAYREF = [2, [3, 6, [4, 23], [44, 7, 96]]
-
---> 2
-
---> 3
-    \--> 6
-         |--> 4
-         |    \--> 23
-         |
-         \--> 44
-              \--> 7
-                   \--> 96
-
-
 
 =back
 
@@ -568,12 +555,12 @@ Returns the SOURCE text converted to quoted printable format.
 
 Returns the current date in RFC822 format.
 
-= item Mail::Cclient::rfc822_write_address(MAILBOX, HOST, PERSONAL)
+=item Mail::Cclient::rfc822_write_address(MAILBOX, HOST, PERSONAL)
 
 This function return an RFC 822 format address string based on the 
 information from MAILBOX, HOST and PERSONAL.
 
-= item Mail::Cclient::rfc822_parse_adrlist(ADDRESSES, HOST)
+=item Mail::Cclient::rfc822_parse_adrlist(ADDRESSES, HOST)
 
 This function parses the string of ADDRESSES into an address list array 
 ref. Any addresses missing a host name are have the host name defaulted 
@@ -833,6 +820,178 @@ The RFC822 size of the message.
 
 =back
 
+=head1 SEARCHING CRITERIA
+
+Searching criteria consist of one or more search keys. When multiple keys 
+are specified, the result is the intersection (AND function) of all the 
+messages that match those keys. A search key can also be a parenthesized
+list of one or more search keys. In all search keys that use strings, a 
+message matches the key if the string is a substring of the field. The 
+matching is case-insensitive.
+
+The defined search keys are as follows.
+
+=item <message set>
+
+Messages with message sequence numbers corresponding to the specified
+message sequence number set (not implemented yet).
+
+=item ALL
+
+All messages in the mailbox; the default initial key for ANDing.
+
+=item ANSWERED
+
+Messages with the \Answered flag set.
+
+=item BCC <string>
+
+Messages that contain the specified string in the envelope structure's BCC
+field.
+
+=item BEFORE <date>
+
+Messages whose internal date is earlier than the specified date.
+
+=item BODY <string>
+
+Messages that contain the specified string in the body of the message.
+
+=item CC <string>
+
+Messages that contain the specified string in the envelope structure's CC
+field.
+
+=item DELETED
+
+Messages with the \Deleted flag set.
+
+=item DRAFT
+
+Messages with the \Draft flag set.
+
+=item FLAGGED
+
+Messages with the \Flagged flag set.
+
+=item FROM <string>
+
+Messages that contain the specified string in the envelope structure's
+FROM field.
+
+=item HEADER <field-name> <string>
+
+Messages that have a header with the specified field-name (as defined in
+[RFC-822]) and that contains the specified string in the [RFC-822] 
+field-body (not implemented yet).
+
+=item KEYWORD <flag>
+
+Messages with the specified keyword set.
+
+=item LARGER <n>
+
+Messages with an [RFC-822] size larger than the specified number of
+octets.
+
+=item NEW
+
+Messages that have the \Recent flag set but not the \Seen flag.  This is
+functionally equivalent to "(RECENT UNSEEN)".
+
+=item NOT <search-key>
+
+Messages that do not match the specified search key.
+
+=item OLD
+
+Messages that do not have the \Recent flag set. This is functionally
+equivalent to "NOT RECENT" (as opposed to "NOT NEW").
+
+=item ON <date>
+
+Messages whose internal date is within the specified date.
+
+=item OR <search-key1> <search-key2>
+
+Messages that match either search key.
+
+=item RECENT
+
+Messages that have the \Recent flag set.
+
+=item SEEN
+
+Messages that have the \Seen flag set.
+
+=item SENTBEFORE <date>
+
+Messages whose [RFC-822] Date: header is earlier than the specified date.
+
+=item SENTON <date>
+
+Messages whose [RFC-822] Date: header is within the specified date.
+
+=item SENTSINCE <date>
+
+Messages whose [RFC-822] Date: header is within or later than the
+specified date.
+
+=item SINCE <date>
+
+Messages whose internal date is within or later than the specified date.
+
+=item SMALLER <n>
+
+Messages with an [RFC-822] size smaller than the specified number of
+octets.
+
+=item SUBJECT <string>
+
+Messages that contain the specified string in the envelope structure's
+SUBJECT field.
+
+=item TEXT <string>
+
+Messages that contain the specified string in the header or body of the
+message.
+
+=item TO <string>
+
+Messages that contain the specified string in the envelope structure's TO
+field.
+
+=item UID <message set>
+
+Messages with unique identifiers corresponding to the specified unique 
+identifier set (not implemented yet).
+
+=item UNANSWERED
+
+Messages that do not have the \Answered flag set.
+
+=item UNDELETED
+
+Messages that do not have the \Deleted flag set.
+
+=item UNDRAFT
+
+Messages that do not have the \Draft flag set.
+
+=item UNFLAGGED
+
+Messages that do not have the \Flagged flag set.
+
+=item UNKEYWORD <flag>
+
+Messages that do not have the specified keyword set.
+
+=item UNSEEN
+
+Messages that do not have the \Seen flag set.
+
+=back
+
 =head1 CAVEATS
 
 This CAVEATS section was contributed by Bruce Gingery
@@ -877,6 +1036,14 @@ work as expected.
 =head1 AUTHOR
 
 Malcolm Beattie, mbeattie@sable.ox.ac.uk.
+
+=head1 VERSION
+
+version 1.3
+
+=head1 SEE ALSO
+
+perl(1) IMAP::Admin Mail::Send
 
 =cut
 

@@ -22,6 +22,7 @@
 #include "mail.h"
 #include "misc.h"
 #include "rfc822.h"
+#include "criteria.h"
 
 #define CCLIENT_LOCAL_INIT(s,d,data,size) \
     ((*((s)->dtb = &d)->init) (s,data,size))
@@ -996,7 +997,7 @@ mail_thread(stream, ...)
 			" Mail::Cclient::thread", key);
 	}
 	spg = (search_criteria) ?
-		mail_criteria(search_criteria) : mail_newsearchpgm();
+		make_criteria(search_criteria) : mail_newsearchpgm();
 	thread = mail_thread(stream, (strEQ(threading, "references")) ?
 			    "REFERENCES" : "ORDEREDSUBJECT", cs, spg, flags);
 	if(thread) {
@@ -1078,7 +1079,7 @@ mail_sort(stream, ...)
 	if(!len)
 	    croak("no SORT key/value passed to Mail::Cclient::sort");
 	spg = (search_criteria) ?
-		mail_criteria(search_criteria) : mail_newsearchpgm();
+		make_criteria(search_criteria) : mail_newsearchpgm();
 	pgm = (SORTPGM **)safemalloc(len * sizeof(SORTPGM *));
 	for(idx = 0; idx < len; idx = idx+2) {
 	    SV **n;
@@ -1174,7 +1175,7 @@ mail_fetchtext(stream, msgno, ...)
 	    if (strEQ(flag, "uid"))
 		flags |= FT_UID;
 	    else if (strEQ(flag, "peek"))
-		flags |= FT_NOT;
+		flags |= FT_PEEK;
 	    else if (strEQ(flag, "internal"))
 		flags |= FT_INTERNAL;
 	    else {
@@ -1201,7 +1202,7 @@ mail_fetchbody(stream, msgno, section, ...)
 	    if (strEQ(flag, "uid"))
 		flags |= FT_UID;
 	    else if (strEQ(flag, "peek"))
-		flags |= FT_NOT;
+		flags |= FT_PEEK;
 	    else if (strEQ(flag, "internal"))
 		flags |= FT_INTERNAL;
 	    else {
@@ -1335,6 +1336,7 @@ void
 mail_search(stream, ...)
 	Mail::Cclient	stream
     PREINIT:
+	SEARCHPGM *spgm;
 	char *search_criteria = NIL;
 	char *cs = NIL;
 	int i;
@@ -1379,7 +1381,29 @@ mail_search(stream, ...)
 	}
 	if(!search_criteria)
 	    croak("no SEARCH key/value passed to Mail::Cclient::search");
-	mail_search_full(stream, cs, mail_criteria(search_criteria), flags);
+	if(spgm = make_criteria(search_criteria))
+		mail_search_full(stream, cs, spgm, flags);
+
+ #
+ # mail_search_msg from code submitted by
+ # Helena Gomes <hpgomes@mail.pt>.
+ #
+
+long
+mail_search_msg(stream, msgno, criteria, cs = NIL)
+	Mail::Cclient	stream
+	unsigned long	msgno
+	char *		criteria
+	char *		cs
+    PREINIT:
+	SEARCHPGM *spgm;
+	long result = NIL;
+    CODE:
+	spgm = make_criteria(criteria);
+	if(spgm) result = mail_search_msg(stream, msgno, cs, spgm);
+	RETVAL = result;
+    OUTPUT:
+	RETVAL
 
 
 void

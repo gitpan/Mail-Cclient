@@ -1,0 +1,25 @@
+use Mail::Cclient qw(set_callback);
+
+
+# look for Perl in TEXT.
+
+set_callback
+	log => sub {
+		my ($str, $type) = @_;
+		print "$type: $str";
+	};
+
+if($cclient->search_msg(559, "TEXT \"Perl\"")) {
+	print "Perl exist...\n";	
+} else {
+	print "Perl not found!\n";
+}
+
+# look for Perl in SUBJECT and Larry in TEXT.
+
+my $res = $cclient->search_msg(559, "SUBJECT \"Perl\" TEXT \"Larry\"")) { 
+if($res) {
+        print "Perl exist...\n";
+} else { 
+        print "Perl not found!\n";
+}

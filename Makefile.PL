@@ -40,6 +40,6 @@ WriteMakefile(
     VERSION_FROM	=> "Cclient.pm",
     INC			=> "-I$CCLIENT_DIR",
     LIBS		=> ["-lc"],
-    OBJECT		=> "Cclient.o @objects"
+    OBJECT		=> "criteria.o Cclient.o  @objects"
 );
 

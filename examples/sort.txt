@@ -1,9 +1,14 @@
 use Mail::Cclient qw(set_callback);
 
-#	'FLAGGED SINCE 1-Feb-1994 NOT FROM "SMITH"'
-#	'ALL FROM "hdias"'
-#	'FROM "hdias"'
-#	'ANSWERED TO "malcolm"'
+# Criteria examples
+#
+#       'FLAGGED SINCE 1-Feb-1994 NOT FROM "SMITH"'
+#       'ALL FROM "hdias" NOT (SUBJECT "spam" TEXT "bug")'
+#       'OR FROM "hdias" SUBJECT "perl"'
+#       'FROM "hdias" NOT FROM "smith" OR (SUBJECT "perl" TO "cpan") SUBJECT "linux"'
+#       'FROM "hdias"'
+#       'ANSWERED TO "malcolm"'
+#
 
 my $criteria = "ALL FROM \"hdias\"";
 

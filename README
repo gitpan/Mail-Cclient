@@ -1,4 +1,4 @@
-		     Perl Mail::Cclient module, Version 1.1
+		     Perl Mail::Cclient module, Version 1.3
 
 		Copyright (c) 1998, 1999, 2000, 2001, Malcolm Beattie
 
@@ -76,8 +76,8 @@ Malcolm Beattie
 31 Oct 2000
 
 
-Version 1.2 submitted by Henrique Dias
-Questions, bug reports, useful code bits, and suggestions for Mail-Cclient-1.2
+Version 1.3 submitted by Henrique Dias
+Questions, bug reports, useful code bits, and suggestions for Mail-Cclient-1.3
 should just be sent to to me at hdias@esb.ucp.pt
 Henrique Dias
-05 Jul 2001
+23 Jul 2001

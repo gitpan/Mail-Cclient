@@ -1,3 +1,20 @@
+1.3
+23 Jul 2001
+  (version 1.3 submitted by Henrique Dias <hdias@esb.ucp.pt>)
+
+* changed wrong flag "FT_NOT" to "FT_PEEK" in internal XS functions 
+  mail_fetchtext and mail_fetchbody, thanks to Le-Sueur Phil 
+  <Phil.Le-Sueur@icl.com>
+
+* Updated the documentation and fixed a 'bug' in text
+
+* Added $mc->search_msg method
+  (from code submitted by Helena Gomes <hpgomes@mail.pt>)
+
+* Added DRAFT, LARGER, SENTBEFORE, SENTON, SENTSINCE, SMALLER, UNDRAFT,
+  NOT and OR to search criteria.
+  (submitted by Helena Gomes <hpgomes@mail.pt>)
+
 1.2
 05 Jul 2001
   (version 1.2 submitted by Henrique Dias <hdias@esb.ucp.pt>)
